@@ -28,41 +28,60 @@ export default function NavBar() {
           {/* <Link className="hidden md:block" href="/features">
             Features
           </Link> */}
-          <button
+          <Link
             className={`hidden md:block`}
-            onClick={() => alert("Coming Soon")}
+            href="https://github.com/michaelkremenetsky/Refeed"
           >
             Github
-          </button>
-          <button
+          </Link>
+          <Link
             className="hidden md:block"
-            onClick={() => alert("Coming Soon")}
+            href="https://github.com/users/michaelkremenetsky/projects/2"
           >
             Roadmap
-          </button>
+          </Link>
           <div className="hidden md:block">
             <NavigationMenu>
               <NavigationMenuList className="center">
                 <NavigationMenuItem>
                   <NavigationMenuTrigger>Resources</NavigationMenuTrigger>
                   <NavigationMenuContent className="min-w-[200px] bg-white py-2">
-                    <NavigationButton title="About" subtitle="About Us" />
-                    <NavigationButton
-                      title="Self Host"
-                      subtitle="Self Host Refeed"
-                    />
-                    <NavigationButton
-                      title="Contributing"
-                      subtitle="Contribute to Refeed"
-                    />
-                    <NavigationButton
-                      title="Report an Issue"
-                      subtitle="Report on Github"
-                    />
-                    <NavigationButton
-                      title="Privacy Policy"
-                      subtitle="Our Privacy Policy"
-                    />
+                    <Link href="/about" className="cursor-default">
+                      <NavigationButton title="About" subtitle="About Us" />
+                    </Link>
+                    <Link
+                      href="https://github.com/michaelkremenetsky/Refeed?tab=readme-ov-file#self-hosting-with-docker"
+                      className="cursor-default"
+                    >
+                      <NavigationButton
+                        title="Self Host"
+                        subtitle="Self Host Refeed"
+                      />
+                    </Link>
+                    <Link
+                      href="https://github.com/michaelkremenetsky/Refeed?tab=readme-ov-file#contributing"
+                      className="cursor-default"
+                    >
+                      <NavigationButton
+                        title="Contributing"
+                        subtitle="Contribute to Refeed"
+                      />
+                    </Link>
+                    <Link
+                      href="https://github.com/michaelkremenetsky/Refeed/issues"
+                      className="cursor-default"
+                    >
+                      <NavigationButton
+                        title="Report an Issue"
+                        subtitle="Report on Github"
+                      />
+                    </Link>
+                    <Link href="/privacy" className="cursor-default">
+                      <NavigationButton
+                        title="Privacy Policy"
+                        subtitle="Our Privacy Policy"
+                      />
+                    </Link>
                   </NavigationMenuContent>
                 </NavigationMenuItem>
               </NavigationMenuList>
@@ -96,29 +115,42 @@ const MobileNav = () => {
               <Link href="/pricing">
                 <NavigationButton title="Pricing" subtitle="Refeed Pricing" />
               </Link>
-              <a href="test.com">
+              <Link href="https://github.com/michaelkremenetsky/Refeed">
                 <NavigationButton
                   title="Github"
                   subtitle="Refeed Source Code"
                 />
-              </a>
-              <a href="test.com">
+              </Link>
+              <Link href="https://github.com/users/michaelkremenetsky/projects/2">
                 <NavigationButton title="Roadmap" subtitle="Our Roadmap" />
-              </a>
-              <NavigationButton title="About" subtitle="About Us" />
-              <NavigationButton title="Self Host" subtitle="Self Host Refeed" />
-              <NavigationButton
-                title="Contributing"
-                subtitle="Contribute to Refeed"
-              />
-              <NavigationButton
-                title="Report an Issue"
-                subtitle="Report on Github"
-              />
-              <NavigationButton
-                title="Privacy Policy"
-                subtitle="Refeed Privacy Policy"
-              />
+              </Link>
+              <Link href="/about">
+                <NavigationButton title="About" subtitle="About Us" />
+              </Link>
+              <Link href="https://github.com/michaelkremenetsky/Refeed?tab=readme-ov-file#self-hosting-with-docker">
+                <NavigationButton
+                  title="Self Host"
+                  subtitle="Self Host Refeed"
+                />
+              </Link>
+              <Link href="https://github.com/michaelkremenetsky/Refeed?tab=readme-ov-file#contributing">
+                <NavigationButton
+                  title="Contributing"
+                  subtitle="Contribute to Refeed"
+                />
+              </Link>
+              <Link href="https://github.com/michaelkremenetsky/Refeed/issues">
+                <NavigationButton
+                  title="Report an Issue"
+                  subtitle="Report on Github"
+                />
+              </Link>
+              <Link href="/privacy">
+                <NavigationButton
+                  title="Privacy Policy"
+                  subtitle="Refeed Privacy Policy"
+                />
+              </Link>
             </NavigationMenuContent>
           </NavigationMenuItem>
         </NavigationMenuList>

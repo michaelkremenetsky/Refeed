@@ -28,7 +28,7 @@ export const BottomFooter = () => {
                 </li>
                 <li className="mb-4">
                   <a
-                    href="https://tailwindcss.com/"
+                    href="https://github.com/users/michaelkremenetsky/projects/2"
                     className="hover:underline"
                   >
                     Roadmap
@@ -47,17 +47,26 @@ export const BottomFooter = () => {
               </h2>
               <ul className="font-medium text-neutral-450">
                 <li className="mb-4">
-                  <Link href="/about" className="hover:underline">
+                  <Link
+                    href="https://github.com/michaelkremenetsky/Refeed?tab=readme-ov-file#self-hosting-with-docker"
+                    className="hover:underline"
+                  >
                     Self Hosting
                   </Link>
                 </li>
                 <li className="mb-4">
-                  <a href="/" className="hover:underline">
+                  <a
+                    href="https://github.com/michaelkremenetsky/Refeed?tab=readme-ov-file#contributing"
+                    className="hover:underline"
+                  >
                     Contributing
                   </a>
                 </li>
                 <li className="mb-4">
-                  <a href="/" className="hover:underline">
+                  <a
+                    href="https://github.com/michaelkremenetsky/Refeed/issues"
+                    className="hover:underline"
+                  >
                     Report an Issue
                   </a>
                 </li>
@@ -69,7 +78,10 @@ export const BottomFooter = () => {
               </h2>
               <ul className="font-medium text-neutral-450">
                 <li className="mb-4">
-                  <a href="https://github.com" className="hover:underline ">
+                  <a
+                    href="https://github.com/michaelkremenetsky/Refeed/issues"
+                    className="hover:underline"
+                  >
                     Github
                   </a>
                 </li>
