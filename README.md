@@ -1,6 +1,6 @@
 <a href="https://refeedreader.com">
   <div align="center">
-    <img alt="Refeed - An Open Source RSS Reader for the modern human" src="https://github.com/michaelkremenetsky/personal-refeed-version/blob/main/apps/web/public/Card.png">
+    <img alt="Refeed - An Open Source RSS Reader for the modern human" src="https://github.com/michaelkremenetsky/Refeed/blob/main/apps/web/public/Card.png">
   </div>
 </a>
 
@@ -9,7 +9,7 @@ Refeed is an open-source RSS Reader. It allows you to consume better content fas
 
 <a href="https://refeedreader.com">
   <div align="center">
-    <img alt="Refeed - An Open Source RSS Reader for the modern human" width={1344} height={696} src="https://github.com/michaelkremenetsky/personal-refeed-version/blob/main/apps/web/public/Screenshot 2024-02-22 at 02-37-15 Refeed.png">
+    <img alt="Refeed - An Open Source RSS Reader for the modern human" width={1344} height={696} src="https://github.com/michaelkremenetsky/Refeed/blob/main/apps/web/public/Screenshot 2024-02-22 at 02-37-15 Refeed.png">
   </div>
 </a>
 
