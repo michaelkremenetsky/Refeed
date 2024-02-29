@@ -1,0 +1,4 @@
+{
+  "extends": "@refeed/tsconfig/base.json",
+  "include": ["."]
+}

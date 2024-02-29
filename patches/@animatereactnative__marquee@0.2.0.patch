@@ -1,0 +1,20 @@
+diff --git a/src/index.tsx b/src/index.tsx
+index 909717aca11079c834752b5a9363c865f0076c66..f15ab6bdb84c731172069a641e0d9f8166c74761 100644
+--- a/src/index.tsx
++++ b/src/index.tsx
+@@ -1,7 +1,6 @@
+ import * as React from 'react';
+ import type { ViewStyle } from 'react-native';
+-import { StyleSheet } from 'react-native';
+-import { View } from 'react-native';
++import { StyleSheet, View } from 'react-native';
+ import type { SharedValue } from 'react-native-reanimated';
+ import Animated, {
+   runOnJS,
+@@ -125,5 +124,5 @@ export const Marquee = React.memo(
+ 
+ const styles = StyleSheet.create({
+   hidden: { opacity: 0, zIndex: -9999 },
+-  row: { flexDirection: 'row', overflow: 'hidden' },
++  row: { flexDirection: 'row' },
+ });

@@ -1,0 +1,11 @@
+{
+  "extends": "@refeed/tsconfig/base.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "jsx": "react-native",
+    "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo.json",
+    "types": ["nativewind/types"]
+  },
+  "include": [".", "*.ts", "index.tsx", "*.js", "*.tsx"],
+  "exclude": ["node_modules"]
+}

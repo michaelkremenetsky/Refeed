@@ -1,0 +1,57 @@
+.env
+
+Dockerfile
+./**/*/Dockerfile
+./*/Dockerfile
+.dockerignore
+
+./packages/core/target
+
+node_modules
+**/node_modules
+./**/*/node_modules
+.pnp
+.pnp.js
+
+pnpm-debug.log
+./*/pnpm-debug.log
+
+prisma/db.sqlite
+prisma/db.sqlite-journal
+
+# next.js
+
+.next
+out/
+.git
+
+# expo
+
+.expo/
+dist/
+
+# production
+
+build
+
+# misc
+
+.DS_Store
+\*.pem
+
+# debug
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+\*.tsbuildinfo
+
+<!-- # turbo
+
+.turbo
+
+# apk
+
+.apk -->

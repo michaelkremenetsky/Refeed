@@ -1,0 +1,41 @@
+{
+  "name": "refeed",
+  "private": true,
+  "engines": {
+    "node": ">=v18.17.1"
+  },
+  "packageManager": "pnpm@8.9.2",
+  "scripts": {
+    "build": "turbo build",
+    "clean": "git clean -xdf node_modules",
+    "clean:workspaces": "turbo clean",
+    "db:push": "pnpm -F db push",
+    "db:studio": "pnpm -F db dev",
+    "dev": "turbo dev --parallel",
+    "format": "turbo format --continue -- --cache --cache-location='node_modules/.cache/.prettiercache'",
+    "format:fix": "turbo format --continue -- --write --cache --cache-location='node_modules/.cache/.prettiercache'",
+    "rws": "tsx tooling/scripts/removewhitespace.ts",
+    "lint": "turbo lint --continue -- --cache --cache-location 'node_modules/.cache/.eslintcache'",
+    "checkpkg": "manypkg check",
+    "lint:fix": "turbo lint --continue -- --fix --cache --cache-location 'node_modules/.cache/.eslintcache' && manypkg fix",
+    "typecheck": "turbo typecheck",
+    "reinstall": "cd apps/mobile && rm -rf node_modules && watchman watch-del-all && rm -rf $TMPDIR/metro-cache && cd ../../ && find . -name 'node_modules' -type d -prune -exec rm -rf '{}' + && pnpm i && cd packages/db && pnpm db:generate && cd ../../"
+  },
+  "dependencies": {
+    "@manypkg/cli": "^0.21.0",
+    "@refeed/prettier-config": "^0.1.0",
+    "dotenv-cli": "^7.3.0",
+    "eslint": "^8.56.0",
+    "prettier": "^3.2.5",
+    "turbo": "^1.10.16",
+    "typescript": "^5.3.3"
+  },
+  "prettier": "@refeed/prettier-config",
+  "pnpm": {
+    "patchedDependencies": {
+      "react-native-reanimated-carousel@4.0.0-alpha.0": "patches/react-native-reanimated-carousel@4.0.0-alpha.0.patch",
+      "@animatereactnative/marquee@0.2.0": "patches/@animatereactnative__marquee@0.2.0.patch",
+      "sonner@1.4.0": "patches/sonner@1.4.0.patch"
+    }
+  }
+}

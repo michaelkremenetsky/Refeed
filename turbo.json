@@ -1,0 +1,53 @@
+{
+  "$schema": "https://turborepo.org/schema.json",
+  "globalDependencies": [".env"],
+  "pipeline": {
+    "db:generate": {
+      "inputs": ["prisma/schema.prisma"],
+      "cache": false
+    },
+    "db:push": {
+      "inputs": ["prisma/schema.prisma"],
+      "cache": false
+    },
+    "dev": {
+      "persistent": true,
+      "cache": false
+    },
+    "build": {
+      "dependsOn": ["^build", "^db:generate"],
+      "outputs": [".next/**", "!.next/cache/**", "next-env.d.ts", ".expo/**"]
+    },
+    "format": {
+      "outputs": ["node_modules/.cache/.prettiercache"],
+      "outputMode": "new-only"
+    },
+    "lint": {
+      "outputs": ["node_modules/.cache/.eslintcache"]
+    },
+    "typecheck": {
+      "dependsOn": ["^db:generate"],
+      "outputs": ["node_modules/.cache/tsbuildinfo.json"]
+    },
+    "clean": {
+      "cache": false
+    },
+    "//#clean": {
+      "cache": false
+    }
+  },
+  "globalEnv": [
+    "DATABASE_URL",
+    "DIRECT_URL",
+    "SKIP_ENV_VALIDATION",
+    "NEXT_PUBLIC_SUPABASE_URL",
+    "NEXT_PUBLIC_SUPABASE_ANON_KEY",
+    "NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY",
+    "STRIPE_SECRET_KEY",
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "STRIPE_WEBHOOK_SECRET",
+    "EXPO_PUBLIC_SUPABASE_URL",
+    "EXPO_PUBLIC_SUPABASE_ANON_KEY",
+    "EXPO_PUBLIC_APPLE_SHARED_SECRET"
+  ]
+}

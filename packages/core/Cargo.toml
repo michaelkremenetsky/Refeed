@@ -1,0 +1,31 @@
+workspace = { members = ["prisma-cli"] }
+
+[package]
+name = "refeed-backend"
+version = "0.1.0"
+edition = "2021"
+
+[build]
+rustc-wrapper = "sccache"
+
+[dependencies]
+reqwest = { version = "0.11", default-features = false, features = ["rustls-tls", "json"] }
+feed-rs = "1.4.0"
+futures = "0.3"
+prisma-client-rust = { default-features = false, features = ["postgresql"], git = "https://github.com/Brendonovich/prisma-client-rust", tag = "0.6.11" }
+serde = { version = "1.0.196", features = ["derive"] }
+tokio = {features = ["macros","rt-multi-thread", "full"], version = "1.17.0"}
+url = "2.2.0"
+scraper = "0.18.1"
+log = "0.4.20"
+dotenv = "0.15.0"
+image = "0.24.9"
+rust-s3 = { version = "0.33.0", default-features = false, features = ["tokio-rustls-tls", "fail-on-err", "tags"] }
+axum = "0.7.4"
+tracing-subscriber = "0.3.18"
+tower-http = {version = "0.5.1", features = ["cors"]}
+blake3 = "1.5.0"
+chrono = "0.4.33"
+thiserror = "1.0.56"
+fast_image_resize = "3.0.4"
+nanoid="0.4.0"

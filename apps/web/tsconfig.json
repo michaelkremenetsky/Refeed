@@ -1,0 +1,22 @@
+{
+  "extends": "@refeed/tsconfig/base.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@components/*": ["components/*"],
+      "@features/*": ["features/*"],
+      "@lib/*": ["lib/*"],
+      "@utils/*": ["utils/*"]
+    },
+    "esModuleInterop": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo.json",
+    "strictNullChecks": true
+  },
+  "include": [".", ".next/types/**/*.ts"],
+  "exclude": ["node_modules", ".next"]
+}

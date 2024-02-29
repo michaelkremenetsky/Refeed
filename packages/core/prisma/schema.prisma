@@ -1,0 +1,146 @@
+datasource db {
+  provider = "postgresql"
+  url = env("DATABASE_URL")
+}
+
+// This separate file is necessary because prisma-client-rust does not support views and JSON cause it to not compile properly. Make sure to keep this up to date with the actual prisma schema in @refeed/db
+// This file just removes and JSON or enums as the client output has errors with them
+// Might be able to remove this when https://github.com/Brendonovich/prisma-client-rust/issues/297 is fixed
+
+generator rust {
+  provider = "cargo prisma"
+  output = "../src/prisma.rs"
+
+  previewFeatures = ["fullTextSearch"]
+}
+
+// Refeed stuff
+model user {
+  id                       String      @id @default(cuid())
+  name                     String?
+  email                    String
+  email_verified           DateTime?
+  image                    String?
+  sharing                  String[]    @default(["twitter", "facebook", "linkedin", "email"])
+  default_temp_time        Int         @default(1440)
+  feeds                    user_feeds[]
+  items                    user_item[]
+  plan                     plan        @default(free)
+  filters                  filter[]
+  user_id                  String      @db.Uuid
+  created_at               DateTime    @default(now())
+  bookmark_folders         bookmark_folder[]
+  stripeCustomerId         String?
+  stripeSubscriptionId     String?
+  @@unique([name, email])
+  @@index([user_id, id])
+}
+
+enum plan {
+  free
+  pro
+  enterprise
+}
+
+model filter {
+  id         String   @id @default(cuid())
+  enabled    Boolean  @default(true)
+  User       user?    @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  user_id    String?
+}
+
+model user_feeds {
+  feed_id                     String
+  user_id                     String
+  feed_rename                 String?
+  date_added                  DateTime?        @default(now())
+  pagination_start_timestamp  DateTime?
+  feed                        feed             @relation(fields: [feed_id], references: [id])
+  user                        user             @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@index([feed_id, user_id])
+  @@id([feed_id, user_id])
+}
+
+model feed {
+  id                      String               @id @default(cuid())
+  title                   String               @unique
+  logo_url                String?
+  feed_url                String               @unique
+  website_url             String?           
+  language                String?
+  summary                 String?
+  topics                  String[]
+  created_at              DateTime             @default(now())
+  updated_at              DateTime             @updatedAt
+  public                  Boolean?
+  items                   item[]
+  last_crawled            DateTime? 
+  last_etag               String?
+  last_crawl_hash         String?
+  users                   user_feeds[]
+
+  @@index([id])
+}
+
+model user_item {
+  item_id          String
+  in_read_later    Boolean   @default(false)
+  marked_read      Boolean
+  marked_read_time DateTime?
+  temp_added_time  DateTime?
+  bookmark_folders bookmark_folder_items[]
+  note             String?
+  user_id          String
+  item             item      @relation(fields: [item_id], references: [id])
+  user             user      @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  created_at       DateTime  @default(now())
+
+  @@index([item_id])
+  @@id([item_id, user_id])
+}
+
+model item {
+  id                 String     @id @default(cuid())
+  title              String  
+  url                String     
+  website_content    String?
+  image_url          String?
+  image_source_url   String?
+  readibility_score  Float?
+  content_length     Int?
+  feed_id            String
+  feed               feed       @relation(fields: [feed_id], references: [id], onDelete: Cascade)
+  user_items         user_item[]
+  created_at         DateTime   @default(now()) @db.Timestamp(6)
+  updated_at         DateTime   @updatedAt
+
+  @@unique([url, feed_id])
+  @@index([id, created_at])
+  @@index([title, url])
+}
+
+model bookmark_folder {
+  id         String      @id @default(cuid())
+  name       String
+  user_id    String
+  owner       user     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  items bookmark_folder_items[] 
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@index([id])
+  @@index([user_id])
+  @@unique([name, user_id])
+}
+
+model bookmark_folder_items {
+  folder_id  String
+  item_id    String
+  user_id    String
+
+  folder     bookmark_folder  @relation(fields: [folder_id], references: [id])
+  user_item  user_item        @relation(fields: [item_id, user_id], references: [item_id, user_id])
+
+  @@id([folder_id, item_id, user_id])
+}

@@ -1,0 +1,37 @@
+{
+  "cli": {
+    "version": ">=5.7.0",
+    "promptToConfigurePushNotifications": false
+  },
+  "build": {
+    "development": {
+      "node": "18.17.1",
+      "distribution": "internal",
+      "developmentClient": true,
+      "android": {
+        "gradleCommand": ":app:assembleDebug",
+        "buildType": "apk"
+      },
+      "ios": {
+        "buildConfiguration": "Debug",
+        "resourceClass": "medium",
+        "image": "latest"
+      }
+    },
+    "preview": {
+      "node": "18.17.1",
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk"
+      }
+    },
+    "production": {
+      // Remove when submitting to the app store
+      "distribution": "internal",
+      "node": "18.17.1"
+    }
+  },
+  "submit": {
+    "production": {}
+  }
+}

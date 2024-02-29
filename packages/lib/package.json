@@ -1,0 +1,36 @@
+{
+  "name": "@refeed/lib",
+  "version": "0.1.0",
+  "license": "MIT",
+  "scripts": {
+    "clean": "rm -rf .turbo node_modules",
+    "lint": "eslint . --ext .ts,.tsx",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@types/xml2js": "^0.4.11",
+    "cheerio": "1.0.0-rc.12",
+    "effect": "^2.1.1",
+    "node-html-parser": "^6.1.5",
+    "sanitize-html": "^2.11.0",
+    "xml2js": "^0.5.0",
+    "xmldom": "^0.6.0",
+    "zod": "^3.22.2"
+  },
+  "devDependencies": {
+    "@refeed/eslint-config": "^0.1.0",
+    "@refeed/prettier-config": "^0.1.0",
+    "@refeed/tsconfig": "^0.1.0",
+    "@types/sanitize-html": "^2.9.5",
+    "@types/uuid": "^9.0.1",
+    "eslint": "^8.56.0",
+    "typescript": "^5.3.3"
+  },
+  "eslintConfig": {
+    "root": true,
+    "extends": [
+      "@refeed/eslint-config/base"
+    ]
+  },
+  "prettier": "@refeed/prettier-config"
+}

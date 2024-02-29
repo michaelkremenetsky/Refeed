@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Filter" ALTER COLUMN "filter" SET DATA TYPE TEXT;

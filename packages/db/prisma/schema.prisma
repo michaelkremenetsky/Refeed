@@ -1,0 +1,211 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextSearch", "views", "relationJoins"] 
+}
+
+datasource db {
+  provider = "postgresql"
+  url = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// Supabase Generated
+view AuthUser {
+  instance_id                 String?   @db.Uuid
+  id                          String    @id @unique @db.Uuid
+  aud                         String?   @db.VarChar(255)
+  role                        String?   @db.VarChar(255)
+  email                       String?   @db.VarChar(255)
+  encrypted_password          String?   @db.VarChar(255)
+  email_confirmed_at          DateTime? @db.Timestamptz(6)
+  invited_at                  DateTime? @db.Timestamptz(6)
+  confirmation_token          String?   @db.VarChar(255)
+  confirmation_sent_at        DateTime? @db.Timestamptz(6)
+  recovery_token              String?   @db.VarChar(255)
+  recovery_sent_at            DateTime? @db.Timestamptz(6)
+  email_change_token_new      String?   @db.VarChar(255)
+  email_change                String?   @db.VarChar(255)
+  email_change_sent_at        DateTime? @db.Timestamptz(6)
+  last_sign_in_at             DateTime? @db.Timestamptz(6)
+  raw_app_meta_data           Json?
+  raw_user_meta_data          Json?
+  is_super_admin              Boolean?
+  created_at                  DateTime? @db.Timestamptz(6)
+  updated_at                  DateTime? @db.Timestamptz(6)
+  phone                       String?   @unique
+  phone_confirmed_at          DateTime? @db.Timestamptz(6)
+  phone_change                String?   @default("")
+  phone_change_token          String?   @default("") @db.VarChar(255)
+  phone_change_sent_at        DateTime? @db.Timestamptz(6)
+  confirmed_at                DateTime? @default(dbgenerated("LEAST(email_confirmed_at, phone_confirmed_at)"))     @db.Timestamptz(6)
+  email_change_token_current  String?   @default("") @db.VarChar(255)
+  email_change_confirm_status Int?      @default(0) @db.SmallInt
+  banned_until                DateTime? @db.Timestamptz(6)
+  reauthentication_token      String?   @default("") @db.VarChar(255)
+  reauthentication_sent_at    DateTime? @db.Timestamptz(6)
+  is_sso_user                 Boolean   @default(false)
+  deleted_at                  DateTime? @db.Timestamptz(6)
+
+  @@index([instance_id])
+  @@map("auth_users")
+}
+
+// Refeed stuff
+
+model user {
+  id                       String      @id @default(cuid())
+  name                     String?
+  email                    String
+  email_verified           DateTime?
+  image                    String?
+  sharing                  String[]    @default(["twitter", "facebook", "linkedin", "email"])
+  default_temp_time        Int         @default(1440) // In local storage for now
+  feeds                    user_feeds[]
+  items                    user_item[]
+  plan                     plan        @default(free)
+  filters                  filter[]
+  user_id                  String      @db.Uuid
+  created_at               DateTime    @default(now())
+  feed_order               Json? // [folder_name: string, order: number]: [feedId: string, order: number]];
+  bookmark_folders         bookmark_folder[]
+  stripeCustomerId         String?
+  stripeSubscriptionId     String?
+  stripeSubscriptionStatus StripeSubscriptionStatus?
+
+  @@unique([name, email])
+  @@index([user_id, id])
+}
+
+enum plan {
+  free
+  pro
+  enterprise
+}
+
+model filter {
+  id         String   @id @default(cuid())
+  filter     Json
+  enabled    Boolean  @default(true)
+  User       user?    @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  user_id    String?
+}
+
+model user_feeds {
+  feed_id                     String
+  user_id                     String
+  feed_rename                 String?
+  date_added                  DateTime?        @default(now())
+  pagination_start_timestamp  DateTime?
+  feed                        feed             @relation(fields: [feed_id], references: [id])
+  user                        user             @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@index([feed_id, user_id])
+  @@id([feed_id, user_id])
+}
+
+model feed {
+  id                      String               @id @default(cuid())
+  title                   String               @unique
+  logo_url                String?
+  feed_url                String               @unique
+  website_url             String?           
+  language                String?
+  summary                 String?
+  topics                  String[]
+  created_at              DateTime             @default(now())
+  updated_at              DateTime             @updatedAt
+  public                  Boolean?
+  items                   item[]
+  last_crawled            DateTime? 
+  last_etag               String?
+  last_crawl_hash         String?
+  users                   user_feeds[]
+
+  @@index([id])
+}
+
+model user_item {
+  item_id          String
+  in_read_later    Boolean   @default(false)
+  marked_read      Boolean
+  marked_read_time DateTime?
+  temp_added_time  DateTime?
+  bookmark_folders bookmark_folder_items[]
+  note             String?
+  user_id          String
+  item             item      @relation(fields: [item_id], references: [id])
+  user             user      @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  created_at       DateTime  @default(now())
+
+  @@index([item_id])
+  @@id([item_id, user_id])
+}
+
+model item {
+  id                 String     @id @default(cuid())
+  title              String  
+  url                String     
+  website_content    String?
+  image_url          String?
+  image_source_url   String?
+  readibility_score  Float?
+  content_length     Int?
+  feed_id            String
+  feed               feed       @relation(fields: [feed_id], references: [id], onDelete: Cascade)
+  user_items         user_item[]
+  created_at         DateTime   @default(now()) @db.Timestamp(6)
+  updated_at         DateTime   @updatedAt
+
+  @@unique([url, title, feed_id])
+  @@index([id, created_at])
+  @@index([title, url])
+}
+
+model bookmark_folder {
+  id         String      @id @default(cuid())
+  name       String
+  user_id    String
+  owner       user     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  items bookmark_folder_items[] 
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@index([id])
+  @@index([user_id])
+  @@unique([name, user_id])
+}
+
+model bookmark_folder_items {
+  folder_id  String
+  item_id    String
+  user_id    String
+
+  folder     bookmark_folder  @relation(fields: [folder_id], references: [id])
+  user_item  user_item        @relation(fields: [item_id, user_id], references: [item_id, user_id])
+
+  @@id([folder_id, item_id, user_id])
+}
+
+model StripeEvent {
+    id               String   @id @unique
+    api_version      String?
+    data             Json
+    request          Json?
+    type             String
+    object           String
+    account          String?
+    created          DateTime
+    livemode         Boolean
+    pending_webhooks Int
+}
+
+enum StripeSubscriptionStatus {
+    incomplete
+    incomplete_expired
+    trialing
+    active
+    past_due
+    canceled
+    unpaid
+    paused
+}
