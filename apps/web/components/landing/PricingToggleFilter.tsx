@@ -1,8 +1,8 @@
 import { LogicSelect } from "@components/landing/LandingToggleFilter";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuTrigger,
 } from "@components/ui/DropDownMenu";
 import type { FormApi } from "@tanstack/react-form";
 import { useForm } from "@tanstack/react-form";
@@ -10,16 +10,16 @@ import { ChevronDown } from "lucide-react";
 
 import type { Filter } from "@refeed/types/filter";
 import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandList,
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+	Command,
+	CommandEmpty,
+	CommandGroup,
+	CommandInput,
+	CommandList,
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
 } from "@refeed/ui";
 
 // ESLint dosen't know that Tanstack Form uses the children prop
@@ -126,57 +126,6 @@ export const FeedsSelect = ({ FilterForm }: { FilterForm: filterType }) => {
     />
   );
 };
-
-// export const FeedsSelect = ({ FilterForm }: { FilterForm: filterType }) => {
-//   return (
-//     <FilterForm.Field
-//       name="Feeds"
-//       children={(field) => {
-//         const selectedFeedsLogo = field.state.value;
-
-//         return (
-//           <DropdownMenu>
-//             <DropdownMenuTrigger asChild>
-//               <div className="ml-1 flex w-[150px] items-center rounded-md border border-neutral-200 bg-white px-4 shadow-[0px_20px_70px_-10px_hsla(227,30%,20%,0.08),0px_10px_24px_-8px_hsla(227,30%,20%,0.04),0px_1px_4px_-1px_hsla(227,30%,20%,0.06)] dark:border-[#24252A] dark:bg-[#141415] dark:text-stone-200">
-//                 <div className="mr-auto flex">
-//                   <p className="text-sm font-[450]">
-//                     {field.state.value?.length == 0
-//                       ? "All Feeds"
-//                       : "+" + field.state.value?.length + " Feeds"}
-//                   </p>
-//                   <div className="ml-2 flex items-center space-x-1">
-//                     {selectedFeedsLogo?.map((logo) => (
-//                       <img
-//                         className="h-4 w-4"
-//                         key={logo}
-//                         src={logo}
-//                         alt={selectedFeedsLogo.toString() + "Logo"}
-//                       />
-//                     ))}
-//                   </div>
-//                 </div>
-//                 <ChevronDown className="h-4 w-4 opacity-50" />
-//               </div>
-//             </DropdownMenuTrigger>
-//             <DropdownMenuContent
-//               align="center"
-//               sideOffset={-40}
-//               className="w-[150px] p-0"
-//             >
-//               <Command>
-//                 <CommandInput placeholder="Filter Feeds" className="h-[40px]" />
-//                 <CommandList className="p-1 scrollbar-none">
-//                   <CommandEmpty>No Feeds found</CommandEmpty>
-//                   <CommandGroup />
-//                 </CommandList>
-//               </Command>
-//             </DropdownMenuContent>
-//           </DropdownMenu>
-//         );
-//       }}
-//     />
-//   );
-// };
 
 export const ContentSelect = ({
   FilterForm,
