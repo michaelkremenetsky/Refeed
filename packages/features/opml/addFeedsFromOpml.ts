@@ -50,7 +50,7 @@ export const addFeedsFromOpml = async (
           }
 
           progressManager.updateProgress(userId, {
-            title: feed.title!,
+            title: feed.title ?? feed.text!,
             step: "Step 1",
             error,
           });
@@ -90,43 +90,49 @@ export const addFeedsFromOpml = async (
   const successfullyAddedFeeds: string[] = [];
   const limit2 = pLimit(50);
 
-  formatedOPML.forEach((feed) => {
-    step2.push(
-      limit2(async () => {
-        let error: FeedError;
-        let feedId;
-        try {
-          if (userId) {
-            feedId = await addFeedToUserDB(prisma, feed.title, userId);
-          }
-        } catch (err) {
-          if (err instanceof Error) {
-            if (err.message === "Issue adding Feed to User") {
-              error = "Issue adding Feed to User";
+  formatedOPML.forEach(
+    (feed: { title?: string; text?: string; xmlUrl?: string }) => {
+      step2.push(
+        limit2(async () => {
+          let error: FeedError;
+          let feedId;
+          try {
+            if (userId) {
+              if (feed.title) {
+                feedId = await addFeedToUserDB(prisma, feed.title, userId);
+              } else {
+                feedId = await addFeedToUserDB(prisma, feed.text!, userId);
+              }
             }
+          } catch (err) {
+            if (err instanceof Error) {
+              if (err.message === "Issue adding Feed to User") {
+                error = "Issue adding Feed to User";
+              }
+            }
+            console.log(err);
           }
-          console.log(err);
-        }
 
-        if (feedId) {
-          successfullyAddedFeeds.push(feedId);
-        }
+          if (feedId) {
+            successfullyAddedFeeds.push(feedId);
+          }
 
-        // If it already has a existing error skip it and don't update it
-        const checkFeed = progressManager
-          .getProgress(userId)
-          .find((item) => item.title === feed.title);
+          // If it already has a existing error skip it and don't update it
+          const checkFeed = progressManager
+            .getProgress(userId)
+            .find((item) => item.title === feed.title);
 
-        if (!checkFeed?.error) {
-          progressManager.updateProgress(userId, {
-            title: feed.title,
-            step: "Step 2",
-            error,
-          });
-        }
-      }),
-    );
-  });
+          if (!checkFeed?.error) {
+            progressManager.updateProgress(userId, {
+              title: feed.title ?? feed.text!,
+              step: "Step 2",
+              error,
+            });
+          }
+        }),
+      );
+    },
+  );
 
   await Promise.all(step2);
 
