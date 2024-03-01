@@ -48,7 +48,6 @@ export default function Hero() {
                     priority
                     width={1920}
                     height={995}
-                    unoptimized
                     className="scale-[1.03] transform rounded-lg border border-neutral-200 shadow-[0px_20px_70px_-10px_hsla(227,30%,20%,0.08),0px_10px_24px_-8px_hsla(227,30%,20%,0.04),0px_1px_4px_-1px_hsla(227,30%,20%,0.06)]"
                   />
                 </Tilt>
