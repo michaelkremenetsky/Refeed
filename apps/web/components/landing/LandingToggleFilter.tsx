@@ -103,7 +103,7 @@ export const LandingToggleFilter = ({
                     <div className="flex flex-col">
                       <TextArea
                         defaultValue={filter.filter.Keywords ?? ""}
-                        className="z-10 mb-0.5 ml-1 mt-2 h-[120px] w-[602px]"
+                        className="z-10 mb-0.5 ml-1 mt-2 h-[150px] w-[602px]"
                         placeholder="Write Keywords"
                         rows={5}
                         maxLength={50}

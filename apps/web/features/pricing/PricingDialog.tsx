@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { LandingToggleFilter } from "@components/landing/LandingToggleFilter";
+import { PricingToggleFilter } from "@components/landing/PricingToggleFilter";
 import { TimedBookmarkAnimated } from "@components/landing/TimeBookmarksCard";
 import * as RadixDialog from "@radix-ui/react-dialog";
 import { useUser } from "@supabase/auth-helpers-react";
@@ -250,8 +250,8 @@ export const ProPlan = (props: {
           content={
             <div className="h-[200px]">
               <div className="flex flex-col space-y-2 overflow-hidden py-5 pl-2">
-                <LandingToggleFilter filter={Filter1 as any} />
-                <LandingToggleFilter filter={Filter2 as any} />
+                <PricingToggleFilter filter={Filter1 as any} />
+                <PricingToggleFilter filter={Filter2 as any} />
               </div>
               <div className="px-2">
                 <h2 className="mx-2 mt-4 font-medium">Filters</h2>
