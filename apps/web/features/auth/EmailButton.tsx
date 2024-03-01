@@ -103,7 +103,9 @@ export const EmailButton = (props: { type: "login" | "signup" }) => {
         </motion.button>
       </motion.div>
       {emailSent && (
-        <h3 className="text-neutral-500">Please check your email</h3>
+        <h3 className="text-center text-neutral-500">
+          We have sent you an email, please check your inbox.
+        </h3>
       )}
     </>
   );
