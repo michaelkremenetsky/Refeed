@@ -44,7 +44,7 @@ const Mobile: NextPage = () => {
                       <>
                         <Input
                           placeholder="Type your email address"
-                          className="mb-0.5 h-11 w-full text-lg md:w-[300px]"
+                          className="mb-0.5 h-11 w-full text-base md:w-[300px]"
                           defaultValue={searchQuery ?? ""}
                           onInput={(e: EventFor<"input", "onChange">) => {
                             if (!e.target.value) {
@@ -59,7 +59,7 @@ const Mobile: NextPage = () => {
                             submitWaitlist.mutate({ email: searchQuery! });
                             setSubmitted(true);
                           }}
-                          className="mx-auto h-11 w-[240px] rounded-md bg-white px-6 text-lg font-medium shadow-[0_0_0_1px_rgba(18,55,105,0.08),0_1px_2px_0_rgba(18,55,105,0.12)] sm:mx-0"
+                          className="mx-auto h-11 w-[240px] rounded-md bg-white px-6 text-base font-medium shadow-[0_0_0_1px_rgba(18,55,105,0.08),0_1px_2px_0_rgba(18,55,105,0.12)] sm:mx-0"
                         >
                           Sign Up for Waitlist
                         </button>

@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { domAnimation, LazyMotion, m, useAnimation } from "framer-motion";
 
+import { ProBadge } from "@refeed/ui";
+
 import { Card, Items } from "./Cards";
 import { LandingToggleFilter } from "./LandingToggleFilter";
 
@@ -124,6 +126,7 @@ export const SignInAnimatedSquare = ({
 
 export const FilterCard = () => {
   const [expanded, setExpanded] = useState(false);
+  const [noteExpanded, setNoteExpanded] = useState(false);
 
   const initialSeparation = 110 + 15;
 
@@ -138,7 +141,7 @@ export const FilterCard = () => {
       ], // Replaced with links unlink the real one
       Content: "Title",
       Logic: "Equals",
-      Keywords: ["test", "test"],
+      Keywords: ["Floating Rock", " Neuralink"],
     },
   };
 
@@ -157,20 +160,22 @@ export const FilterCard = () => {
     Keywords: ["test", "test"],
   };
 
-  // const Filter3 = {
-  //   id: 0,
-  //   enabled: false,
-  //   user_id: "",
-  //   filter: {
-  //     Feeds: [
-  //       "https://techcrunch.com/wp-content/uploads/2018/04/tc-logo-2018-square-reverse2x.png",
-  //       // "https://techcrunch.com/wp-content/uploads/2018/04/tc-logo-2018-square-reverse2x.png",
-  //     ], // Replaced with links unlink the real one
-  //     Content: "Content",
-  //     Logic: "Contain",
-  //     Keywords: ["test", "test"],
-  //   },
-  // };
+  const Filter3 = {
+    id: 0,
+    enabled: false,
+    user_id: "",
+    filter: {
+      Feeds: [
+        "https://techcrunch.com/wp-content/uploads/2018/04/tc-logo-2018-square-reverse2x.png",
+        // "https://techcrunch.com/wp-content/uploads/2018/04/tc-logo-2018-square-reverse2x.png",
+      ], // Replaced with links unlink the real one
+      Content: "Content",
+      Logic: "Contain",
+      Keywords: ["test", "test"],
+    },
+  };
+
+  console.log("Filter1", noteExpanded);
 
   return (
     <LazyMotion features={domAnimation}>
@@ -180,19 +185,33 @@ export const FilterCard = () => {
       >
         <Card
           description="Filter out items based on conditions"
-          title="Powerful Filtering System"
+          title="Filtering System"
           multipler={2}
         >
           <>
-            <div className="ml-5 flex w-full overflow-hidden">
-              <div className="mt-6 flex flex-col md:block">
-                <div className="flex flex-col space-y-2 py-10">
-                  <LandingToggleFilter filter={Filter1 as any} />
-                  <LandingToggleFilter filter={Filter2 as any} />
+            <div className="ml-5 mr-20 flex w-full justify-center overflow-hidden">
+              <div
+                className={`${noteExpanded ? "pt-2" : "py-20"} flex md:block`}
+              >
+                <div className="mb-1 ml-1.5 flex flex-col">
+                  <h1 className="mb-1 select-none text-sm font-medium leading-5">
+                    Filters
+                    <ProBadge className="ml-1.5" />
+                  </h1>
+                  <h4 className="mb-2.5 select-none text-sm leading-5 text-neutral-450 dark:text-stone-500">
+                    Filter out items based on conditions
+                  </h4>
+                </div>
+                <div className="flex flex-col space-y-2">
+                  <LandingToggleFilter
+                    filter={Filter1 as any}
+                    notesOpen={noteExpanded}
+                    setNotesOpen={setNoteExpanded}
+                  />
                 </div>
               </div>
             </div>
-            <div className="-translate-x-[330px] -translate-y-[800px]">
+            {/* <div className="-translate-x-[330px] -translate-y-[800px]">
               <div className="">
                 {[...Array(10)]?.map((data, x) => (
                   <FilterAnimation
@@ -204,7 +223,7 @@ export const FilterCard = () => {
                 ))}
               </div>
               <div className="flex h-full flex-col overflow-hidden"></div>
-            </div>
+            </div> */}
           </>
         </Card>
       </m.div>

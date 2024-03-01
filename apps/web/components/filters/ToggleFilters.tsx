@@ -93,7 +93,7 @@ export const ToggleFilter = ({ filter }: { filter: Filter }) => {
                 setChecked(e.target.checked);
                 void form.handleSubmit();
               }}
-              className="ml-1 mr-2.5 mt-2.5  rounded-[3px] border border-neutral-300 bg-[#fcfcfc] text-stone-700 dark:border-[#333333]/80 dark:bg-[#333333]"
+              className="ml-1 mr-2.5 mt-2.5 rounded-[3px] border border-neutral-300 bg-[#fcfcfc] text-stone-700 dark:border-[#333333]/80 dark:bg-[#333333]"
               type="checkbox"
             />
             <FeedsSelect FilterForm={form as any} existingFilter />

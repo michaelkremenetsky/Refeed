@@ -17,14 +17,14 @@ export const MobileCard = () => {
                     Alpha
                   </span>
                 </div>
-                <span className="mx-4 text-center text-lg text-neutral-450 sm:mx-0 sm:text-left">
+                <span className="mx-4 text-center text-lg text-neutral-500/90  sm:mx-0 sm:text-left">
                   Want to access your Feeds on the go? Download the Refeed
                   Mobile App for iOS and Android apps.
                 </span>
               </div>
             </div>
             <Link href="/mobile" className="mx-auto w-fit md:mx-0">
-              <button className="mx-auto mt-6 w-[230px] rounded-md bg-white px-6 py-1.5 text-lg font-[450] shadow-[0_0_0_1px_rgba(18,55,105,0.08),0_1px_2px_0_rgba(18,55,105,0.12)] sm:mx-0">
+              <button className="mx-auto mt-6 w-[230px] rounded-md bg-white px-6 py-1.5 text-[17px] font-[450] shadow-[0_0_0_1px_rgba(18,55,105,0.08),0_1px_2px_0_rgba(18,55,105,0.12)] sm:mx-0">
                 Sign Up for Waitlist
               </button>
             </Link>
