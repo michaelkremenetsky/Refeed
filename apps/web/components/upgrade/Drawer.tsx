@@ -10,7 +10,7 @@ export const UpgradeDrawer = () => {
         Upgrade
       </Drawer.Trigger>
       <Drawer.Portal>
-        <Drawer.Overlay className="fixed inset-0 z-20 bg-black/40" />
+        <Drawer.Overlay className="fixed inset-0 z-20 bg-black/[.32]" />
         <Drawer.Content className="fixed bottom-0 left-0 right-0 z-20 mx-auto mt-24 flex h-[96%] w-[70%] flex-col rounded-lg rounded-t-[10px] bg-white dark:bg-[#141415]">
           <div className="no-scrollbar overflow-y-scroll rounded-md">
             <PricingPage />
@@ -28,7 +28,7 @@ export const RightUpgradeDrawer = () => {
         Upgrade
       </Drawer.Trigger>
       <Drawer.Portal>
-        <Drawer.Overlay className="fixed inset-0 z-20 " />
+        <Drawer.Overlay className="fixed inset-0 z-20 bg-black/[.32]" />
         <Drawer.Content className="fixed bottom-0 right-0 z-20 mt-24 flex h-full w-[900px] flex-col overflow-scroll overflow-x-hidden rounded-t-[10px] bg-white dark:bg-[#141415]">
           <PricingPage />
         </Drawer.Content>

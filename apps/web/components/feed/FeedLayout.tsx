@@ -79,7 +79,7 @@ export const FeedLayout = (props: FeedLayoutTypes) => {
   return (
     <div
       ref={containerRef}
-      className={`no-scrollbar mr-4 flex h-full overflow-x-auto overflow-y-visible bg-white dark:bg-[#0f0f10]`}
+      className={`gutter flex h-full overflow-x-auto overflow-y-visible bg-white dark:bg-[#0f0f10] ${readerOpen && "mr-[15px] scrollbar-hide"}`}
     >
       <div className="w-[5px]" />
       <div

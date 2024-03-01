@@ -133,11 +133,11 @@ const Reader = () => {
       >
         <div className="flex flex-row items-center rounded-t border-b border-[#f0f0f0] bg-[#fcfcfc] py-2.5 font-bold dark:border-[#303030]/90 dark:bg-[#141415]">
           <BackButton onBackClick={() => closeReader()} />
-          <div className={`${fullscreen ? "mx-auto w-[670px]" : "w-[90%]"}`}>
+          <div className={`${fullscreen ? "mx-auto w-[680px]" : "w-[90%]"}`}>
             <div
               className={`flex ${fullscreen ? "w-[90%]" : "ml-2"} justify-between`}
             >
-              <Topbar className="ml-1" />
+              <Topbar className={!fullscreen ? "ml-1" : ""} />
               <Sharing />
             </div>
           </div>
