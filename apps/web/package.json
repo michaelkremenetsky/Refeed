@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "build": "pnpm with-env next build",
+    "postbuild": "next-sitemap --config utils/next-sitemap.config.js",
     "dev": "pnpm with-env next dev",
     "start": "pnpm with-env next start",
     "clean": "git clean -xdf .next .turbo node_modules",
@@ -80,6 +81,7 @@
     "million": "^3.0.3",
     "next": "v14.1.1-canary.69",
     "next-seo": "^6.4.0",
+    "next-sitemap": "4.2.3",
     "next-themes": "^0.2.1",
     "nextjs-openai": "^7.2.0",
     "nuka-carousel": "^6.0.3",

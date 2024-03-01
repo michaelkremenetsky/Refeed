@@ -8,6 +8,9 @@ patchedDependencies:
   '@animatereactnative/marquee@0.2.0':
     hash: 73dcdg5tq3dxxb6dhfmkeytlny
     path: patches/@animatereactnative__marquee@0.2.0.patch
+  next-sitemap@4.2.3:
+    hash: bd2xwe67msn6y5wlwyg6mzzejy
+    path: patches/next-sitemap@4.2.3.patch
   react-native-reanimated-carousel@4.0.0-alpha.0:
     hash: c3go2fel4mzdory76lgufylmrq
     path: patches/react-native-reanimated-carousel@4.0.0-alpha.0.patch
@@ -551,6 +554,9 @@ importers:
       next-seo:
         specifier: ^6.4.0
         version: 6.5.0(next@14.1.1-canary.69)(react-dom@18.2.0)(react@18.2.0)
+      next-sitemap:
+        specifier: 4.2.3
+        version: 4.2.3(patch_hash=bd2xwe67msn6y5wlwyg6mzzejy)(next@14.1.1-canary.69)
       next-themes:
         specifier: ^0.2.1
         version: 0.2.1(next@14.1.1-canary.69)(react-dom@18.2.0)(react@18.2.0)
@@ -3301,6 +3307,10 @@ packages:
       w3c-keyname: 2.2.8
     dev: false
 
+  /@corex/deepmerge@4.0.43:
+    resolution: {integrity: sha512-N8uEMrMPL0cu/bdboEWpQYb/0i2K5Qn8eCsxzOmxSggJbbQte7ljMRoXm917AbntqTGOzdTu+vP3KOOzoC70HQ==}
+    dev: false
+
   /@cspotcode/source-map-support@0.8.1:
     resolution: {integrity: sha512-IchNf6dN4tHoMFIn/7OE8LWZ19Y6q/67Bmf6vnGREv8RSbBVb9LPJxEcnwrcwX6ixSvaiGoomAUvu4YSxXrVgw==}
     engines: {node: '>=12'}
@@ -5169,6 +5179,10 @@ packages:
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
+    dev: false
+
+  /@next/env@13.5.6:
+    resolution: {integrity: sha512-Yac/bV5sBGkkEXmAX5FWPS9Mmo2rthrOPRQQNfycJPkjUAUclomCPH7QFVCDQ4Mp2k2K1SSM6m0zrxYrOwtFQw==}
     dev: false
 
   /@next/env@14.1.1-canary.69:
@@ -16586,6 +16600,21 @@ packages:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
     dev: false
+
+  /next-sitemap@4.2.3(patch_hash=bd2xwe67msn6y5wlwyg6mzzejy)(next@14.1.1-canary.69):
+    resolution: {integrity: sha512-vjdCxeDuWDzldhCnyFCQipw5bfpl4HmZA7uoo3GAaYGjGgfL4Cxb1CiztPuWGmS+auYs7/8OekRS8C2cjdAsjQ==}
+    engines: {node: '>=14.18'}
+    hasBin: true
+    peerDependencies:
+      next: '*'
+    dependencies:
+      '@corex/deepmerge': 4.0.43
+      '@next/env': 13.5.6
+      fast-glob: 3.3.2
+      minimist: 1.2.8
+      next: 14.1.1-canary.69(@babel/core@7.23.9)(react-dom@18.2.0)(react@18.2.0)(sass@1.71.0)
+    dev: false
+    patched: true
 
   /next-themes@0.2.1(next@14.1.1-canary.69)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-B+AKNfYNIzh0vqQQKqQItTS8evEouKD7H5Hj3kmuPERwddR2TxvDSFZuTj6T7Jfn1oyeUyJMydPl1Bkxkh0W7A==}

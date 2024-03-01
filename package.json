@@ -35,7 +35,8 @@
     "patchedDependencies": {
       "react-native-reanimated-carousel@4.0.0-alpha.0": "patches/react-native-reanimated-carousel@4.0.0-alpha.0.patch",
       "@animatereactnative/marquee@0.2.0": "patches/@animatereactnative__marquee@0.2.0.patch",
-      "sonner@1.4.0": "patches/sonner@1.4.0.patch"
+      "sonner@1.4.0": "patches/sonner@1.4.0.patch",
+      "next-sitemap@4.2.3": "patches/next-sitemap@4.2.3.patch"
     }
   }
 }

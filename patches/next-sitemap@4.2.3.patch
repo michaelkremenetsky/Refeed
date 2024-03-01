@@ -1,0 +1,557 @@
+diff --git a/dist/esm/builders/url-set-builder.js b/dist/esm/builders/url-set-builder.js
+index b1edada67a37494b8feec73b26ae880e9753c72f..315c77e5b5bed5ad742f24ad828383bdc81067fe 100644
+--- a/dist/esm/builders/url-set-builder.js
++++ b/dist/esm/builders/url-set-builder.js
+@@ -1,122 +1,131 @@
+-import { removeIfMatchPattern } from '../utils/array.js';
+-import { defaultSitemapTransformer } from '../utils/defaults.js';
+-import { createDefaultLocaleReplace, entityEscapedUrl, generateUrl, isNextInternalUrl, } from '../utils/url.js';
++import { removeIfMatchPattern } from "../utils/array.js";
++import { defaultSitemapTransformer } from "../utils/defaults.js";
++import {
++  createDefaultLocaleReplace,
++  entityEscapedUrl,
++  generateUrl,
++  isNextInternalUrl,
++} from "../utils/url.js";
+ export class UrlSetBuilder {
+-    config;
+-    manifest;
+-    constructor(config, manifest) {
+-        this.config = config;
+-        this.manifest = manifest;
++  config;
++  manifest;
++  constructor(config, manifest) {
++    this.config = config;
++    this.manifest = manifest;
++  }
++  /**
++   * Returns absolute url by combining siteUrl and path w.r.t trailingSlash config
++   * @param siteUrl
++   * @param path
++   * @param trailingSlash
++   * @returns
++   */
++  absoluteUrl(siteUrl, path, trailingSlash) {
++    const url = generateUrl(siteUrl, trailingSlash ? `${path}/` : path);
++    if (!trailingSlash && url.endsWith("/")) {
++      return url.slice(0, url.length - 1);
+     }
+-    /**
+-     * Returns absolute url by combining siteUrl and path w.r.t trailingSlash config
+-     * @param siteUrl
+-     * @param path
+-     * @param trailingSlash
+-     * @returns
+-     */
+-    absoluteUrl(siteUrl, path, trailingSlash) {
+-        const url = generateUrl(siteUrl, trailingSlash ? `${path}/` : path);
+-        if (!trailingSlash && url.endsWith('/')) {
+-            return url.slice(0, url.length - 1);
+-        }
+-        return entityEscapedUrl(url);
++    return entityEscapedUrl(url);
++  }
++  /**
++   * Normalize sitemap fields to include absolute urls
++   * @param field
++   */
++  normalizeSitemapField(field) {
++    // Handle trailing Slash
++    const trailingSlash =
++      "trailingSlash" in field
++        ? field.trailingSlash
++        : this.config?.trailingSlash;
++    return {
++      ...field,
++      trailingSlash,
++      loc: this.absoluteUrl(this.config?.siteUrl, field?.loc, trailingSlash),
++      alternateRefs: (field.alternateRefs ?? []).map((alternateRef) => ({
++        href: alternateRef.hrefIsAbsolute
++          ? alternateRef.href
++          : this.absoluteUrl(alternateRef.href, field.loc, trailingSlash),
++        hreflang: alternateRef.hreflang,
++      })),
++    };
++  }
++  /**
++   * Create a unique url set
++   */
++  async createUrlSet() {
++    // Load i18n routes
++    const i18n = this.manifest?.routes?.i18n;
++    // Init all page keys
++    const allKeys = [
++      ...Object.keys(this.manifest?.build?.pages ?? {}),
++      ...(this.manifest?.build?.ampFirstPages ?? []),
++      ...(this.manifest?.preRender
++        ? Object.keys(this.manifest?.preRender?.routes ?? {})
++        : []),
++      ...(this.manifest?.trace
++        ?.filter((e) => !!e.tags.path)
++        .map((e) => e.tags.path) ?? []),
++    ];
++    // Filter out next.js internal urls and generate urls based on sitemap
++    let urlSet = allKeys.filter((x) => !isNextInternalUrl(x));
++    // Remove default locale if i18n is enabled
++    let defaultLocale;
++    if (i18n) {
++      defaultLocale = i18n.defaultLocale;
++      const replaceDefaultLocale = createDefaultLocaleReplace(defaultLocale);
++      urlSet = urlSet.map(replaceDefaultLocale);
+     }
+-    /**
+-     * Normalize sitemap fields to include absolute urls
+-     * @param field
+-     */
+-    normalizeSitemapField(field) {
+-        // Handle trailing Slash
+-        const trailingSlash = 'trailingSlash' in field
+-            ? field.trailingSlash
+-            : this.config?.trailingSlash;
+-        return {
+-            ...field,
+-            trailingSlash,
+-            loc: this.absoluteUrl(this.config?.siteUrl, field?.loc, trailingSlash),
+-            alternateRefs: (field.alternateRefs ?? []).map((alternateRef) => ({
+-                href: alternateRef.hrefIsAbsolute
+-                    ? alternateRef.href
+-                    : this.absoluteUrl(alternateRef.href, field.loc, trailingSlash),
+-                hreflang: alternateRef.hreflang,
+-            })),
+-        };
++    // Remove the urls based on this.config?.exclude array
++    if (this.config?.exclude) {
++      if (typeof this.config.exclude === "function") {
++        const asyncExcludes = await this.config.exclude();
++        urlSet = removeIfMatchPattern(urlSet, asyncExcludes);
++      } else {
++        urlSet = removeIfMatchPattern(urlSet, this.config?.exclude);
++      }
+     }
+-    /**
+-     * Create a unique url set
+-     */
+-    async createUrlSet() {
+-        // Load i18n routes
+-        const i18n = this.manifest?.routes?.i18n;
+-        // Init all page keys
+-        const allKeys = [
+-            ...Object.keys(this.manifest?.build?.pages ?? {}),
+-            ...(this.manifest?.build?.ampFirstPages ?? []),
+-            ...(this.manifest?.preRender
+-                ? Object.keys(this.manifest?.preRender?.routes ?? {})
+-                : []),
+-            ...(this.manifest?.staticExportPages ?? []),
+-        ];
+-        // Filter out next.js internal urls and generate urls based on sitemap
+-        let urlSet = allKeys.filter((x) => !isNextInternalUrl(x));
+-        // Remove default locale if i18n is enabled
+-        let defaultLocale;
+-        if (i18n) {
+-            defaultLocale = i18n.defaultLocale;
+-            const replaceDefaultLocale = createDefaultLocaleReplace(defaultLocale);
+-            urlSet = urlSet.map(replaceDefaultLocale);
+-        }
+-        // Remove the urls based on this.config?.exclude array
+-        if (this.config?.exclude) {
+-            if (typeof this.config.exclude === 'function') {
+-                const asyncExcludes = await this.config.exclude();
+-                urlSet = removeIfMatchPattern(urlSet, asyncExcludes);
+-            }
+-            else {
+-                urlSet = removeIfMatchPattern(urlSet, this.config?.exclude);
+-            }
+-        }
+-        urlSet = [...new Set(urlSet)];
+-        // Remove routes which don't exist
+-        const notFoundRoutes = (this.manifest?.preRender?.notFoundRoutes ??
+-            []);
+-        urlSet = urlSet.filter((url) => {
+-            return (!notFoundRoutes.includes(url) &&
+-                !notFoundRoutes.includes(`/${defaultLocale}${url}`));
+-        });
+-        // Create sitemap fields based on transformation
+-        const sitemapFields = []; // transform using relative urls
+-        // Create a map of fields by loc to quickly find collisions
+-        const mapFieldsByLoc = {};
+-        for (const url of urlSet) {
+-            const sitemapField = await this.config?.transform?.(this.config, url);
+-            if (!sitemapField?.loc)
+-                continue;
+-            sitemapFields.push(sitemapField);
+-            // Add link on field to map by loc
+-            if (this.config?.additionalPaths) {
+-                mapFieldsByLoc[sitemapField.loc] = sitemapField;
+-            }
+-        }
+-        if (this.config?.additionalPaths) {
+-            const additions = (await this.config?.additionalPaths({
+-                ...this.config,
+-                transform: this.config?.transform ?? defaultSitemapTransformer,
+-            })) ?? [];
+-            for (const field of additions) {
+-                if (!field?.loc)
+-                    continue;
+-                const collision = mapFieldsByLoc[field.loc];
+-                // Update first entry
+-                if (collision) {
+-                    // Mutate common entry between sitemapFields and mapFieldsByLoc (spread operator don't work)
+-                    Object.entries(field).forEach(([key, value]) => (collision[key] = value));
+-                    continue;
+-                }
+-                sitemapFields.push(field);
+-            }
++    urlSet = [...new Set(urlSet)];
++    // Remove routes which don't exist
++    const notFoundRoutes = this.manifest?.preRender?.notFoundRoutes ?? [];
++    urlSet = urlSet.filter((url) => {
++      return (
++        !notFoundRoutes.includes(url) &&
++        !notFoundRoutes.includes(`/${defaultLocale}${url}`)
++      );
++    });
++    // Create sitemap fields based on transformation
++    const sitemapFields = []; // transform using relative urls
++    // Create a map of fields by loc to quickly find collisions
++    const mapFieldsByLoc = {};
++    for (const url of urlSet) {
++      const sitemapField = await this.config?.transform?.(this.config, url);
++      if (!sitemapField?.loc) continue;
++      sitemapFields.push(sitemapField);
++      // Add link on field to map by loc
++      if (this.config?.additionalPaths) {
++        mapFieldsByLoc[sitemapField.loc] = sitemapField;
++      }
++    }
++    if (this.config?.additionalPaths) {
++      const additions =
++        (await this.config?.additionalPaths({
++          ...this.config,
++          transform: this.config?.transform ?? defaultSitemapTransformer,
++        })) ?? [];
++      for (const field of additions) {
++        if (!field?.loc) continue;
++        const collision = mapFieldsByLoc[field.loc];
++        // Update first entry
++        if (collision) {
++          // Mutate common entry between sitemapFields and mapFieldsByLoc (spread operator don't work)
++          Object.entries(field).forEach(
++            ([key, value]) => (collision[key] = value)
++          );
++          continue;
+         }
+-        return sitemapFields.map((x) => this.normalizeSitemapField(x));
++        sitemapFields.push(field);
++      }
+     }
++    return sitemapFields.map((x) => this.normalizeSitemapField(x));
++  }
+ }
+diff --git a/dist/esm/parsers/manifest-parser.js b/dist/esm/parsers/manifest-parser.js
+index 596f4d0521dffb1840ad31691995d6552bb47d6a..7221db97dbdeded4b6f3fb006233eb9d277fca7f 100644
+--- a/dist/esm/parsers/manifest-parser.js
++++ b/dist/esm/parsers/manifest-parser.js
+@@ -1,50 +1,60 @@
+-import { Logger } from '../logger.js';
+-import { loadJSON } from '../utils/file.js';
+-import fg from 'fast-glob';
++import fg from "fast-glob";
++import { Logger } from "../logger.js";
++import { loadJSON } from "../utils/file.js";
+ export class ManifestParser {
+-    config;
+-    runtimePaths;
+-    constructor(config, runtimePaths) {
+-        this.config = config;
+-        this.runtimePaths = runtimePaths;
++  config;
++  runtimePaths;
++  constructor(config, runtimePaths) {
++    this.config = config;
++    this.runtimePaths = runtimePaths;
++  }
++  /**
++   * Return paths of html files if config.output = "export"
++   * @param exportFolder
++   * @returns
++   */
++  async getStaticExportPages(config, exportFolder) {
++    // Skip this step if config.output is not export mode
++    if (config?.output !== "export") {
++      return [];
+     }
+-    /**
+-     * Return paths of html files if config.output = "export"
+-     * @param exportFolder
+-     * @returns
+-     */
+-    async getStaticExportPages(config, exportFolder) {
+-        // Skip this step if config.output is not export mode
+-        if (config?.output !== 'export') {
+-            return [];
+-        }
+-        // Get html file paths using glob
+-        const htmlFiles = await fg(`${exportFolder}/**/*.html`);
+-        // Cleanup files
+-        return htmlFiles?.map((file) => file
+-            .replace(exportFolder, '')
+-            .replace('index', '')
+-            .replace('.html', '')
+-            .trim());
+-    }
+-    async loadManifest() {
+-        // Load build manifest
+-        const buildManifest = await loadJSON(this.runtimePaths.BUILD_MANIFEST);
+-        // Throw error if no build manifest exist
+-        if (this.config?.output !== 'export' && !buildManifest) {
+-            throw Logger.noBuildManifest();
+-        }
+-        // Load pre-render manifest
+-        const preRenderManifest = await loadJSON(this.runtimePaths.PRERENDER_MANIFEST);
+-        // Load routes manifest
+-        const routesManifest = await loadJSON(this.runtimePaths.ROUTES_MANIFEST);
+-        // Get static export path when output is set as "export"
+-        const staticExportPages = await this.getStaticExportPages(this.config, this.runtimePaths.STATIC_EXPORT_ROOT);
+-        return {
+-            build: buildManifest ?? {},
+-            preRender: preRenderManifest,
+-            routes: routesManifest,
+-            staticExportPages,
+-        };
++    // Get html file paths using glob
++    const htmlFiles = await fg(`${exportFolder}/**/*.html`);
++    // Cleanup files
++    return htmlFiles?.map((file) =>
++      file
++        .replace(exportFolder, "")
++        .replace("index", "")
++        .replace(".html", "")
++        .trim()
++    );
++  }
++  async loadManifest() {
++    // Load build manifest
++    const buildManifest = await loadJSON(this.runtimePaths.BUILD_MANIFEST);
++    // Throw error if no build manifest exist
++    if (this.config?.output !== "export" && !buildManifest) {
++      throw Logger.noBuildManifest();
+     }
++    // Load pre-render manifest
++    const preRenderManifest = await loadJSON(
++      this.runtimePaths.PRERENDER_MANIFEST
++    );
++    // Load routes manifest
++    const routesManifest = await loadJSON(this.runtimePaths.ROUTES_MANIFEST);
++    // Get static export path when output is set as "export"
++    const staticExportPages = await this.getStaticExportPages(
++      this.config,
++      this.runtimePaths.STATIC_EXPORT_ROOT
++    );
++
++    const trace = await loadJSON(this.runtimePaths.TRACE, true);
++    return {
++      build: buildManifest ?? {},
++      preRender: preRenderManifest,
++      routes: routesManifest,
++      staticExportPages,
++      trace,
++    };
++  }
+ }
+diff --git a/dist/esm/utils/file.js b/dist/esm/utils/file.js
+index 23c1f8127e09da8d7e8ccaaf26b351d333f2d154..b9f702d53f95ed3e88fa74cb21fff4911b0db89c 100644
+--- a/dist/esm/utils/file.js
++++ b/dist/esm/utils/file.js
+@@ -1,24 +1,37 @@
+-import * as fs from 'node:fs/promises';
+-import path from 'node:path';
++import * as fs from "node:fs/promises";
++import path from "node:path";
+ /**
+  * Load file
+  * @param path
+  * @param throwError
+  * @returns
+  */
+-export const loadJSON = async (path) => {
+-    // Get path stat
+-    const stat = await fs.stat(path).catch(() => {
+-        return {
+-            isFile: () => false, // Handle errors gracefully
+-        };
+-    });
+-    // Return undefined or throw error
+-    if (!stat.isFile()) {
+-        return; // Handle errors gracefully
+-    }
+-    const jsonString = await fs.readFile(path, { encoding: 'utf-8' });
+-    return JSON.parse(jsonString);
++export const loadJSON = async (path, lineDelimited = false) => {
++  // Get path stat
++  const stat = await fs.stat(path).catch(() => {
++    return {
++      isFile: () => false, // Handle errors gracefully
++    };
++  });
++  // Return undefined or throw error
++  if (!stat.isFile()) {
++    return; // Handle errors gracefully
++  }
++  const jsonString = await fs.readFile(path, { encoding: "utf-8" });
++
++  if (lineDelimited) {
++    const jsonLines = jsonString.split("\n");
++    return jsonLines
++      .map((line) => {
++        if (line.trim().length === 0) {
++          return [];
++        }
++        return JSON.parse(line);
++      })
++      .reduce((accumulator, value) => accumulator.concat(value), []);
++  }
++
++  return JSON.parse(jsonString);
+ };
+ /**
+  * Export file
+@@ -27,18 +40,18 @@ export const loadJSON = async (path) => {
+  * @returns
+  */
+ export const exportFile = async (filePath, content) => {
+-    // Target folder
+-    const folder = path.dirname(filePath);
+-    // Get file stat
+-    const stat = await fs.stat(folder).catch(() => ({
+-        isDirectory: () => false,
+-    }));
+-    // Directory
+-    if (!stat.isDirectory()) {
+-        await fs.mkdir(folder).catch(() => {
+-            return;
+-        });
+-    }
+-    // Write file
+-    return fs.writeFile(filePath, content);
++  // Target folder
++  const folder = path.dirname(filePath);
++  // Get file stat
++  const stat = await fs.stat(folder).catch(() => ({
++    isDirectory: () => false,
++  }));
++  // Directory
++  if (!stat.isDirectory()) {
++    await fs.mkdir(folder).catch(() => {
++      return;
++    });
++  }
++  // Write file
++  return fs.writeFile(filePath, content);
+ };
+diff --git a/dist/esm/utils/path.js b/dist/esm/utils/path.js
+index 2f7d5c0195e3ba787e89d0fad14af186f41b3b1d..a111ec5268adbdab28223dff81172487ecfd0c85 100644
+--- a/dist/esm/utils/path.js
++++ b/dist/esm/utils/path.js
+@@ -1,18 +1,18 @@
+ /* eslint-disable @typescript-eslint/no-non-null-assertion */
+ /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+-import minimist from 'minimist';
+-import fs from 'node:fs/promises';
+-import path from 'node:path';
+-import { Logger } from '../logger.js';
+-import { generateUrl } from './url.js';
+-import { pathToFileURL } from 'url';
++import minimist from "minimist";
++import fs from "node:fs/promises";
++import path from "node:path";
++import { pathToFileURL } from "url";
++import { Logger } from "../logger.js";
++import { generateUrl } from "./url.js";
+ /**
+  * Return absolute path from path segments
+  * @param pathSegment
+  * @returns
+  */
+ export const getPath = (...pathSegment) => {
+-    return path.resolve(process.cwd(), ...pathSegment);
++  return path.resolve(process.cwd(), ...pathSegment);
+ };
+ /**
+  * Return all runtime paths
+@@ -20,42 +20,43 @@ export const getPath = (...pathSegment) => {
+  * @returns
+  */
+ export const getRuntimePaths = (config) => {
+-    // Check whether user enabled index sitemap or not
+-    const sitemapIndexEnabled = config?.generateIndexSitemap;
+-    // Set sitemap index file
+-    const SITEMAP_INDEX_FILE = sitemapIndexEnabled
+-        ? getPath(config.outDir, `${config.sitemapBaseFileName}.xml`)
+-        : undefined;
+-    // Set sitemap index url
+-    const SITEMAP_INDEX_URL = sitemapIndexEnabled
+-        ? generateUrl(config?.siteUrl, `${config.sitemapBaseFileName}.xml`)
+-        : undefined;
+-    return {
+-        BUILD_MANIFEST: getPath(config.sourceDir, 'build-manifest.json'),
+-        PRERENDER_MANIFEST: getPath(config.sourceDir, 'prerender-manifest.json'),
+-        ROUTES_MANIFEST: getPath(config.sourceDir, 'routes-manifest.json'),
+-        EXPORT_MARKER: getPath(config.sourceDir, 'export-marker.json'),
+-        ROBOTS_TXT_FILE: getPath(config.outDir, 'robots.txt'),
+-        STATIC_EXPORT_ROOT: getPath(config.outDir),
+-        SITEMAP_INDEX_URL,
+-        SITEMAP_INDEX_FILE,
+-    };
++  // Check whether user enabled index sitemap or not
++  const sitemapIndexEnabled = config?.generateIndexSitemap;
++  // Set sitemap index file
++  const SITEMAP_INDEX_FILE = sitemapIndexEnabled
++    ? getPath(config.outDir, `${config.sitemapBaseFileName}.xml`)
++    : undefined;
++  // Set sitemap index url
++  const SITEMAP_INDEX_URL = sitemapIndexEnabled
++    ? generateUrl(config?.siteUrl, `${config.sitemapBaseFileName}.xml`)
++    : undefined;
++  return {
++    BUILD_MANIFEST: getPath(config.sourceDir, "build-manifest.json"),
++    PRERENDER_MANIFEST: getPath(config.sourceDir, "prerender-manifest.json"),
++    ROUTES_MANIFEST: getPath(config.sourceDir, "routes-manifest.json"),
++    EXPORT_MARKER: getPath(config.sourceDir, "export-marker.json"),
++    ROBOTS_TXT_FILE: getPath(config.outDir, "robots.txt"),
++    STATIC_EXPORT_ROOT: getPath(config.outDir),
++    SITEMAP_INDEX_URL,
++    SITEMAP_INDEX_FILE,
++    TRACE: getPath(config.sourceDir, "trace"),
++  };
+ };
+ /**
+  * Get config file path
+  * @returns
+  */
+ export const getConfigFilePath = async () => {
+-    // Extract args from command
+-    const args = minimist(process.argv.slice(2));
+-    // Config file path
+-    const configPath = getPath(args.config || 'next-sitemap.config.js');
+-    // Check file stat
+-    return fs
+-        .stat(configPath)
+-        .then(() => pathToFileURL(configPath).toString())
+-        .catch((err) => {
+-        Logger.noConfigFile();
+-        throw err;
++  // Extract args from command
++  const args = minimist(process.argv.slice(2));
++  // Config file path
++  const configPath = getPath(args.config || "next-sitemap.config.js");
++  // Check file stat
++  return fs
++    .stat(configPath)
++    .then(() => pathToFileURL(configPath).toString())
++    .catch((err) => {
++      Logger.noConfigFile();
++      throw err;
+     });
+ };
