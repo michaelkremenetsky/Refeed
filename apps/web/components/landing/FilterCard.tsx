@@ -125,11 +125,7 @@ export const SignInAnimatedSquare = ({
 };
 
 export const FilterCard = () => {
-  const [expanded, setExpanded] = useState(false);
-  const [noteExpanded, setNoteExpanded] = useState(false);
-
-  const initialSeparation = 110 + 15;
-
+  const [noteExpanded1, setNoteExpanded1] = useState(false);
   const Filter1 = {
     id: 0,
     enabled: false,
@@ -145,8 +141,9 @@ export const FilterCard = () => {
     },
   };
 
+  const [noteExpanded2, setNoteExpanded2] = useState(false);
   const Filter2 = {
-    id: 0,
+    id: 1,
     enabled: false,
     user_id: "",
     filter: {
@@ -155,10 +152,13 @@ export const FilterCard = () => {
         // "https://techcrunch.com/wp-content/uploads/2018/04/tc-logo-2018-square-reverse2x.png",
       ], // Replaced with links unlink the real one
       Content: "Anywhere",
-      Logic: "Begins With",
+      Logic: "Does Not Contain",
+      Keywords: ["IPO", " Meta", " Apple", " Amazon", " Tesla", " Google"],
     },
-    Keywords: ["test", "test"],
   };
+
+  // const [expanded, setExpanded] = useState(false);
+  // const initialSeparation = 110 + 15;
 
   const Filter3 = {
     id: 0,
@@ -175,13 +175,11 @@ export const FilterCard = () => {
     },
   };
 
-  console.log("Filter1", noteExpanded);
-
   return (
     <LazyMotion features={domAnimation}>
       <m.div
-        onHoverStart={() => setExpanded(true)}
-        onHoverEnd={() => setExpanded(false)}
+      // onHoverStart={() => setExpanded(true)}
+      // onHoverEnd={() => setExpanded(false)}
       >
         <Card
           description="Filter out items based on conditions"
@@ -191,7 +189,7 @@ export const FilterCard = () => {
           <>
             <div className="ml-5 mr-20 flex w-full justify-center overflow-hidden">
               <div
-                className={`${noteExpanded ? "pt-2" : "py-20"} flex md:block`}
+                className={`${noteExpanded1 || noteExpanded2 ? "pt-4" : "py-20"} flex md:block`}
               >
                 <div className="mb-1 ml-1.5 flex flex-col">
                   <h1 className="mb-1 select-none text-sm font-medium leading-5">
@@ -205,8 +203,13 @@ export const FilterCard = () => {
                 <div className="flex flex-col space-y-2">
                   <LandingToggleFilter
                     filter={Filter1 as any}
-                    notesOpen={noteExpanded}
-                    setNotesOpen={setNoteExpanded}
+                    notesOpen={noteExpanded1}
+                    setNotesOpen={setNoteExpanded1}
+                  />
+                  <LandingToggleFilter
+                    filter={Filter2 as any}
+                    notesOpen={noteExpanded2}
+                    setNotesOpen={setNoteExpanded2}
                   />
                 </div>
               </div>
