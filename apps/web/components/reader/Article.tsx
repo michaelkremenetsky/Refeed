@@ -69,7 +69,7 @@ export const Article = (props: ArticleProps) => {
       }  `}
     >
       {props.Type == "Article View" ? (
-        <div className="flex items-center rounded-t-md border-b bg-[#FCFCFC] py-3 dark:border-[#24252A] dark:bg-[#141415]">
+        <div className="flex items-center rounded-t-md border-b bg-[#FCFCFC] py-3.5 dark:border-[#24252A] dark:bg-[#141415]">
           <div className="mx-auto flex w-[95%] justify-between">
             <Topbar />
             <div>
