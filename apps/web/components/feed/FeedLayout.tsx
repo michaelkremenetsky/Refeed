@@ -157,7 +157,7 @@ export const FeedLayout = (props: FeedLayoutTypes) => {
                   <div
                     key={item?.id}
                     // For whatever reason the border dosen't apply on the card item itself
-                    className="w-[249.5px] border dark:rounded-md dark:border-neutral-800"
+                    className="w-[249.5px] dark:rounded-md dark:border dark:border-neutral-800"
                   >
                     {item.from_search ? null : (
                       <CardItem
