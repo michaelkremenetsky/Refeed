@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:mobile="http://www.google.com/schemas/sitemap-mobile/1.0" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
-<url><loc>https://refeedreader.com</loc><lastmod>2024-03-01T01:26:47.254Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://refeedreader.com/about</loc><lastmod>2024-03-01T01:26:47.255Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://refeedreader.com/blog</loc><lastmod>2024-03-01T01:26:47.255Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://refeedreader.com/bookmarks</loc><lastmod>2024-03-01T01:26:47.255Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://refeedreader.com/discover</loc><lastmod>2024-03-01T01:26:47.255Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://refeedreader.com/features</loc><lastmod>2024-03-01T01:26:47.255Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://refeedreader.com/feed/all</loc><lastmod>2024-03-01T01:26:47.255Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://refeedreader.com/forgotpassword</loc><lastmod>2024-03-01T01:26:47.255Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://refeedreader.com/login</loc><lastmod>2024-03-01T01:26:47.255Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://refeedreader.com/mobile</loc><lastmod>2024-03-01T01:26:47.255Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://refeedreader.com/pricing</loc><lastmod>2024-03-01T01:26:47.255Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://refeedreader.com/privacy</loc><lastmod>2024-03-01T01:26:47.255Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://refeedreader.com/recentlyread</loc><lastmod>2024-03-01T01:26:47.255Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://refeedreader.com/rss/youtube</loc><lastmod>2024-03-01T01:26:47.255Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://refeedreader.com/signup</loc><lastmod>2024-03-01T01:26:47.255Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://refeedreader.com/terms</loc><lastmod>2024-03-01T01:26:47.255Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://refeedreader.com</loc><lastmod>2024-03-02T05:21:26.127Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://refeedreader.com/about</loc><lastmod>2024-03-02T05:21:26.128Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://refeedreader.com/blog</loc><lastmod>2024-03-02T05:21:26.128Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://refeedreader.com/bookmarks</loc><lastmod>2024-03-02T05:21:26.128Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://refeedreader.com/discover</loc><lastmod>2024-03-02T05:21:26.128Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://refeedreader.com/features</loc><lastmod>2024-03-02T05:21:26.128Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://refeedreader.com/feed/all</loc><lastmod>2024-03-02T05:21:26.128Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://refeedreader.com/forgotpassword</loc><lastmod>2024-03-02T05:21:26.128Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://refeedreader.com/login</loc><lastmod>2024-03-02T05:21:26.128Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://refeedreader.com/mobile</loc><lastmod>2024-03-02T05:21:26.128Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://refeedreader.com/pricing</loc><lastmod>2024-03-02T05:21:26.128Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://refeedreader.com/privacy</loc><lastmod>2024-03-02T05:21:26.128Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://refeedreader.com/recentlyread</loc><lastmod>2024-03-02T05:21:26.128Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://refeedreader.com/rss/youtube</loc><lastmod>2024-03-02T05:21:26.128Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://refeedreader.com/signup</loc><lastmod>2024-03-02T05:21:26.128Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://refeedreader.com/terms</loc><lastmod>2024-03-02T05:21:26.128Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
 </urlset>

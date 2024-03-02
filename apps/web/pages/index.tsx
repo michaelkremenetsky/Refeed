@@ -31,14 +31,19 @@ const Landing: NextPage = () => {
               <TimeBookmarksCard />
               <BookmarkFolderCard />
               <NotesCard />
+              <div className="xl:hidden">
+                <FullContentCard />
+              </div>
             </div>
           </div>
-          <div className="mx-auto mt-4 w-full justify-center px-1.5 sm:flex">
-            <div className="mx-4 grid grid-cols-1 gap-6 md:mx-0 lg:grid-cols-2 xl:grid-cols-3">
-              <div className="lg:col-span-2">
+          <div className="mx-auto mt-4 w-full justify-center px-1.5 md:flex">
+            <div className="mx-4 grid grid-cols-1 gap-6 md:mx-0 md:grid-cols-2 xl:grid-cols-3">
+              <div className="md:col-span-2">
                 <FilterCard />
               </div>
-              <FullContentCard />
+              <div className="hidden xl:block">
+                <FullContentCard />
+              </div>
             </div>
           </div>
           <div className="pb-6" />

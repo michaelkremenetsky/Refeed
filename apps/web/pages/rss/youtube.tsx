@@ -34,15 +34,15 @@ const Youtube: NextPage = () => {
                 <h1 className="text-center text-4xl font-bold">
                   Youtube RSS Link Generator
                 </h1>
-                <h2 className="mt-5 text-center text-neutral-450">
+                <h2 className="mx-2 mt-5 text-center text-neutral-450 sm:mx-0">
                   Create RSS feeds from any YouTube Channel. Just copy and paste
                   the YouTube channel @ below to get started.
                 </h2>
               </div>
-              <div className="flex">
+              <div className="flex justify-center sm:justify-normal">
                 <Input
                   placeholder="Type a Youtube channel @"
-                  className="mb-0.5 h-11 w-[330px] bg-white"
+                  className="mb-0.5 h-11 w-[200px] bg-white placeholder:text-neutral-400 sm:w-[330px]"
                   defaultValue={query ?? ""}
                   onInput={(e: EventFor<"input", "onChange">) => {
                     if (!e.target.value) {
@@ -102,7 +102,7 @@ const Youtube: NextPage = () => {
                   width={960}
                   height={497}
                   unoptimized
-                  className="scale-[1.03] transform rounded-lg border border-neutral-200 shadow-[0px_20px_70px_-10px_hsla(227,30%,20%,0.08),0px_10px_24px_-8px_hsla(227,30%,20%,0.04),0px_1px_4px_-1px_hsla(227,30%,20%,0.06)]"
+                  className="transform rounded-lg border border-neutral-200 shadow-[0px_20px_70px_-10px_hsla(227,30%,20%,0.08),0px_10px_24px_-8px_hsla(227,30%,20%,0.04),0px_1px_4px_-1px_hsla(227,30%,20%,0.06)] sm:scale-[1.03]"
                 />
               </Tilt>
             </div>

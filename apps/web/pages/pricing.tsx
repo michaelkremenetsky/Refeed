@@ -31,7 +31,7 @@ export const PricingPage = () => {
 
   return (
     <>
-      <div className="background-pattern rounded-b-xl border-x border-b bg-[#FAFBFC]">
+      <div className="background-pattern rounded-b-xl border-b bg-[#FAFBFC]">
         {!isSafari && <PricingBackground />}
         <NavBar />
         <h1 className="mx-auto mb-1 mt-20 flex justify-center text-7xl font-[750] leading-none tracking-tighter md:w-[700px]">
@@ -50,14 +50,14 @@ export const PricingPage = () => {
         </div>
         <div className="mb-20 mt-8 flex justify-center">
           <div className="z-10 flex flex-col gap-x-4 gap-y-4 rounded-lg md:flex-row md:gap-y-0">
-            <FreePlan className="w-[375px] border border-neutral-300/80" />
-            <ProPlan className="w-[375px]" isYearlyPlan={isYearlyPlan} />
+            <FreePlan className="border border-neutral-300/80 sm:w-[375px]" />
+            <ProPlan className="sm:w-[375px]" isYearlyPlan={isYearlyPlan} />
           </div>
         </div>
       </div>
       <FAQ removeTitle={true} />
       <div className="flex justify-center bg-white pb-14 pt-10">
-        <div className="w-[1248px] rounded-xl">
+        <div className="rounded-xl sm:w-[1248px]">
           <EmptyMessageSvgForFooter className="mx-auto mb-3 h-40 w-40 drop-shadow-[rgba(0,0,0,0.05)_0px_0px_1px,rgba(0,0,0,0.04)_0px_15px_30px]" />
           <div className="mt-8 flex justify-center">
             <h1 className="z-10 text-center text-6xl font-[775] leading-none tracking-tight text-sky-500 lg:w-[900px]">

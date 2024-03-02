@@ -41,7 +41,7 @@ export const PageWrapper = ({
 export const LandingWrapper = ({ children }: { children: ReactNode }) => {
   return (
     <main
-      className={` ${inter.className} text-optimize-legibility subpixel-antialiased`}
+      className={`${inter.className} text-optimize-legibility subpixel-antialiased`}
     >
       {/* eslint-disable-next-line react/no-unknown-property */}
       <style jsx global>{`

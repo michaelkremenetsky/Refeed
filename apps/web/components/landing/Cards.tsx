@@ -255,14 +255,14 @@ export const Card = (props: {
         animate={expanded ? "hover" : "hidden"}
         // variants={cardVariants}
         className={`mx-auto flex overflow-hidden ${
-          props.multipler ? "lg:w-[825px]" : "lg:w-[400px]"
+          props.multipler ? "sm:w-[400px] md:w-[825px]" : "md:w-[400px]"
         } mx-1 h-[400px] rounded-xl border   ${
           expanded
             ? "bg-neutral-50"
             : props.background
               ? props.background
               : " bg-[#fcfcfc]"
-        } lg:mx-0 ${expanded ? "" : null}`}
+        } md:mx-0 ${expanded ? "" : null}`}
       >
         <div className="flex w-full flex-col">
           <div className="flex h-full select-none items-center justify-center">

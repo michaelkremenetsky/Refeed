@@ -1,11 +1,8 @@
 import type { NextPage } from "next";
 
-
-
 import { BottomFooter } from "../components/landing/Footer";
 import NavBar from "../components/landing/NavBar";
 import { LandingWrapper } from "../components/layout/PageWrapper";
-
 
 const PrivacyPolicyPage: NextPage = () => {
   return (
@@ -15,9 +12,9 @@ const PrivacyPolicyPage: NextPage = () => {
         <div className="pb-20" />
 
         <div className="flex justify-center">
-          <div className="w-[850px] rounded-lg">
+          <div className="mx-6 w-full rounded-lg lg:mx-0 lg:w-[850px]">
             <div className="mb-12 flex justify-center">
-              <h1 className="text-6xl font-bold tracking-tight">
+              <h1 className="text-center text-6xl font-bold tracking-tight">
                 Privacy Policy
               </h1>
             </div>

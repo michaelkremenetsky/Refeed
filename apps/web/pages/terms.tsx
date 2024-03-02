@@ -14,9 +14,9 @@ const TermsPage: NextPage = () => {
         <div className="more-background-pattern bg-[#FCFCFC]">
           <div className="pb-20" />
           <div className="flex justify-center">
-            <div className="w-[850px] rounded-lg">
+            <div className="mx-6 w-full rounded-lg lg:mx-0 lg:w-[850px]">
               <div className="mb-12 flex justify-center">
-                <h1 className="text-6xl font-bold tracking-tight">
+                <h1 className="text-center text-6xl font-bold tracking-tight">
                   Terms of Service
                 </h1>
               </div>

@@ -187,7 +187,7 @@ export const FilterCard = () => {
           multipler={2}
         >
           <>
-            <div className="ml-5 mr-20 flex w-full justify-center overflow-hidden">
+            <div className="ml-5 mr-20 flex w-full justify-center sm:overflow-hidden">
               <div
                 className={`${noteExpanded1 || noteExpanded2 ? "pt-4" : "py-20"} flex md:block`}
               >
