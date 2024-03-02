@@ -24,6 +24,7 @@ if (typeof window !== "undefined") {
   if (NEXT_PUBLIC_POSTHOG_KEY && NEXT_PUBLIC_POSTHOG_HOST) {
     posthog.init(NEXT_PUBLIC_POSTHOG_KEY, {
       api_host: NEXT_PUBLIC_POSTHOG_HOST || "https://app.posthog.com",
+      enable_recording_console_log: true,
       // Enable debug mode in development
       loaded: (posthog) => {
         if (process.env.NODE_ENV === "development") posthog.debug();
