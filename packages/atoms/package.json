@@ -7,7 +7,6 @@
   "dependencies": {
     "@refeed/trpc": "*",
     "@refeed/types": "*",
-    "@trpc/client": "11.0.0-next-beta.208",
     "jotai": "^2.4.2",
     "jotai-trpc": "^0.5.1",
     "superjson": "1.13.1"

@@ -27,7 +27,6 @@ export const webTrpc = createTRPCNext<AppRouter>({
   config() {
     return {
       queryClientConfig: defaultReactQueryOptions,
-      transformer: superjson,
       links: [
         loggerLink({
           enabled: (opts) =>
@@ -35,11 +34,13 @@ export const webTrpc = createTRPCNext<AppRouter>({
             (opts.direction === "down" && opts.result instanceof Error),
         }),
         httpBatchLink({
+          transformer: superjson,
           url: `${getBaseUrl()}/api/trpc`,
         }),
       ],
     };
   },
+  transformer: superjson,
   ssr: false,
 });
 
