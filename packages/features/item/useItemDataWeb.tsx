@@ -45,6 +45,13 @@ export const useItemData = () => {
     ?.map((page) => page?.transformedItems)
     .flat() as ItemType[];
 
+  const lastPageWasEmpty =
+    rawItems?.pages[rawItems.pages.length - 1]?.transformedItems.length == 0;
+
+  if (lastPageWasEmpty && !isFetching) {
+    fetchNextPage();
+  }
+
   if (!items) {
     items = [];
   }
