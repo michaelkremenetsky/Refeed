@@ -6,6 +6,7 @@ const config = {
     "plugin:@typescript-eslint/recommended",
     "plugin:@typescript-eslint/recommended-type-checked",
     "plugin:@typescript-eslint/stylistic-type-checked",
+    "plugin:@tanstack/eslint-plugin-query/recommended",
     "prettier",
   ],
   env: {
