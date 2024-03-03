@@ -7,6 +7,7 @@ import type { RouterOutput } from "utils/trpc";
 import { trpc } from "utils/trpc";
 
 import { useItemData } from "@refeed/features/item/useItemDataWeb";
+import { usePlan } from "@refeed/features/payment/usePlan";
 import { debounce } from "@refeed/lib/debounce";
 import type { ItemType } from "@refeed/types/item";
 
@@ -17,6 +18,8 @@ import { kmenu } from "../../stores/ui";
 const CommandPalette = () => {
   const [open, setOpen] = useAtom(kmenu);
   const [query, setQuery] = useState<string | undefined>(undefined);
+
+  const { plan } = usePlan();
 
   const [_, setItemQuery] = useQueryState("item", {
     shallow: true,
@@ -35,7 +38,7 @@ const CommandPalette = () => {
     isFetched,
     isFetching,
   } = trpc.item.searchMultipleItems.useQuery(
-    { query: query, take: 10 },
+    { query: query, take: 10, plan: plan as "free" | "pro" },
     { enabled: query != undefined },
   );
 

@@ -59,7 +59,8 @@ export const itemRouter = createTRPCRouter({
               : input.sort == "Oldest"
                 ? { id: Prisma.SortOrder.asc }
                 : undefined
-            : undefined,
+            : // I still think this isn't the proper way to do this.
+              { id: Prisma.SortOrder.desc },
         include: {
           feed: {
             select: {
