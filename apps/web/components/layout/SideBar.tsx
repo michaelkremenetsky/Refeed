@@ -7,7 +7,6 @@ import { ChevronDown } from "lucide-react";
 import { Resizable } from "re-resizable";
 import { Drawer } from "vaul";
 
-import { usePlan } from "@refeed/features/payment/usePlan";
 import { DialogRoot } from "@refeed/ui/components/dialog/AddDialog";
 
 import { useFeedsInFolders } from "../../features/folders/useFeedsInFolders";
@@ -134,28 +133,17 @@ export default function SideBar() {
 
 const SearchSelect = () => {
   const setKmenu = useSetAtom(kmenu);
-  const { plan } = usePlan();
 
   const handleClick = (e: React.MouseEvent) => {
-    if (plan == "pro") {
-      e.preventDefault();
-      setKmenu(true);
-    }
+    e.preventDefault();
+    setKmenu(true);
   };
 
-  if (plan == "pro") {
-    return (
-      <Link href={"search"} shallow={true} onClick={handleClick}>
-        <Search />
-      </Link>
-    );
-  } else {
-    return (
-      <Drawer.Trigger className="w-full">
-        <Search />
-      </Drawer.Trigger>
-    );
-  }
+  return (
+    <Link href={"search"} shallow={true} onClick={handleClick}>
+      <Search />
+    </Link>
+  );
 };
 
 const Search = () => {

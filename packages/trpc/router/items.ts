@@ -353,6 +353,7 @@ export const itemRouter = createTRPCRouter({
     .input(
       z.object({
         query: z.union([z.string(), z.undefined()]),
+        plan: z.enum(["free", "pro"]),
         take: z.number(),
       }),
     )
@@ -363,8 +364,18 @@ export const itemRouter = createTRPCRouter({
             // I would prefer to use search but prisma dosen't support indexes on it yet:
             // https://github.com/prisma/prisma/issues/8950
             contains: input.query,
+            // contains: input.query,
             mode: "insensitive",
           },
+          website_content:
+            input.plan == "free"
+              ? undefined
+              : {
+                  // I would prefer to use search but prisma dosen't support indexes on it yet:
+                  // https://github.com/prisma/prisma/issues/8950
+                  contains: input.query,
+                  mode: "insensitive",
+                },
           feed: {
             users: {
               some: {

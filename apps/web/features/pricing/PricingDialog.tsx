@@ -271,7 +271,7 @@ export const ProPlan = (props: {
         </Tippy>
         <li className=" px-4 py-[3px] text-lg hover:bg-neutral-50 dark:text-stone-200 dark:hover:bg-[#121212]">
           <Checkbox />
-          Search
+          Full Text Search
         </li>
         <Tippy
           className="rounded-[4px] bg-white p-2 shadow-[0_0px_0px_1px_rgba(31,34,37,0.09),0px_12px_24px_-4px_rgba(0,0,0,0.08),0px_8px_16px_-4px_rgba(0,0,0,0.06)] dark:border dark:border-[#333333] dark:bg-[#141415]"
