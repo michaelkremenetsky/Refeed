@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   KeyboardAvoidingView,
+  Linking,
   Platform,
   TextInput,
   TouchableOpacity,
@@ -10,6 +11,7 @@ import * as AppleAuthentication from "expo-apple-authentication";
 import { Mail } from "lucide-react-native";
 
 import { useAuth } from "../features/useAuth";
+import { supabase } from "../utils/supabase";
 import { Text } from "./ui/Text";
 import { View } from "./ui/View";
 
@@ -18,6 +20,42 @@ export const SignedOutView = () => {
   const [signUp, setSignUp] = useState(true);
   const [email, setEmail] = useState("");
   const [emailOpen, setEmailOpen] = useState(false);
+
+  useEffect(() => {
+    async function handleDeepLink(event: any) {
+      const url = event.url;
+      if (url) {
+        // Example: extract 'token' from url
+        const urlParams = new URLSearchParams(url);
+        const token = urlParams.get("token");
+
+        if (token) {
+          try {
+            await supabase.auth.verifyOtp({
+              token,
+              email: email,
+              type: "magiclink",
+            });
+
+            // Successful verification - Navigate the user
+            // to the appropriate screen in your app
+          } catch (error) {
+            // Handle verification error
+            console.error(error);
+          }
+        }
+      }
+    }
+
+    // Add listeners
+    Linking.addEventListener("url", handleDeepLink);
+    Linking.getInitialURL().then(handleDeepLink);
+
+    // return () => {
+    //   // Remove listeners
+    //   Linking.removeEventListener("url", handleDeepLink);
+    // };
+  }, []);
 
   return (
     <KeyboardAvoidingView
@@ -92,7 +130,7 @@ export const SignedOutView = () => {
             />
           )}
           {/** Removed for till I figure out the Supabase Deep Linking */}
-          {/* <TouchableOpacity
+          <TouchableOpacity
             onPress={() => {
               if (emailOpen) {
                 signInWithOtp(email, signUp ? "Sign Up" : "Login");
@@ -103,7 +141,7 @@ export const SignedOutView = () => {
             className="mt-4 rounded-lg border border-neutral-300/80 bg-white py-3"
           >
             <SignInWithEmail signUp={signUp} />
-          </TouchableOpacity> */}
+          </TouchableOpacity>
         </View>
       </View>
     </KeyboardAvoidingView>
@@ -138,7 +176,6 @@ const SignInWithGoogleButton = ({ signUp }: { signUp: boolean }) => {
   );
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const SignInWithEmail = ({ signUp }: { signUp: boolean }) => {
   return (
     <View className="h-7.5 flex flex-row items-center justify-center">
