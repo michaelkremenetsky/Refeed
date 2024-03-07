@@ -6,6 +6,7 @@ import { getFolderFeedIds } from "@refeed/features/feed/getFolderFeedIds";
 
 import { getNextPrismaCursor } from "../../lib/getNextPrismaCursor";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
+import { removeDuplicates } from "./utils/removeDuplicates";
 import {
   transformItems,
   transformItemsWithoutUserItems,
@@ -171,8 +172,15 @@ export const itemRouter = createTRPCRouter({
           );
         }
 
-        const nextCursor = getNextPrismaCursor(items, input.amount);
-        const transformedItems = await transformItems(items, ctx.prisma);
+        let transformedItems = await transformItems(items, ctx.prisma);
+        const nextCursor = getNextPrismaCursor(transformedItems, input.amount);
+
+        transformedItems = removeDuplicates(
+          transformedItems,
+          ctx.user.id,
+          ctx.prisma,
+          false,
+        );
 
         return {
           transformedItems,
@@ -209,9 +217,15 @@ export const itemRouter = createTRPCRouter({
           ...sharedQuery,
         });
 
-        const nextCursor = getNextPrismaCursor(items, input.amount);
+        let transformedItems = transformItemsWithoutUserItems(items);
+        const nextCursor = getNextPrismaCursor(transformedItems, input.amount);
 
-        const transformedItems = transformItemsWithoutUserItems(items);
+        transformedItems = removeDuplicates(
+          transformedItems,
+          ctx.user.id,
+          ctx.prisma,
+          false,
+        );
 
         return {
           transformedItems,
@@ -261,9 +275,15 @@ export const itemRouter = createTRPCRouter({
           return feed_added <= item_added;
         });
 
-        const nextCursor = getNextPrismaCursor(items, input.amount);
+        let transformedItems = transformItemsWithoutUserItems(itemsAfterDate);
+        const nextCursor = getNextPrismaCursor(transformedItems, input.amount);
 
-        const transformedItems = transformItemsWithoutUserItems(itemsAfterDate);
+        transformedItems = removeDuplicates(
+          transformedItems,
+          ctx.user.id,
+          ctx.prisma,
+          true,
+        );
 
         return {
           transformedItems,
@@ -327,9 +347,15 @@ export const itemRouter = createTRPCRouter({
           return feed_added <= item_added;
         });
 
-        const nextCursor = getNextPrismaCursor(items, input.amount);
+        let transformedItems = transformItemsWithoutUserItems(itemsAfterDate);
+        const nextCursor = getNextPrismaCursor(transformedItems, input.amount);
 
-        const transformedItems = transformItemsWithoutUserItems(itemsAfterDate);
+        transformedItems = removeDuplicates(
+          transformedItems,
+          ctx.user.id,
+          ctx.prisma,
+          true,
+        );
 
         return {
           transformedItems,
@@ -365,7 +391,6 @@ export const itemRouter = createTRPCRouter({
             // I would prefer to use search but prisma dosen't support indexes on it yet:
             // https://github.com/prisma/prisma/issues/8950
             contains: input.query,
-            // contains: input.query,
             mode: "insensitive",
           },
           website_content:

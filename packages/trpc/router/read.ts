@@ -2,6 +2,7 @@ import dayjs from "dayjs";
 import { z } from "zod";
 
 import { createTRPCRouter, protectedProcedure } from "../trpc";
+import { markItemRead } from "./utils/markItemRead";
 
 // Tip - use the VSCode Outline View feature to see the APIs defined in here without having to scroll through the file
 
@@ -39,35 +40,7 @@ export const readRouter = createTRPCRouter({
   markItemRead: protectedProcedure
     .input(z.object({ itemId: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      const time = dayjs();
-
-      await ctx.prisma.user_item.upsert({
-        where: {
-          item_id_user_id: {
-            item_id: input.itemId,
-            user_id: ctx.user.id,
-          },
-        },
-        update: {
-          marked_read: true,
-          marked_read_time: time.toDate(),
-        },
-        create: {
-          user: {
-            connect: {
-              id: ctx.user.id,
-            },
-          },
-          item: {
-            connect: {
-              id: input.itemId,
-            },
-          },
-          in_read_later: false,
-          marked_read: true,
-          marked_read_time: time.toDate(),
-        },
-      });
+      await markItemRead(input.itemId, ctx.user.id, ctx.prisma);
     }),
   markItemUnread: protectedProcedure
     .input(z.object({ itemId: z.string() }))
@@ -205,7 +178,7 @@ export const readRouter = createTRPCRouter({
           })),
         });
       }
-      
+
       // Mark All Feeds Read
       else {
         // Get items that don't already have userItem on them
