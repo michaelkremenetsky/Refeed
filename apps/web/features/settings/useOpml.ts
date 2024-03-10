@@ -4,10 +4,10 @@ import { useSupabaseClient } from "@supabase/auth-helpers-react";
 
 import { usePlan } from "@refeed/features/payment/usePlan";
 import { base64ToBlob } from "@refeed/lib/base64toBlob";
+import { decode } from "@refeed/lib/decode";
+import { formatOPML } from "@refeed/lib/formatOPML";
 import { parseOpml } from "@refeed/lib/OpmlParser";
 
-import { decode } from "../../../../packages/lib/decode";
-import { formatOPML } from "../../../../packages/lib/formatOPML";
 import { trpc } from "../../utils/trpc";
 
 type FeedError =

@@ -1,6 +1,6 @@
-import { useContext } from "react";
 import * as RadixDialog from "@radix-ui/react-dialog";
 import { AnimatePresence, motion } from "framer-motion";
+import { useContext } from "react";
 
 import {
   ContentTopBar,
@@ -43,7 +43,7 @@ export function AddFolderDialog({
             forceMount
             asChild
             className={cn(
-              "fixed z-50 grid w-[300px] gap-4 rounded-b-lg bg-white shadow-[rgba(31,34,37,0.09)_0px_0px_0px_1px,rgba(0,0,0,0.08)_0px_12px_24px_-4px,rgba(0,0,0,0.04)_0px_8px_16px_-4px] fade-in-100 sm:max-w-lg sm:rounded-lg sm:zoom-in-90 dark:bg-[#0f0f10]",
+              "fixed z-50 grid w-[300px] gap-4 bg-white shadow-[rgba(31,34,37,0.09)_0px_0px_0px_1px,rgba(0,0,0,0.08)_0px_12px_24px_-4px,rgba(0,0,0,0.04)_0px_8px_16px_-4px] fade-in-100 sm:max-w-lg rounded-lg sm:zoom-in-90 dark:bg-[#0f0f10]",
               className,
             )}
           >
