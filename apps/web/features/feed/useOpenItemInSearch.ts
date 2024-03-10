@@ -3,6 +3,8 @@ import type { ItemType } from "@refeed/types/item";
 
 import { trpc } from "../../utils/trpc";
 
+// NOTE: not in use for now
+
 export const useOpenItemInSearch = (items: ItemType[]) => {
   const utils = trpc.useUtils();
 
