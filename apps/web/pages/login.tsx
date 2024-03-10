@@ -1,7 +1,7 @@
-import { useEffect } from "react";
+import { useUser } from "@supabase/auth-helpers-react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useUser } from "@supabase/auth-helpers-react";
+import { useEffect } from "react";
 
 import { LandingWrapper } from "../components/layout/PageWrapper";
 import { AppleButton } from "../features/auth/AppleLoginButton";
@@ -22,7 +22,7 @@ function Login() {
 
   return (
     <LandingWrapper>
-      <div className="flex h-[100svh] justify-center overflow-hidden bg-[#FCFCFC] text-neutral-900">
+      <div className="flex h-screen justify-center overflow-hidden bg-[#FCFCFC] text-neutral-900">
         <div className="mx-auto flex w-[325px] flex-col items-center justify-center gap-2.5">
           <h1 className="text-2xl font-bold tracking-tight">Sign In</h1>
           <div className="mb-2 flex text-sm font-medium">

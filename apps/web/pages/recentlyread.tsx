@@ -12,7 +12,7 @@ const Recent: NextPage = () => {
     <PageWrapper>
       <CommandPalette />
       <SideBar />
-      <div className={`flex h-[100vh] w-full flex-col`}>
+      <div className={`flex h-screen w-full flex-col`}>
         <Reader />
         <NavBar title="Recently Read" recentPage={true} />
         <FeedLayout FeedType="recentlyread" />

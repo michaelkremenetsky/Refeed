@@ -11,7 +11,7 @@ function Signup() {
   const router = useRouter();
   return (
     <LandingWrapper>
-      <div className="flex h-[100svh] bg-[#FCFCFC] text-neutral-900">
+      <div className="flex h-screen bg-[#FCFCFC] text-neutral-900">
         <div className="mx-auto flex w-[325px] flex-col items-center justify-center gap-2.5">
           <h1 className="text-2xl font-bold tracking-tight">Sign Up</h1>
           <div className="mb-2 flex text-sm font-medium">
