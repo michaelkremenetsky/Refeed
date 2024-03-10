@@ -111,7 +111,7 @@ const AddFilter = () => {
           <Close
             type="submit"
             onClick={() => void form.handleSubmit()}
-            className="mt-0.5 flex rounded-md bg-white px-4 py-1.5 text-base font-[450] shadow-[0_0_0_1px_rgba(18,55,105,0.08),0_1px_2px_0_rgba(18,55,105,0.12)] hover:bg-[#fafafa] dark:border-[#333333] dark:bg-[#0f0f10]"
+            className="mt-0.5 flex rounded-md bg-white px-4 py-1.5 text-base font-[450] shadow-[0_0_0_1px_rgba(18,55,105,0.08),0_1px_2px_0_rgba(18,55,105,0.12)] hover:bg-[#fafafa] dark:border dark:border-[#1e2020] dark:bg-[#0f0f10] dark:text-stone-200 dark:shadow-none dark:hover:bg-[#0f0f10]"
           >
             Add Filter
           </Close>
