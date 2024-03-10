@@ -1,11 +1,6 @@
-import type { PrismaClient } from "@prisma/client";
 import { NodeHtmlMarkdown } from "node-html-markdown";
 
 import type { ItemType } from "@refeed/types/item";
-
-import { findFolderById } from "./findFolderById";
-
-/* eslint-disable @typescript-eslint/no-unsafe-call */
 
 type TODO = any;
 
@@ -47,37 +42,25 @@ export const transformItemsWithoutUserItems = (rawItems: TODO) => {
   return transformedItems;
 };
 
-export const transformItems = async (
-  rawItems: TODO,
-  prisma: PrismaClient,
-  bookmarks?: boolean,
-) => {
+export const transformItems = async (rawItems: TODO) => {
   const transformedItems: ItemType[] = [];
 
   for (const rawItem of rawItems) {
     if (rawItem) {
       let bookmarkFolders: string[] | undefined = [];
 
-      // @ts-ignore
-      const promises = rawItem.user_items[0]?.bookmark_folders.map((folder) =>
-        findFolderById(prisma, folder.folder_id),
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+      bookmarkFolders = rawItem.user_items[0]?.bookmark_folders.map(
+        (folder: {
+          folder: {
+            name: string;
+          };
+        }) => folder.folder.name,
       );
-      if (promises) {
-        bookmarkFolders = (await Promise.all(promises)) as string[];
-      }
 
       const contentMarkdown = NodeHtmlMarkdown.translate(
         rawItem.website_content ?? "",
       );
-
-      // To prevent items from being returned if they are not in bookmarks
-      if (
-        bookmarks &&
-        rawItem.user_items[0]?.in_read_later == false &&
-        bookmarkFolders.length == 0
-      ) {
-        continue;
-      }
 
       const transformedItem: ItemType = {
         id: rawItem.id,

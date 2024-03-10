@@ -86,7 +86,11 @@ export const itemRouter = createTRPCRouter({
                     marked_read: true,
                     in_read_later: true,
                     temp_added_time: true,
-                    bookmark_folders: true,
+                    bookmark_folders: {
+                      select: {
+                        folder: true,
+                      },
+                    },
                     marked_read_time: true,
                     user: {
                       include: {
@@ -116,6 +120,8 @@ export const itemRouter = createTRPCRouter({
                     },
                   },
                 ],
+              },
+              every: {
                 user_id: ctx.user.id,
               },
             },
@@ -125,7 +131,7 @@ export const itemRouter = createTRPCRouter({
 
         const nextCursor = getNextPrismaCursor(items, input.amount);
 
-        const transformedItems = await transformItems(items, ctx.prisma, true);
+        const transformedItems = await transformItems(items);
 
         return {
           transformedItems,
@@ -137,24 +143,21 @@ export const itemRouter = createTRPCRouter({
           where: {
             user_items: {
               some: {
-                AND: [
-                  {
-                    marked_read: true,
-                  },
-                  {
-                    marked_read_time: {
-                      gte: thirtyDaysAgo,
-                    },
-                  },
-                  {
-                    user_id: ctx.user.id,
-                  },
-                ],
+                marked_read: true,
+                marked_read_time: {
+                  gte: thirtyDaysAgo,
+                },
+              },
+              every: {
+                user_id: ctx.user.id,
               },
             },
           },
           ...sharedQuery,
         });
+
+        // I need to get this on the DB level because its not gonna load everything
+        // The whole scrolling is broken
 
         // Sort recently read Items (Make sure it gets the cursor before running this)
         if (input.type == "recentlyread" && input.sort == "Latest") {
@@ -172,7 +175,7 @@ export const itemRouter = createTRPCRouter({
           );
         }
 
-        let transformedItems = await transformItems(items, ctx.prisma);
+        let transformedItems = await transformItems(items);
         const nextCursor = getNextPrismaCursor(transformedItems, input.amount);
 
         transformedItems = removeDuplicates(
@@ -410,6 +413,13 @@ export const itemRouter = createTRPCRouter({
             },
           },
         },
+        include: {
+          feed: {
+            select: {
+              title: true,
+            },
+          },
+        },
         take: input.take,
       });
 
@@ -418,6 +428,10 @@ export const itemRouter = createTRPCRouter({
         item.website_content = NodeHtmlMarkdown.translate(
           item.website_content ?? "",
         );
+
+        // Temporarily add the feed_title to the item
+        // @ts-ignore
+        item.feed_title = item.feed.title;
       }
 
       return searchItems;
