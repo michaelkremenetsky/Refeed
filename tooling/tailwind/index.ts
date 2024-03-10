@@ -31,6 +31,7 @@ export default {
         stone: {
           // All these should have a hue of 240 (or close)
           200: "#e4e4e7",
+          300: "#93939a",
           400: "#72727e",
           450: "#52525b",
           500: "#6d6d78",
