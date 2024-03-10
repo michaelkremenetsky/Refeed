@@ -58,7 +58,7 @@ export default function SideBar() {
           // Cache the size in the browser
           setWidth(ref.offsetWidth);
         }}
-        className={`group/add sticky top-0 max-h-screen min-w-[240px] overflow-x-hidden overflow-y-scroll border-r border-[#f0f0f0] bg-[#fcfcfc] scrollbar-hide dark:border-[#24252A] dark:bg-[#141415]`}
+        className={`group/add sticky top-0 max-h-screen min-h-screen overflow-x-hidden overflow-y-scroll border-r border-[#f0f0f0] bg-[#fcfcfc] scrollbar-hide lg:min-w-[240px] dark:border-[#24252A] dark:bg-[#141415]`}
       >
         <Drawer.Root direction="right" shouldScaleBackground>
           <div className={`ml-2.5 mr-1.5 mt-1.5`}>
@@ -91,7 +91,7 @@ export default function SideBar() {
                       >
                         All
                       </span>
-                      <span className="absolute right-[12.5px] text-center text-xs font-[450] text-neutral-400/75 dark:text-stone-500/80">
+                      <span className="absolute right-[12.5px] text-center text-xs font-[450] text-neutral-400/75 dark:text-stone-500/95">
                         {totalItemAmount! > 2500
                           ? "2.5K+"
                           : totalItemAmount! >= 1000
