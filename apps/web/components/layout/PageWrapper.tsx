@@ -18,7 +18,7 @@ export const PageWrapper = ({
 }) => {
   return (
     <main
-      className={`min-w-screen max-h-screen overflow-y-hidden dark:bg-[#0f0f10] ${inter.className} text-optimize-legibility subpixel-antialiased`}
+      className={`min-w-screen text-optimize-legibility max-h-screen overflow-y-hidden subpixel-antialiased dark:bg-[#0f0f10]`}
     >
       {/* eslint-disable-next-line react/no-unknown-property */}
       <style jsx global>{`
@@ -40,9 +40,7 @@ export const PageWrapper = ({
 
 export const LandingWrapper = ({ children }: { children: ReactNode }) => {
   return (
-    <main
-      className={`${inter.className} text-optimize-legibility subpixel-antialiased`}
-    >
+    <main className={`text-optimize-legibility subpixel-antialiased`}>
       {/* eslint-disable-next-line react/no-unknown-property */}
       <style jsx global>{`
         html {
