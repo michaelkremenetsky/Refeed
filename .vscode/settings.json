@@ -17,6 +17,5 @@
     "editor.defaultFormatter": "rust-lang.rust-analyzer",
     "editor.formatOnSave": true
   },
-  "typescript.tsdk": "node_modules/typescript/lib",
   "prisma.fileWatcher": true
 }

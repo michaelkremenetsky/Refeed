@@ -31,7 +31,7 @@ const defineConfig = (): ExpoConfig => ({
       UIViewControllerBasedStatusBarAppearance: true,
     },
     associatedDomains: ["applinks:readreader.com"],
-    buildNumber: "0.8.0",
+    buildNumber: "0.8.1",
   },
   android: {
     userInterfaceStyle: "light",
