@@ -1,6 +1,6 @@
-import { useState } from "react";
 import * as RadixDialog from "@radix-ui/react-dialog";
 import { motion } from "framer-motion";
+import { useState } from "react";
 
 import { Input } from "@refeed/ui";
 import {
@@ -76,7 +76,7 @@ export const AddFolderDialogContent = ({
       ) : (
         <RadixDialog.Close
           aria-label="Close"
-          onClick={() => {
+            onClick={() => {
             if (folderName.length > 0) {
               addFolder(folderName);
               utils.feed.getFeedOrder.reset();
