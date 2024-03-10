@@ -59,6 +59,7 @@ export const useItemData = () => {
     refetch,
     isFetchingNextPage,
     FeedType,
+    folder,
   };
 };
 

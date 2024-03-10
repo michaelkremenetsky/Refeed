@@ -40,7 +40,7 @@ const useMobileParams = () => {
   const folder = useNavigationState((state) => {
     return state.routes.find((route) => route.name === "Feed");
     // @ts-ignore
-  })?.params?.title;
+  })?.params?.folder;
 
   return { sort, FeedType: FeedType, folder, feedId };
 };
