@@ -1,18 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { NonLinkedSearchItem } from "@components/feed/SearchItem";
 import { Command } from "cmdk";
-import { useAtom } from "jotai";
+import { atom, useAtom, useSetAtom } from "jotai";
 import { useQueryState } from "nuqs";
 import type { RouterOutput } from "utils/trpc";
 import { trpc } from "utils/trpc";
 
-import { useItemData } from "@refeed/features/item/useItemDataWeb";
 import { usePlan } from "@refeed/features/payment/usePlan";
 import { debounce } from "@refeed/lib/debounce";
 import type { ItemType } from "@refeed/types/item";
 
-import { useOpenItemInSearch } from "../../features/feed/useOpenItemInSearch";
-import { useUpdateFeeds } from "../../features/feed/useUpdateFeeds";
 import { kmenu } from "../../stores/ui";
 
 const CommandPalette = () => {
@@ -109,6 +106,8 @@ const CommandPalette = () => {
 
 type SearchResultsType = RouterOutput["item"]["searchMultipleItems"];
 
+export const currentOpenSearchItem = atom<ItemType | undefined>(undefined);
+
 const SearchItems = ({
   closePallete,
   searchResults,
@@ -116,11 +115,7 @@ const SearchItems = ({
   closePallete: () => void;
   searchResults: SearchResultsType | undefined;
 }) => {
-  const { items } = useItemData();
-  const { openItem } = useOpenItemInSearch(items);
-
-  const { markRead } = useUpdateFeeds(items, "search");
-
+  const setOpenSearchItem = useSetAtom(currentOpenSearchItem);
   const [__, setItemSearchQuery] = useQueryState("searchItem", {
     shallow: true,
   });
@@ -139,11 +134,9 @@ const SearchItems = ({
           {searchResults?.map((item) => (
             <Command.Item value={item.title} key={item.id}>
               <div
-                // Not using a button because it centers it
                 onClick={() => {
-                  markRead(item as unknown as ItemType);
-                  openItem(item as unknown as ItemType);
                   setItemSearchQuery(item.id);
+                  setOpenSearchItem(item as unknown as ItemType);
 
                   closePallete();
                 }}
