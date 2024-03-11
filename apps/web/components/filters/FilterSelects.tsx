@@ -23,7 +23,7 @@ import {
   DropdownMenuTrigger,
 } from "../ui/DropDownMenu";
 
-type filterType = FormApi<
+export type filterType = FormApi<
   {
     Feeds: string[];
     Content: "Content" | "Anywhere" | "Title" | "Link";
@@ -65,7 +65,7 @@ export const FeedsSelect = ({
         return (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <div className="flex w-[190px] items-center rounded-md border border-neutral-200 px-4 shadow-sm dark:border-[#24252A] dark:bg-[#141415] dark:text-stone-200">
+              <div className="flex h-10 w-[190px] items-center rounded-md border border-neutral-200 px-4 shadow-sm dark:border-[#24252A] dark:bg-[#141415] dark:text-stone-200">
                 <div className="mr-auto flex">
                   <p className="text-sm font-[450]">
                     {field.state.value?.length == 0
@@ -168,10 +168,10 @@ export const ContentSelect = ({
           defaultValue={field.state.value}
           value={field.state.value}
         >
-          <SelectTrigger className="w-[175px]">
+          <SelectTrigger className="h-10 w-[190px] md:w-[175px]">
             <SelectValue />
           </SelectTrigger>
-          <SelectContent className="w-[175px]">
+          <SelectContent className="w-[190px] md:w-[175px]">
             <SelectItem value="Anywhere">Anywhere</SelectItem>
             <SelectItem value="Title">In the Title</SelectItem>
             <SelectItem value="Content">In the Content</SelectItem>
@@ -205,7 +205,7 @@ export const LogicSelect = ({
           defaultValue={field.state.value}
           value={field.state.value}
         >
-          <SelectTrigger className="w-[175px]">
+          <SelectTrigger className="h-10 w-[190px] md:w-[175px]">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>

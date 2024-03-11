@@ -11,6 +11,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "../ui/Tooltip";
+import type { filterType } from "./FilterSelects";
 import { ContentSelect, FeedsSelect, LogicSelect } from "./FilterSelects";
 
 // ESLint dosen't know that Tanstack Form uses the children prop
@@ -25,7 +26,7 @@ export const ToggleFilters = () => {
         const filter = f as unknown as Filter;
 
         return (
-          <div className="my-2 flex" key={JSON.stringify(filter)}>
+          <div className="my-2" key={JSON.stringify(filter)}>
             <div className="flex items-center space-x-1">
               <ToggleFilter filter={filter} />
             </div>
@@ -85,7 +86,7 @@ export const ToggleFilter = ({ filter }: { filter: Filter }) => {
     <div className="flex items-center space-x-1">
       <form.Provider>
         <div>
-          <div className="flex space-x-1">
+          <div className="flex flex-col space-x-1 space-y-1.5 md:flex-row md:space-y-0">
             <input
               // @ts-ignore
               defaultChecked={filter.enabled}
@@ -96,14 +97,14 @@ export const ToggleFilter = ({ filter }: { filter: Filter }) => {
               className="ml-1 mr-2.5 mt-2.5 rounded-[3px] border border-neutral-300 bg-[#fcfcfc] text-stone-700 dark:border-[#333333]/80 dark:bg-[#333333]"
               type="checkbox"
             />
-            <FeedsSelect FilterForm={form as any} existingFilter />
+            <FeedsSelect FilterForm={form as filterType} existingFilter />
             <form.Subscribe
               selector={(state) => [state.isTouched]}
               children={
-                <ContentSelect FilterForm={form as any} existingFilter />
+                <ContentSelect FilterForm={form as filterType} existingFilter />
               }
             />
-            <LogicSelect FilterForm={form as any} existingFilter />
+            <LogicSelect FilterForm={form as filterType} existingFilter />
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger>
@@ -154,7 +155,7 @@ export const ToggleFilter = ({ filter }: { filter: Filter }) => {
                           // void form.handleSubmit();
                         }}
                         defaultValue={filter.filter.Keywords ?? ""}
-                        className="z-10 mb-0.5 ml-[34px] mt-2 w-[602px]"
+                        className="z-10 mb-0.5 ml-1 mt-2 w-[40vh] md:ml-[34px] md:w-[602px]"
                         placeholder="Write Keywords"
                         rows={5}
                         maxLength={50}
