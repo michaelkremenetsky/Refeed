@@ -25,10 +25,6 @@ if (typeof window !== "undefined") {
     posthog.init(NEXT_PUBLIC_POSTHOG_KEY, {
       api_host: NEXT_PUBLIC_POSTHOG_HOST || "https://app.posthog.com",
       enable_recording_console_log: true,
-      // Enable debug mode in development
-      loaded: (posthog) => {
-        if (process.env.NODE_ENV === "development") posthog.debug();
-      },
     });
   }
 }
@@ -73,7 +69,7 @@ const App = ({
               forcedTheme={Component.theme}
             >
               <main
-                className={`bg-background text-optimize-legibility min-h-screen font-sans text-[#38383d] subpixel-antialiased outline-none dark:bg-[#0f0f10] dark:text-[#f3f3f7]`}
+                className={`bg-background text-optimize-legibility min-h-screen text-[#38383d] subpixel-antialiased outline-none dark:bg-[#0f0f10] dark:text-[#f3f3f7]`}
               >
                 <Component className={`dark`} {...pageProps} />
                 <Toaster position="bottom-right" />
