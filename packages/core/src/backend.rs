@@ -79,14 +79,11 @@ async fn refreshfeeds(Json(request): Json<RefreshFeedsRequest>) {
         .await
         .unwrap();
 
-    // Cache the fetch info in the background to return the response faster
-    tokio::spawn(async move {
         // Execute caching in the background
         if let Err(e) = cache_fetch_info(feeds, &client).await {
             // Handle or log the error as needed
             println!("Failed to cache fetch info: {:?}", e);
         }
-    });
 
     println!("Finished refresh");
 }

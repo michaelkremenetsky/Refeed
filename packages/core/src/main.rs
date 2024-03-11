@@ -35,7 +35,7 @@ async fn start_refresh_cron() {
     let mut interval = interval(Duration::from_secs(1800));
     loop {
         interval.tick().await;
-        run_refresher().await;
+        tokio::spawn(async move { run_refresher().await });
     }
 }
 
@@ -87,7 +87,10 @@ async fn run_refresher() {
 
     println!("Caching items");
 
-    cache_fetch_info(feeds, &client).await.unwrap();
+    if let Err(e) = cache_fetch_info(feeds, &client).await {
+        // Handle or log the error as needed
+        println!("Failed to cache fetch info: {:?}", e);
+    }
 
     println!("Finished refresh");
 }
