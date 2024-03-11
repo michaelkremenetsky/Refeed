@@ -37,7 +37,7 @@ export const MagazineImage = (props: {
             fill={true}
             src={item?.image_url ?? ""}
             unoptimized
-            className={`rounded-md border border-neutral-50 object-cover dark:border-stone-700`}
+            className={`rounded-md border border-neutral-50 object-cover dark:border-stone-800`}
           />
         )}
       </>

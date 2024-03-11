@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { ArticleTopbar } from "@components/reader/Reader";
 import {
   Tooltip,
   TooltipContent,
@@ -19,7 +20,7 @@ import { TextArea } from "@refeed/ui";
 
 import { settingsAtom } from "../../stores/settings";
 import Sharing from "../sharing/Sharing";
-import { fullscreenAtom, Topbar } from "./Reader";
+import { fullscreenAtom } from "./Reader";
 
 interface ArticleProps {
   item: ItemType;
@@ -62,7 +63,7 @@ export const Article = (props: ArticleProps) => {
         props.Type == "Popup"
           ? "w-[94.5%]"
           : props.Type == "Full"
-            ? "h-[calc(100vh-3.4rem)]"
+            ? "h-[calc(100svh-3.4rem)]"
             : props.Type == "Article View"
               ? "overflow-hidden rounded-md"
               : ""
@@ -71,7 +72,7 @@ export const Article = (props: ArticleProps) => {
       {props.Type == "Article View" ? (
         <div className="flex items-center rounded-t-md border-b bg-[#FCFCFC] py-3.5 dark:border-[#24252A] dark:bg-[#141415]">
           <div className="mx-auto flex w-[95%] justify-between">
-            <Topbar />
+            <ArticleTopbar openItemFromArticle={item} />
             <div>
               <Sharing />
             </div>
@@ -108,14 +109,14 @@ export const Article = (props: ArticleProps) => {
           </h4>
         </div>
         <div
-          className={`${props.Type == "Full" && "w-[640px]"} reader prose prose-base mb-5 text-neutral-700 subpixel-antialiased dark:prose-invert prose-a:text-neutral-700 prose-a:underline prose-a:decoration-neutral-300/70 prose-a:decoration-[0.5px] prose-a:underline-offset-[3px] hover:prose-a:decoration-neutral-400/60 dark:text-inherit dark:text-stone-200 dark:prose-a:text-stone-200 dark:prose-a:decoration-[#F4F4F5]`}
+          className={`${props.Type == "Full" && "w-fit md:w-[640px]"} reader prose prose-base mb-5 text-neutral-700 subpixel-antialiased dark:prose-invert prose-a:text-neutral-700 prose-a:underline prose-a:decoration-neutral-300/70 prose-a:decoration-[0.5px] prose-a:underline-offset-[3px] hover:prose-a:decoration-neutral-400/60 dark:text-inherit dark:text-stone-200 dark:prose-a:text-stone-200 dark:prose-a:decoration-[#F4F4F5]`}
         >
           <Markdown
             renderer={{
               image: (src, alt, title) => {
                 return (
                   <img
-                    className="mb-2 mt-3.5 h-auto w-full rounded-[3px]"
+                    className="mb-2 mt-3.5 h-auto w-full rounded-[3px] border border-[#f1f1f2] dark:border-neutral-800"
                     alt={alt}
                     src={src}
                     key={src + alt + title}
@@ -129,14 +130,14 @@ export const Article = (props: ArticleProps) => {
           />
         </div>
         <div className="flex">
-          <button className=" w-full rounded-md border border-neutral-200 text-base font-medium hover:border-gray-300 dark:border-neutral-700 dark:hover:border-neutral-700/90">
+          <button className="w-full rounded-md border border-neutral-200 text-base font-medium hover:border-gray-300 dark:border-neutral-700 dark:hover:border-neutral-700/90">
             <a
               target="_blank"
               rel="noopener noreferrer"
               href={url}
               className="no-underline"
             >
-              <h2 className="py-2 text-center font-[450] text-neutral-600/80 shadow-sm dark:text-stone-200">
+              <h2 className="py-2 text-center font-[450] text-neutral-600/80 shadow-sm dark:text-gray-200">
                 Visit Website
               </h2>
             </a>

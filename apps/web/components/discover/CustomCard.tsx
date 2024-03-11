@@ -17,7 +17,7 @@ export const CustomCard = ({
   return (
     <div
       className={clsx(
-        `${search_logo_url != undefined ? "dark:bg-[#0f0f10]" : "dark:bg-[#141415]"} text-optimize-legibility h-[200px] w-[245px] overflow-hidden rounded-lg border border-neutral-200 bg-white pb-2 pt-2 subpixel-antialiased shadow-[0px_20px_70px_-10px_hsla(227,30%,20%,0.08),0px_10px_24px_-8px_hsla(227,30%,20%,0.04),0px_1px_4px_-1px_hsla(227,30%,20%,0.06)] dark:border-neutral-700/80 dark:shadow-sm`,
+        `${search_logo_url != undefined ? "dark:bg-[#0f0f10]" : "dark:bg-[#141415]"} text-optimize-legibility h-[200px] w-[275px] overflow-hidden rounded-lg border border-neutral-200 bg-white pb-2 pt-2 subpixel-antialiased shadow-[0px_20px_70px_-10px_hsla(227,30%,20%,0.08),0px_10px_24px_-8px_hsla(227,30%,20%,0.04),0px_1px_4px_-1px_hsla(227,30%,20%,0.06)] sm:w-[245px] dark:border-neutral-700/80 dark:shadow-sm`,
         className,
       )}
     >

@@ -150,7 +150,7 @@ const Search = () => {
   return (
     <div className="flex flex-none cursor-pointer flex-col gap-3">
       <div className="flex flex-1 flex-col">
-        <div className="capacitor:active:opacity-70 dark:hover:text-near-white flex flex-1 items-center space-x-1 rounded-[7px] border border-neutral-300/60 bg-white px-2 py-1 text-sm text-neutral-400 shadow-sm shadow-black/5 transition duration-150 ease-in-out hover:bg-white hover:text-neutral-500 dark:border-white/5 dark:bg-white/5 dark:text-neutral-500 dark:shadow-black/10 dark:hover:bg-white/5">
+        <div className="capacitor:active:opacity-70 dark:hover:text-near-white flex flex-1 items-center space-x-1 rounded-[7px] border border-neutral-300/60 bg-white px-2 py-1 text-sm text-neutral-400 shadow-sm shadow-black/5 transition duration-150 ease-in-out hover:bg-white hover:text-neutral-500 dark:border-[#fcfcfd]/5 dark:bg-[#202022] dark:text-neutral-500 dark:shadow-black/10 dark:hover:bg-[#202022]">
           <div className="flex-none">
             <svg
               width="24"
@@ -167,7 +167,7 @@ const Search = () => {
               />
             </svg>
           </div>
-          <div className="w-0 flex-1 truncate ">Search your feeds...</div>
+          <div className="w-0 flex-1 truncate">Search your feeds...</div>
           <kbd className="inline-flex flex-none items-center rounded px-2 font-sans text-xs font-medium uppercase ">
             <span className="text-neutral-400 dark:text-neutral-500/90">
               ctrl&thinsp;k

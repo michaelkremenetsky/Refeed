@@ -1,11 +1,16 @@
+import { useRouter } from "next/router";
+import { LayoutTypes } from "@components/feed/FeedLayout";
 import { SideBarWidth } from "@components/layout/SideBar";
-import { ThemedSkeleton } from "@components/ui/Skeleton";
 import * as Dialog from "@radix-ui/react-dialog";
-import { useAtom, useAtomValue } from "jotai";
-import { ArrowRightToLine } from "lucide-react";
+import clsx from "clsx";
+import { motion } from "framer-motion";
+import { useAtom } from "jotai";
+import { PanelLeft } from "lucide-react";
+import { useWindowSize } from "usehooks-ts";
 
 import { trimTitle } from "../../lib/trimTitle";
 import { feedLayout } from "../../stores/ui";
+import { ThemedSkeleton } from "../ui/Skeleton";
 import { NavBarButtons } from "./NavBarButtons";
 
 interface NavBarTypes {
@@ -19,71 +24,74 @@ interface NavBarTypes {
 
 export default function NavBar(props: NavBarTypes) {
   const { title } = props;
-  const feedlayout = useAtomValue(feedLayout);
   const [width, setWidth] = useAtom(SideBarWidth);
+  const [Layout] = useAtom(feedLayout);
+
+  const { width: windowWidth } = useWindowSize();
+
+  const { query } = useRouter();
+  const { item: itemParam, search } = query;
+  const readerOpen = itemParam != undefined || search != undefined;
+
+  const isMobile = windowWidth < 500;
 
   return (
     <Dialog.Root>
       <div
         className={`sticky top-0 z-10 flex h-10 border-b border-[#f0f0f0] bg-white/95 backdrop-blur dark:border-[#24252A] dark:bg-[#0f0f10]`}
       >
-        {width == 1 && (
-          <ArrowRightToLine
-            size={16}
-            onClick={() => setWidth(240)}
-            className="absolute left-2 top-2.5 stroke-neutral-400/90 stroke-[1.5] dark:stroke-stone-400"
-          />
-        )}
+        <PanelLeft
+          size={18}
+          onClick={() => (width != 240 ? setWidth(240) : setWidth(0))}
+          className={clsx(
+            "left-3 top-2.5 stroke-neutral-400 stroke-[2] dark:stroke-stone-400",
+            "absolute sm:hidden",
+          )}
+        />
         {title == "Discover" ? (
           <div
-            // TODO: Fix this hacky solution
-            className={`mx-auto flex transform items-center sm:translate-x-[23px]  md:-translate-x-[100px] lg:translate-x-[15px] xl:-translate-x-[106px]`}
+            className={`flex w-full items-center overflow-x-auto scrollbar-hide`}
           >
-            <div className="w-[5px]" />
-            <div
-              className={`flex lg:w-[35.15em] ${
-                feedlayout == "Card" && title != "Discover"
-                  ? "w-[950px]"
-                  : feedlayout == "Article" && title != "Discover"
-                    ? "w-[620px]"
-                    : null
-              } font-bold`}
+            <motion.div
+              layout="preserve-aspect"
+              transition={{
+                duration: title ? 0.1 : 0,
+              }}
+              className="mx-auto flex"
             >
-              <h1
-                className={`ml-1.5 truncate text-ellipsis tracking-[-0.01em] subpixel-antialiased`}
-              >
-                {trimTitle(title, 30)}
-              </h1>
-            </div>
-            <div className="w-[250px]" />
+              <div className="sm:w-[250px] md:mx-0 md:w-[500px] lg:w-[750px] xl:w-[1000px]">
+                <h1
+                  className={`-ml-1 truncate text-ellipsis font-bold tracking-[-0.01em] subpixel-antialiased`}
+                >
+                  Discover
+                </h1>
+              </div>
+            </motion.div>
           </div>
         ) : (
           <div
-            // Remove -translate-x-[4px]?
-            className={`mx-auto flex -translate-x-[4px] items-center`}
+            className={`flex w-full items-center overflow-x-auto scrollbar-hide`}
           >
-            <div className="w-[5px]" />
-            <div
-              // TODO: Fix this hacky solution
-              className={`flex sm:w-[35.15em] ${
-                feedlayout == "Card" && title != "Discover"
-                  ? "w-[150px] xl:-translate-x-[250px]"
-                  : feedlayout == "Article" && title != "Discover"
-                    ? "w-[620px] xl:-translate-x-[40px]"
-                    : null
-              } font-bold`}
-            >
-              {title != "" ? (
-                <h1
-                  className={`ml-3 truncate text-ellipsis tracking-[-0.01em] subpixel-antialiased`}
-                >
-                  {trimTitle(title, 30)}
-                </h1>
-              ) : (
-                <ThemedSkeleton className="ml-2 h-5 min-w-[50px] py-2 dark:bg-[#1a1a1a]" />
-              )}
-            </div>
-            <div className="w-[250px]" />
+            <LayoutTypes Layout={Layout} readerOpen={readerOpen}>
+              <div
+                className={clsx(
+                  Layout == "Article" && "md:ml-6 md:w-[39.5em]",
+                  Layout == "Magazine" && !isMobile && "md:ml-8 md:w-[35em]",
+                  Layout == "Card" && "md:ml-2",
+                )}
+              >
+                {title != "" ? (
+                  <h1
+                    className={`truncate text-ellipsis font-bold tracking-[-0.01em] subpixel-antialiased`}
+                  >
+                    {trimTitle(title, 30)}
+                  </h1>
+                ) : (
+                  <ThemedSkeleton className="h-5 min-w-[100px] max-w-[200px] py-2 dark:bg-[#1a1a1a]" />
+                )}
+              </div>
+              <div className="md:w-[250px]" />
+            </LayoutTypes>
           </div>
         )}
         <NavBarButtons {...props} />

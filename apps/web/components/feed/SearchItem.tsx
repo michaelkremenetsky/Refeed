@@ -50,7 +50,8 @@ const FeedInfo = ({
     FeedType == "all" ||
     FeedType == "multiple" ||
     FeedType == "recentlyread" ||
-    FeedType == "bookmarks";
+    FeedType == "bookmarks" ||
+    FeedType == "search";
 
   // TODO: figure out a pure CSS solution for this
   return (
@@ -84,7 +85,7 @@ export const FeedName = ({
 }) => (
   <>
     {showFeedName ? (
-      <h4 className="font-regular max-w-[150px] shrink-0 truncate pb-1.5 pl-1 text-[13px] font-[400] leading-none text-neutral-400 dark:text-[#BDBDBD]/80 dark:text-stone-500">
+      <h4 className="font-regular shrink-0 truncate pb-1.5 pl-1 text-[13px] font-[400] leading-none text-neutral-400 md:max-w-[150px] dark:text-[#BDBDBD]/80 dark:text-stone-500">
         {item?.feed_title}
       </h4>
     ) : null}

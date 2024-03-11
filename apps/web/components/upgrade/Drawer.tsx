@@ -24,12 +24,12 @@ export const UpgradeDrawer = () => {
 export const RightUpgradeDrawer = () => {
   return (
     <Drawer.Root direction="right" shouldScaleBackground>
-      <Drawer.Trigger className="my-1 ml-2 rounded-md text-sm font-medium text-sky-500 hover:text-sky-500/30">
+      <Drawer.Trigger className="ml-2 mt-0.5 rounded-md text-sm font-medium text-sky-500 hover:text-sky-500/30">
         Upgrade
       </Drawer.Trigger>
       <Drawer.Portal>
         <Drawer.Overlay className="fixed inset-0 z-20 bg-black/[.32]" />
-        <Drawer.Content className="fixed bottom-0 right-0 z-20 mt-24 flex h-full w-[900px] flex-col overflow-scroll overflow-x-hidden rounded-t-[10px] bg-white dark:bg-[#141415]">
+        <Drawer.Content className="fixed bottom-0 right-0 z-20 mt-24 flex h-full flex-col overflow-scroll overflow-x-hidden rounded-t-[10px] bg-white md:w-[900px] dark:bg-[#141415]">
           <PricingPage />
         </Drawer.Content>
       </Drawer.Portal>

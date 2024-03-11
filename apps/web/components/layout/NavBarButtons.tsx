@@ -30,9 +30,8 @@ export const NavBarButtons = (props: NavBarTypes) => {
   const { plan } = usePlan();
 
   return (
-    <div className="item-center absolute right-3 top-1.5 justify-end rounded text-xl font-bold">
+    <div className="item-center absolute right-2 top-1.5 justify-end rounded text-xl font-bold">
       <div className="flex items-center self-center">
-        {/* <AiButton /> */}
         {!hideButtons ? (
           <div className={`flex self-center`}>
             {!recentPage ||
@@ -112,21 +111,21 @@ const FeedLayoutButtonNew = () => {
           <DropdownMenuLabel>Layout</DropdownMenuLabel>
           <DropdownMenuItem
             onClick={() => {
-              setFeedLayout("Magazine"), window.scrollTo(0, 0);
+              setFeedLayout("Magazine");
             }}
           >
             <span>Magazine</span>
           </DropdownMenuItem>
           <DropdownMenuItem
             onClick={() => {
-              setFeedLayout("Card"), window.scrollTo(0, 0);
+              setFeedLayout("Card");
             }}
           >
             <span>Card</span>
           </DropdownMenuItem>
           <DropdownMenuItem
             onClick={() => {
-              setFeedLayout("Article"), window.scrollTo(0, 0);
+              setFeedLayout("Article");
             }}
           >
             <span>Article</span>

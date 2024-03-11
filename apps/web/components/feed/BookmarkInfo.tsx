@@ -1,6 +1,9 @@
 import dayjs from "dayjs";
+import { useAtom } from "jotai";
 
 import type { ItemType } from "@refeed/types/item";
+
+import { feedLayout } from "../../stores/ui";
 
 interface Types {
   item: ItemType;
@@ -8,29 +11,19 @@ interface Types {
 
 export const BookmarkInfo: React.FC<Types> = (props: Types) => {
   const { item } = props;
+  const [Layout] = useAtom(feedLayout);
+
+  // Slice the amount of bookmark_folders to 3 if they are using the Card layout
+  if (Layout == "Card") {
+    item.bookmark_folders = item?.bookmark_folders?.slice(0, 3);
+  }
 
   if (item) {
     return (
       <>
         {item?.in_read_later == true && (
           <div className="flex shrink-0">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.55}
-              stroke="currentColor"
-              className="mt-[-1px] h-[14px] w-[14px] stroke-sky-500/90"
-              shapeRendering="geometricPrecision"
-            >
-              <path
-                shapeRendering="geometricPrecision"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z"
-              />
-            </svg>
-            <div className="pl-1" />
+            <div className="pl-[1px]" />
             <h4 className="text-[13px] font-[425] leading-none text-sky-500">
               Read Later
             </h4>

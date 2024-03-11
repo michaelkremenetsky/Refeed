@@ -36,6 +36,8 @@ export const MagazineItem = memo(
   },
 );
 
+// NOTE:Removing flex on mobile makes this look super nice on mobile web. Make this its own layout?
+
 export const NonLinkedMagazineItem = ({
   item,
   FeedType,
@@ -44,7 +46,7 @@ export const NonLinkedMagazineItem = ({
   FeedType: FeedTypes;
 }) => (
   <div
-    className={`relative mx-1 mt-1 flex w-[33em] flex-row space-x-[4px] rounded-md pb-2 pt-2
+    className={`relative mx-1 mt-1 flex w-screen flex-row space-x-[4px] rounded-md pb-2 pt-2 md:w-[33em]
           ${item?.marked_read ? "opacity-80" : ""}
         `}
   >

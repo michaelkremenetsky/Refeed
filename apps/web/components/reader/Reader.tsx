@@ -1,11 +1,10 @@
-import { memo, useEffect, useMemo, useRef, useState } from "react";
+import { memo, useEffect, useRef } from "react";
 import { useRouter } from "next/router";
 import * as Dialog from "@radix-ui/react-dialog";
 import clsx from "clsx";
 import { motion } from "framer-motion";
-import { atom, useAtom, useAtomValue } from "jotai";
+import { atom, useAtom, useSetAtom } from "jotai";
 import Carousel from "nuka-carousel";
-import { useQueryState } from "nuqs";
 
 import type { FeedType } from "@refeed/features/item/useItemDataWeb";
 import { useItemData } from "@refeed/features/item/useItemDataWeb";
@@ -19,139 +18,70 @@ import { ShortTermBookmarkButton } from "../../features/bookmarks/ShortTermBookm
 import { useUpdateFeeds } from "../../features/feed/useUpdateFeeds";
 import { PricingDialog } from "../../features/pricing/PricingDialog";
 import useWindowSize from "../../lib/useWindowSize";
-import { settingsAtom } from "../../stores/settings";
 import { trpc } from "../../utils/trpc";
-import { SideBarWidth } from "../layout/SideBar";
 import Sharing from "../sharing/Sharing";
 import { Article } from "./Article";
 import { CopyLinkButton } from "./CopyLinkButton";
+import { useReaderAnimation } from "./useReaderAnimation";
+import { useReaderNavigation } from "./useReaderNavigation";
 
 export const fullscreenAtom = atom(false);
-
-const useReaderNavigation = (items: ItemType[]) => {
-  const [_, setItemQuery] = useQueryState("item", {
-    shallow: true,
-  });
-  const [__, setItemSearchQuery] = useQueryState("searchItem", {
-    shallow: true,
-  });
-
-  const { query } = useRouter();
-  const { item, searchItem } = query;
-
-  // TODO: Add ability to fetch the open id from here
-  const initialIndex = useMemo(() => {
-    if (searchItem && items) {
-      return items.findIndex((i) => i.id == searchItem);
-    } else {
-      return items.findIndex((i) => i.id == item);
-    }
-  }, [items, item, searchItem]);
-
-  const isLoaded = items.length > 0 && initialIndex !== -1;
-
-  const closeReader = () => {
-    // TODO: Fix clicking esc causes it to removes parems in other parts of the app
-    // Should be able to just check readerOpen here but for whatever reason it dosen't work.
-    // const readerOpen = item != undefined || searchItem != undefined;
-
-    setItemQuery(null);
-    setItemSearchQuery(null);
-  };
-
-  useEffect(() => {
-    document.addEventListener("keydown", (event) => {
-      if (event.key === "Escape") {
-        closeReader();
-      }
-    });
-    return () => {
-      document.removeEventListener("keydown", (event) => {
-        if (event.key === "Escape") {
-          closeReader();
-        }
-      });
-    };
-  }, []);
-
-  return { closeReader, initialIndex, isLoaded };
-};
-
-const useReaderAnimation = () => {
-  const settings = useAtomValue(settingsAtom);
-  const [fullscreen, setFullscren] = useAtom(fullscreenAtom);
-
-  useEffect(() => {
-    setFullscren(settings.OpenReaderInFullScreenByDefault);
-  }, [settings.OpenReaderInFullScreenByDefault]);
-
-  const width = useAtomValue(SideBarWidth);
-  const { width: screenWidth } = useWindowSize();
-
-  const [prevFull, setPrevFull] = useState(fullscreen);
-
-  // Calculate the full screen percentage
-  const fullScreenWidthPercent = ((screenWidth! - width) / screenWidth!) * 100;
-  const widthStyle = fullscreen
-    ? { width: `${fullScreenWidthPercent}%` }
-    : undefined;
-
-  // Checks if the transtion was caused by a change in `full`.
-  // Any other change will not trigger a transition.
-  useEffect(() => {
-    setPrevFull(fullscreen);
-  }, [fullscreen]);
-
-  // Determine transition duration based on change in `full`
-  const transitionDuration = fullscreen !== prevFull ? 0.2 : 0;
-
-  return { fullscreen, widthStyle, transitionDuration };
-};
+export const AIDrawerOpen = atom(false);
 
 const Reader = () => {
   // To prevent the sharing from popping in
   trpc.settings.getShareProviders.useQuery();
 
+  const { width: windowWidth } = useWindowSize();
+
   const { items, FeedType, fetchNextPage } = useItemData();
-  const { closeReader, initialIndex, isLoaded } = useReaderNavigation(items);
+  const { closeReader, initialIndex, isLoaded, searchItem } =
+    useReaderNavigation(items);
   const { fullscreen, widthStyle, transitionDuration } = useReaderAnimation();
 
-  if (isLoaded) {
+  const [aIDrawerOpen, setAIDrawerOpen] = useAtom(AIDrawerOpen);
+
+  if (isLoaded || searchItem) {
     return (
-      <motion.div
-        layout="preserve-aspect"
-        className={`fixed z-30 w-full overflow-hidden bg-white py-0.5 md:left-auto md:w-[65%] dark:bg-[#0f0f10] ${
-          fullscreen
-            ? "left-0 right-0 top-0 h-full"
-            : "left-1 right-1 top-1.5 mx-1 h-[98.5vh] rounded-lg border-[1.5px] border-neutral-400/25 shadow-[rgba(0,0,0,0.05)_0px_0px_1px,rgba(0,0,0,0.04)_0px_15px_30px] lg:w-[36%] dark:border-[#24252A] dark:bg-[#0f0f10] dark:shadow-none"
-        }
-      `}
-        transition={{
-          duration: transitionDuration,
-        }}
-        style={widthStyle}
-      >
-        <div className="flex flex-row items-center rounded-t border-b border-[#f0f0f0] bg-[#fcfcfc] py-2.5 font-bold dark:border-[#303030]/90 dark:bg-[#141415]">
-          <BackButton onBackClick={() => closeReader()} />
-          <div className={`${fullscreen ? "mx-auto w-[680px]" : "w-[90%]"}`}>
-            <div
-              className={`flex ${fullscreen ? "w-[90%]" : "ml-2"} justify-between`}
-            >
-              <Topbar className={!fullscreen ? "ml-1" : ""} />
-              <Sharing />
+      <>
+        <motion.div
+          layout="preserve-aspect"
+          className={clsx(
+            "fixed z-30 w-full transform overflow-hidden bg-white py-0.5 md:left-auto md:w-[65%] dark:bg-[#0f0f10]",
+            windowWidth! > 500 &&
+              (fullscreen
+                ? `left-0 right-0 top-0 h-full`
+                : `${aIDrawerOpen ? "right-[16.5%] rounded-lg" : "right-1 rounded-lg"} left-1 top-1.5 mx-1 h-[98.5vh] border-[1.5px] border-neutral-400/25 shadow-[rgba(0,0,0,0.05)_0px_0px_1px,rgba(0,0,0,0.04)_0px_15px_30px] lg:w-[36%] dark:border-[#24252A] dark:bg-[#0f0f10] dark:shadow-none`),
+          )}
+          transition={{
+            duration: 0.2,
+          }}
+          style={widthStyle}
+        >
+          <div className="flex flex-row items-center rounded-t border-b border-[#f0f0f0] bg-[#fcfcfc] py-2.5 font-bold dark:border-[#303030]/90 dark:bg-[#141415]">
+            <BackButton onBackClick={() => closeReader()} />
+            <div className={`${fullscreen ? "mx-auto w-[680px]" : "w-[90%]"}`}>
+              <div
+                className={`flex ${fullscreen ? "w-[90%]" : "ml-1"} justify-between`}
+              >
+                <Topbar className={!fullscreen ? "ml-1" : ""} />
+                <div className="flex">
+                  <Sharing />
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-        <div>
-          <MemoizedCarousel
-            fullscreen={fullscreen}
-            items={items}
-            initialIndex={initialIndex}
-            fetchNextPage={() => fetchNextPage}
-            FeedType={FeedType}
-          />
-        </div>
-      </motion.div>
+          <div>
+            <MemoizedCarousel
+              fullscreen={fullscreen}
+              items={searchItem ? [searchItem] : items}
+              initialIndex={searchItem ? 0 : initialIndex}
+              fetchNextPage={() => fetchNextPage}
+              FeedType={FeedType}
+            />
+          </div>
+        </motion.div>
+      </>
     );
   }
 };
@@ -210,7 +140,7 @@ const MemoizedCarousel = memo(function RenderCarousel({
       renderAnnounceSlideMessage={undefined}
       enableKeyboardControls={true}
       dragging={false}
-      swiping={false}
+      swiping={true}
       speed={fullscreen ? 0 : 500}
       slideIndex={initialIndex}
       slidesToScroll="auto"
@@ -227,11 +157,11 @@ const MemoizedCarousel = memo(function RenderCarousel({
       {newBufferedItems?.map((item) => (
         <div
           key={item.id}
-          className="scrollbar-rounded-md w-full overflow-y-scroll overscroll-contain scrollbar scrollbar-thumb-neutral-300 scrollbar-thumb-rounded-md scrollbar-w-1 dark:bg-[#0f0f10]"
+          className="scrollbar-rounded-md w-full overflow-y-scroll overscroll-none scrollbar scrollbar-thumb-neutral-300 scrollbar-thumb-rounded-md scrollbar-w-1 md:overscroll-contain dark:bg-[#0f0f10] dark:scrollbar-thumb-[#404245]"
         >
           {item.title && (
-            <div className={fullscreen ? "mx-auto w-[650px]" : "w-full"}>
-              <div className="flex h-[calc(100vh-3.4rem)] flex-col items-center pt-[1px]">
+            <div className={fullscreen ? "mx-auto md:w-[650px]" : "w-full"}>
+              <div className="flex h-[calc(100svh-3.4rem)] flex-col items-center pt-[1px]">
                 <Article
                   FeedType={FeedType}
                   item={item}
@@ -247,10 +177,14 @@ const MemoizedCarousel = memo(function RenderCarousel({
 });
 
 const BackButton = ({ onBackClick }: { onBackClick: () => void }) => {
+  const setAIDrawerOpen = useSetAtom(AIDrawerOpen);
+
   return (
     <button
       className="animate-fade-in-up mx-2 rounded p-1 transition-all hover:bg-[#F5F5F5] dark:hover:bg-[#0f0f0f]"
-      onClick={() => onBackClick()}
+      onClick={() => {
+        setAIDrawerOpen(false), onBackClick();
+      }}
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -278,6 +212,30 @@ export const Topbar = ({ className }: { className?: string }) => {
         <BookmarkButton />
         <BookmarkFolderButton />
         <ShortTermBookmarkButton />
+        <CopyLinkButton />
+        {plan == "free" && (
+          <PricingDialog setDialogUndefined={() => undefined} />
+        )}
+      </Dialog.Root>
+    </div>
+  );
+};
+
+export const ArticleTopbar = ({
+  className,
+  openItemFromArticle,
+}: {
+  className?: string;
+  openItemFromArticle: ItemType;
+}) => {
+  const { plan } = usePlan();
+
+  return (
+    <div className={clsx("flex items-center gap-5", className)}>
+      <Dialog.Root>
+        <BookmarkButton openItemFromArticle={openItemFromArticle} />
+        <BookmarkFolderButton openItemFromArticle={openItemFromArticle} />
+        <ShortTermBookmarkButton openItemFromArticle={openItemFromArticle} />
         <CopyLinkButton />
         {plan == "free" && (
           <PricingDialog setDialogUndefined={() => undefined} />

@@ -1,5 +1,6 @@
 import { getFirstParagraphs } from "@lib/getFirstParagraph";
 import dayjs from "dayjs";
+import { useWindowSize } from "usehooks-ts";
 
 import type { ItemType } from "@refeed/types/item";
 
@@ -9,9 +10,11 @@ import { BookmarkInfo } from "./BookmarkInfo";
 export const FeedInfo = ({
   FeedType,
   item,
+  removeSummary,
 }: {
   FeedType: FeedTypes;
   item: ItemType;
+  removeSummary?: boolean;
 }) => {
   const hasAnyTypeOfBookmark =
     item?.temp_added_time ??
@@ -29,11 +32,14 @@ export const FeedInfo = ({
     FeedType == "recentlyread" ||
     FeedType == "bookmarks";
 
+  const { width: windowWidth } = useWindowSize();
+  const isMobile = windowWidth < 500;
+
   // TODO: figure out a pure CSS solution for this
   return (
     <>
       <div className="flex flex-row">
-        <div className="mt-1.5 flex max-w-[325px] flex-wrap gap-y-1">
+        <div className="mt-1.5 flex max-w-fit flex-wrap gap-y-1">
           <div
             className={`${hasAnyTypeOfBookmark ? "ml-2" : "ml-1"} ${amountOfBookmarks >= 2 && "gap-y-1.5"} flex flex-wrap gap-x-1.5`}
           >
@@ -45,7 +51,9 @@ export const FeedInfo = ({
           </div>
         </div>
       </div>
-      <Summary website_content={item?.website_content!} />
+      {!isMobile && !removeSummary && (
+        <Summary website_content={item?.website_content!} />
+      )}
     </>
   );
 };
@@ -76,7 +84,7 @@ export const FeedDate = ({ item }: { item: ItemType }) => (
 
 export const Summary = ({ website_content }: { website_content: string }) => {
   return (
-    <div className="line-clamp-3 w-[325px] pl-2 text-[13px] font-[400] not-italic leading-snug text-neutral-400 dark:text-stone-500">
+    <div className="line-clamp-3 w-fit pl-2 text-[13px] font-[400] not-italic leading-snug text-neutral-400 md:w-[325px] dark:text-stone-500">
       <h1>{getFirstParagraphs(website_content)}</h1>
     </div>
   );
