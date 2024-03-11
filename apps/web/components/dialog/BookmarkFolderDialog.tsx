@@ -1,16 +1,19 @@
 import { useContext, useState } from "react";
 import * as RadixDialog from "@radix-ui/react-dialog";
 import { AnimatePresence, motion } from "framer-motion";
+import { trpc } from "utils/trpc";
 
 import { useOpenItem } from "@refeed/features/item/useItemDataWeb";
-import { Input } from "@refeed/ui";
+import { usePlan } from "@refeed/features/payment/usePlan";
 import {
   ContentTopBar,
   DialogOpenContext,
   dialogVariants,
   getEnsureDialogContainer,
 } from "@refeed/ui/components/dialog/AddDialog";
+import { Input } from "@refeed/ui/components/input";
 
+import { BookmarkFolderUpgradeMessage } from "../../../../packages/features/pro/BookmakFolderUpgradeMessage";
 import { useUpdateBookmarkFolders } from "../../features/bookmarks/useUpdateBookmarkFolders";
 import { cn } from "../../lib/cnutils";
 
@@ -22,8 +25,13 @@ export function BookmarkFolderDialog({ className, ...props }: ExtendedProps) {
   const isOpen = useContext(DialogOpenContext);
 
   const { openItem } = useOpenItem();
+  const { plan } = usePlan();
   const [folderName, setFolderName] = useState<string | undefined>();
   const { toggleBookmarkFolder } = useUpdateBookmarkFolders();
+  const [error, setError] = useState<string | undefined>(undefined);
+
+  const { data: bookmarkFolders } =
+    trpc.bookmark.getBookmarkFoldersForUser.useQuery();
 
   return (
     <>
@@ -57,34 +65,67 @@ export function BookmarkFolderDialog({ className, ...props }: ExtendedProps) {
                 layout
                 layoutId="addDialog"
               >
-                <ContentTopBar title={props.title} />
-                <motion.div className="flex h-full w-[300px] flex-col items-stretch px-3.5 pb-2">
-                  <Input
-                    onChange={(e) => {
-                      setFolderName(e.target.value);
-                    }}
-                    placeholder="Folder Name"
-                  />
+                {bookmarkFolders?.length! >= 3 && plan == "free" ? (
+                  <BookmarkFolderUpgradeMessage />
+                ) : (
                   <>
-                    <RadixDialog.Close aria-label="Close">
-                      <motion.button
-                        layout="preserve-aspect"
-                        onClick={() => {
-                          if (folderName && openItem) {
-                            toggleBookmarkFolder(openItem, folderName);
+                    <ContentTopBar title={props.title} />
+                    <motion.div className="flex h-full w-[300px] flex-col items-stretch px-3.5 pb-2">
+                      <Input
+                        onChange={(e) => {
+                          if (
+                            bookmarkFolders?.find(
+                              (folder) => folder.name === e.target.value,
+                            )
+                          ) {
+                            setError("Bookmark folder already exists");
+                            return;
+                          } else {
+                            setError(undefined);
+                            setFolderName(e.target.value);
                           }
                         }}
-                        className={`-z-10 mb-1 mt-4 w-full ${
-                          !folderName
-                            ? "cursor-not-allowed bg-sky-500/60"
-                            : "bg-sky-500"
-                        } rounded-md py-1.5 text-center font-medium tracking-tight text-white`}
-                      >
-                        Create Folder
-                      </motion.button>
-                    </RadixDialog.Close>
+                        placeholder="Folder Name"
+                      />
+                      <RadixDialog.Close aria-label="Close">
+                        <motion.button
+                          layout="preserve-aspect"
+                          onClick={() => {
+                            // Check if their is already a folder with this name
+                            if (
+                              bookmarkFolders?.find(
+                                (folder) => folder.name === folderName,
+                              )
+                            ) {
+                              setError("Bookmark folder already exists");
+                              return;
+                            }
+
+                            if (
+                              plan == "pro" ||
+                              (bookmarkFolders?.length! <= 3 && plan == "free")
+                            )
+                              if (folderName && openItem) {
+                                toggleBookmarkFolder(openItem, folderName);
+                              }
+                          }}
+                          className={`-z-10 mb-1 mt-4 w-full  ${
+                            error || folderName == ""
+                              ? "cursor-not-allowed bg-sky-500/60"
+                              : "bg-sky-500"
+                          } rounded-md py-1.5 text-center font-medium tracking-tight text-white`}
+                        >
+                          Create Folder
+                        </motion.button>
+                      </RadixDialog.Close>
+                      {error && (
+                        <h3 className="pointer-events-none rounded-md text-center text-neutral-500">
+                          {error}
+                        </h3>
+                      )}
+                    </motion.div>
                   </>
-                </motion.div>
+                )}
               </motion.div>
             </RadixDialog.Content>
           </AnimatePresence>
