@@ -10,6 +10,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import { useWindowSize } from "usehooks-ts";
 
 import { Badge } from "@refeed/ui";
 import { Input } from "@refeed/ui/components/input";
@@ -29,13 +30,15 @@ const columns = [
   columnHelper.display({
     id: "select",
     header: ({ table }) => (
-      <IndeterminateCheckbox
-        {...{
-          checked: table.getIsAllRowsSelected(),
-          indeterminate: table.getIsSomeRowsSelected(),
-          onChange: table.getToggleAllRowsSelectedHandler(),
-        }}
-      />
+      <div className="ml-2 px-1">
+        <IndeterminateCheckbox
+          {...{
+            checked: table.getIsAllRowsSelected(),
+            indeterminate: table.getIsSomeRowsSelected(),
+            onChange: table.getToggleAllRowsSelectedHandler(),
+          }}
+        />
+      </div>
     ),
     cell: ({ row }) => (
       <div className="ml-2 px-1">
@@ -52,8 +55,8 @@ const columns = [
   }),
   columnHelper.accessor("title", {
     cell: (props) => (
-      <div className="ml-3 flex items-center p-2">
-        <div className="shadow-[0_0px_1px_rgba(0,0,0,0.5) mr-4 h-6 w-6 rounded-md border bg-[#FCFCFC] p-[3px]  dark:border-[#24252A] dark:bg-[#141415]">
+      <div className="flex items-center p-2 md:ml-3">
+        <div className="shadow-[0_0px_1px_rgba(0,0,0,0.5) mr-4 h-6 w-6 rounded-md border bg-[#FCFCFC] p-[3px] dark:border-[#24252A] dark:bg-[#141415]">
           <Image
             className="h-full w-full rounded-sm"
             width={20}
@@ -63,21 +66,21 @@ const columns = [
             unoptimized
           />
         </div>
-        <span className="w-[225px] overflow-hidden truncate">
+        <span className="w-[100px] overflow-hidden truncate md:w-[225px]">
           {props.getValue()}
         </span>
       </div>
     ),
     footer: (info) => info.column.id,
     header: () => (
-      <span className="ml-4 flex select-none justify-start py-2 font-semibold dark:text-stone-200">
+      <span className="ml-2 flex select-none justify-start py-2 font-semibold md:ml-4 dark:text-stone-200">
         Title
       </span>
     ),
   }),
   columnHelper.accessor("feed_url", {
     cell: (info) => (
-      <div className="w-[225px] overflow-hidden truncate text-neutral-500">
+      <div className="w-[225px] overflow-hidden truncate text-neutral-450">
         {info.getValue()}
       </div>
     ),
@@ -104,6 +107,7 @@ const columns = [
 ];
 
 export const OrganizeFeeds = () => {
+  const { width } = useWindowSize();
   const { data, refetch } = trpc.feed.getAllUserFeeds.useQuery();
 
   const utils = trpc.useUtils();
@@ -160,7 +164,11 @@ export const OrganizeFeeds = () => {
 
   const table = useReactTable({
     data: data ? data : [],
-    columns: columns,
+    columns:
+      width > 500
+        ? columns
+        : // @ts-ignore
+          columns.filter((column) => column.accessorKey != "feed_url"),
     state: {
       sorting,
       rowSelection,
@@ -176,8 +184,8 @@ export const OrganizeFeeds = () => {
   });
 
   return (
-    <div className="mr-[3px] h-full w-full overflow-y-auto scrollbar scrollbar-thumb-neutral-300/75 scrollbar-thumb-rounded-md scrollbar-w-1 dark:scrollbar-thumb-neutral-700">
-      <div className="my-3 mr-2 flex w-[700px] flex-col gap-y-3">
+    <div className="mr-[3px] h-full w-full overflow-y-auto overscroll-none scrollbar scrollbar-thumb-neutral-300/75 scrollbar-thumb-rounded-md scrollbar-w-1 dark:scrollbar-thumb-neutral-700">
+      <div className="my-3 mr-2 flex flex-col gap-y-3 md:w-[700px]">
         <div className="flex w-full">
           <Input
             value={globalFilter ?? ""}
