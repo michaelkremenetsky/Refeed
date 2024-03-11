@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { domAnimation, LazyMotion, m, motion } from "framer-motion";
 import { useQueryState } from "nuqs";
 import { useWindowSize } from "usehooks-ts";
 import { trpc } from "utils/trpc";
@@ -10,6 +9,7 @@ import {
 } from "@refeed/lib/DiscoveryFeeds";
 import type { EventFor } from "@refeed/lib/EventFor";
 import type { ItemType } from "@refeed/types/item";
+import { ScrollArea } from "@refeed/ui";
 import {
   DialogRoot,
   DialogTrigger,
@@ -87,14 +87,14 @@ export const DiscoverLayout = () => {
   });
 
   return (
-    <div
+    <ScrollArea
       ref={containerRef}
-      className="gutter mx-auto flex h-full w-full flex-col overflow-x-hidden overflow-y-scroll pt-4"
+      className="mx-auto flex h-full w-full flex-col overflow-x-hidden pr-4"
     >
-      <div className="mx-auto px-0.5 pt-2">
+      <div className="mx-auto w-max px-0.5 pt-6">
         <Input
           placeholder="Search Feeds or Paste RSS Link"
-          className="mx-4 mb-0.5 h-11 w-[250px] md:mx-0 md:w-[500px] lg:w-[750px] xl:w-[1000px]"
+          className="mx-4 mb-0.5 h-11 w-[275px] sm:w-[250px] md:mx-0 md:w-[500px] lg:w-[750px] xl:w-[1000px]"
           defaultValue={searchQuery ?? ""}
           onInput={(e: EventFor<"input", "onChange">) => {
             if (!e.target.value) {
@@ -163,7 +163,7 @@ export const DiscoverLayout = () => {
           ))}
         </div>
       )}
-    </div>
+    </ScrollArea>
   );
 };
 
@@ -186,67 +186,65 @@ const NewDisc = ({
     trpc.feed.getFeedsInFolders.useQuery();
 
   return (
-    <LazyMotion features={domAnimation}>
-      <m.div
-        className={`flex h-[275px] overflow-hidden rounded-md border bg-[#FCFCFC] lg:mx-0 dark:border-neutral-700/80 dark:dark:bg-[#141415]`}
-      >
-        <div className="flex w-full items-center gap-8">
-          <motion.div layout="size" className="flex w-[200px] flex-col px-3">
-            <div className="shadow-[0_0px_1px_rgba(0,0,0,0.5) mx-auto my-auto h-10 w-10 rounded-md border bg-[#FCFCFC] p-[3px] dark:border-neutral-700/80 dark:bg-[#141415]">
-              <img
-                className="h-full w-full rounded-sm "
-                width={40}
-                height={40}
-                alt="Site not found"
-                src={search_logo_url}
-              />
-            </div>
-            <h1 className="mx-auto mt-3 line-clamp-3 max-w-[150px] text-center text-sm font-semibold tracking-wide">
-              {title}
-            </h1>
-            <div className="flex flex-col">
-              <DialogRoot>
-                <DialogTrigger className="mt-2 rounded-md text-center font-medium tracking-[-0.015em] text-sky-500">
-                  + Add Feed
-                </DialogTrigger>
-                {!isPending && feedsInFolders?.length! > 0 ? (
-                  <AddFeedDialog
-                    feed_title={search_title}
-                    link={search_feed_url}
-                    favicon_url={search_logo_url}
-                    title="Add New Feed"
-                  />
-                ) : (
-                  <AddFolderDialog link={search_feed_url} title="Add Folder" />
-                )}
-              </DialogRoot>
-
-              <Link
-                href={"/discover/" + feed_id}
-                className="mt-1 rounded-md text-center font-medium text-neutral-400/90 dark:text-stone-400"
-              >
-                Preview
-              </Link>
-            </div>
-          </motion.div>
-
-          {items.map((item: any) => (
-            <div key={item.title + item.link} className="w-[219.5px] gap-4">
-              <DialogRoot>
-                <DialogTrigger asChild>
-                  <CustomCard item={item} search_logo_url={search_logo_url} />
-                </DialogTrigger>
+    <div
+      className={`flex h-[275px] overflow-hidden rounded-md border bg-[#FCFCFC] lg:mx-0 dark:border-neutral-700/80 dark:dark:bg-[#141415]`}
+    >
+      <div className="flex w-full items-center gap-8">
+        <div className="flex w-[200px] flex-col px-3">
+          <div className="shadow-[0_0px_1px_rgba(0,0,0,0.5) mx-auto my-auto h-10 w-10 rounded-md border bg-[#FCFCFC] p-[3px] dark:border-neutral-700/80 dark:bg-[#141415]">
+            <img
+              className="h-full w-full rounded-sm "
+              width={40}
+              height={40}
+              alt="Site not found"
+              src={search_logo_url}
+            />
+          </div>
+          <h1 className="mx-auto mt-3 line-clamp-3 max-w-[150px] text-center text-sm font-semibold tracking-wide">
+            {title}
+          </h1>
+          <div className="flex flex-col">
+            <DialogRoot>
+              <DialogTrigger className="mt-2 rounded-md text-center font-medium tracking-[-0.015em] text-sky-500">
+                + Add Feed
+              </DialogTrigger>
+              {!isPending && feedsInFolders?.length! > 0 ? (
                 <AddFeedDialog
                   feed_title={search_title}
                   link={search_feed_url}
+                  favicon_url={search_logo_url}
                   title="Add New Feed"
                 />
-              </DialogRoot>
-            </div>
-          ))}
+              ) : (
+                <AddFolderDialog link={search_feed_url} title="Add Folder" />
+              )}
+            </DialogRoot>
+
+            <Link
+              href={"/discover/" + feed_id}
+              className="mt-1 rounded-md text-center font-medium text-neutral-400/90 dark:text-stone-400"
+            >
+              Preview
+            </Link>
+          </div>
         </div>
-      </m.div>
-    </LazyMotion>
+
+        {items.map((item: any) => (
+          <div key={item.title + item.link} className="w-[219.5px] gap-4">
+            <DialogRoot>
+              <DialogTrigger asChild>
+                <CustomCard item={item} search_logo_url={search_logo_url} />
+              </DialogTrigger>
+              <AddFeedDialog
+                feed_title={search_title}
+                link={search_feed_url}
+                title="Add New Feed"
+              />
+            </DialogRoot>
+          </div>
+        ))}
+      </div>
+    </div>
   );
 };
 
