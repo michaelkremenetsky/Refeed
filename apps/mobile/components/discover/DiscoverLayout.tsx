@@ -11,6 +11,7 @@ import { useSetAtom } from "jotai";
 
 import {
   BusinessDiscoverItems,
+  ScienceDiscoverItems,
   TechDiscoverFeeds,
 } from "@refeed/lib/DiscoveryFeeds";
 import { useDebounce } from "@refeed/lib/useDebounce";
@@ -26,6 +27,7 @@ import { CustomCard } from "./CustomCard";
 const DiscoveryFeeds = [
   { feeds: TechDiscoverFeeds, name: "Tech" },
   { feeds: BusinessDiscoverItems, name: "Business" },
+  { feeds: ScienceDiscoverItems, name: "Science" },
 ];
 
 type Feed = typeof DiscoveryFeeds extends { feeds: infer U }[] | undefined
