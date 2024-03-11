@@ -5,7 +5,7 @@ export {
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue
+  SelectValue,
 } from "./components/select";
 
 export { Switch } from "./components/switch";
@@ -19,7 +19,7 @@ export {
   DialogHeader,
   DialogOverlay,
   DialogPortal,
-  DialogTrigger
+  DialogTrigger,
 } from "./components/dialog/Dialog";
 
 export { Input } from "./components/input";
@@ -32,6 +32,8 @@ export { Toaster } from "./components/toast/index";
 
 export { Progress } from "./components/progress";
 
+export { ScrollArea, ScrollBar } from "./components/scroll-area";
+
 export {
   Drawer,
   DrawerClose,
@@ -42,7 +44,7 @@ export {
   DrawerOverlay,
   DrawerPortal,
   DrawerTitle,
-  DrawerTrigger
+  DrawerTrigger,
 } from "./components/drawer";
 
 export {
@@ -51,7 +53,7 @@ export {
   CommandGroup,
   CommandInput,
   CommandItem,
-  CommandList
+  CommandList,
 } from "./components/command";
 
 export {
@@ -69,6 +71,5 @@ export {
   ContextMenuSub,
   ContextMenuSubContent,
   ContextMenuSubTrigger,
-  ContextMenuTrigger
+  ContextMenuTrigger,
 } from "./components/context-menu";
-
