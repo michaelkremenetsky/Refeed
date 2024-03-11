@@ -64,7 +64,10 @@ export const EmailButton = (props: { type: "login" | "signup" }) => {
           ) : null}
         </div>
         <motion.button
-          onClick={() => setShowEmail(true)}
+          onClick={() => {
+            setShowEmail(true);
+            signInWithOtp();
+          }}
           className="w-full rounded-[6px] bg-white px-4 py-2.5 text-base font-medium no-underline shadow-[0_0_0_1px_rgba(18,55,105,0.08),0_1px_2px_0_rgba(18,55,105,0.12)] transition hover:bg-[#fafafa]"
         >
           <div className="flex items-center justify-center">
@@ -72,13 +75,7 @@ export const EmailButton = (props: { type: "login" | "signup" }) => {
             {props.type == "login" ? (
               <>
                 {showEmail ? (
-                  <span
-                    onClick={() => {
-                      signInWithOtp();
-                    }}
-                  >
-                    Login with Email
-                  </span>
+                  <span>Login with Email</span>
                 ) : (
                   <span> Continue with Email</span>
                 )}
