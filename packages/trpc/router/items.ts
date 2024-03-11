@@ -156,9 +156,6 @@ export const itemRouter = createTRPCRouter({
           ...sharedQuery,
         });
 
-        // I need to get this on the DB level because its not gonna load everything
-        // The whole scrolling is broken
-
         // Sort recently read Items (Make sure it gets the cursor before running this)
         if (input.type == "recentlyread" && input.sort == "Latest") {
           items = items.sort(
