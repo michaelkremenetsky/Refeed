@@ -17,14 +17,21 @@ import { trpc } from "utils/trpc";
 
 import { useOpenItem } from "@refeed/features/item/useItemDataWeb";
 
-// TODO: Make this better, Make it look more like the youtube sharing?
-
 const Sharing = () => {
   const providers = trpc.settings.getShareProviders.useQuery(undefined, {
     staleTime: Infinity,
   }).data;
 
   const { openItem } = useOpenItem();
+
+  const includesAll =
+    providers?.includes("Twitter") &&
+    providers?.includes("Email") &&
+    providers?.includes("Facebook") &&
+    providers?.includes("Telegram") &&
+    providers?.includes("Pocket") &&
+    providers?.includes("Mastodon") &&
+    providers?.includes("Linkedin");
 
   return (
     <div className="flex">
@@ -33,23 +40,35 @@ const Sharing = () => {
           <TwitterShareButton
             title={openItem?.title}
             url={openItem?.url!}
-            className="h-6 w-6"
+            className="h-[22px] w-[22px]"
           >
-            <Twitter className="translate-y-[3px] transform stroke-neutral-450 stroke-[1.25] dark:stroke-stone-400" />
+            <Twitter
+              shapeRendering="geometricPrecision"
+              className="translate-y-[3px] transform stroke-neutral-450 stroke-[1.25] dark:stroke-stone-400"
+            />
           </TwitterShareButton>
         </div>
       ) : null}
       {providers?.includes("Email") ? (
         <div className="pr-5">
-          <EmailShareButton url={openItem?.url!} className="h-6 w-6">
-            <Mail className="translate-y-[3px] transform stroke-neutral-450 stroke-[1.25] dark:stroke-stone-400" />
+          <EmailShareButton url={openItem?.url!} className="h-[22px] w-[22px]">
+            <Mail
+              shapeRendering="geometricPrecision"
+              className="translate-y-[3px] transform stroke-neutral-450 stroke-[1.25] dark:stroke-stone-400"
+            />
           </EmailShareButton>
         </div>
       ) : null}
       {providers?.includes("Facebook") ? (
         <div className="pr-5">
-          <FacebookShareButton url={openItem?.url!} className="h-6 w-6">
-            <Facebook className="translate-y-[3px] transform stroke-neutral-450 stroke-[1.25] dark:stroke-stone-400" />
+          <FacebookShareButton
+            url={openItem?.url!}
+            className="h-[22px] w-[22px]"
+          >
+            <Facebook
+              shapeRendering="geometricPrecision"
+              className="translate-y-[3px] transform stroke-neutral-450 stroke-[1.25] dark:stroke-stone-400"
+            />
           </FacebookShareButton>
         </div>
       ) : null}
@@ -59,22 +78,30 @@ const Sharing = () => {
           <TelegramShareButton url={openItem?.url!}>
             <svg
               fill="transparent"
-              className="h-6 w-6 translate-y-[3px] transform overflow-visible stroke-neutral-450 stroke-[1.25] dark:stroke-stone-400"
+              shapeRendering="geometricPrecision"
+              className="h-[22px] w-[22px] translate-y-[3px] transform overflow-visible stroke-neutral-450 stroke-[1.25] dark:stroke-stone-400"
             >
-              <path d="M15 10l-4 4l6 6l4 -16l-18 7l4 2l2 6l3 -4" />
+              <path
+                shapeRendering="geometricPrecision"
+                d="M15 10l-4 4l6 6l4 -16l-18 7l4 2l2 6l3 -4"
+              />
             </svg>
           </TelegramShareButton>
         </div>
       ) : null}
       {providers?.includes("Pocket") ? (
         <div className="pr-5">
-          <PocketShareButton className="h-6 w-6" url={openItem?.url!}>
+          <PocketShareButton className="h-[22px] w-[22px]" url={openItem?.url!}>
             <svg
               fill="transparent"
-              className="h-6 w-6 translate-y-[3px] transform stroke-neutral-450 stroke-[1.25] dark:stroke-stone-400"
+              shapeRendering="geometricPrecision"
+              className="h-[22px] w-[22px] translate-y-[3px] transform stroke-neutral-450 stroke-[1.25] dark:stroke-stone-400"
             >
-              <path d="M5 4h14a2 2 0 0 1 2 2v6a9 9 0 0 1 -18 0v-6a2 2 0 0 1 2 -2" />
-              <path d="M8 11l4 4l4 -4" />
+              <path
+                shapeRendering="geometricPrecision"
+                d="M5 4h14a2 2 0 0 1 2 2v6a9 9 0 0 1 -18 0v-6a2 2 0 0 1 2 -2"
+              />
+              <path shapeRendering="geometricPrecision" d="M8 11l4 4l4 -4" />
             </svg>
           </PocketShareButton>
         </div>
@@ -84,7 +111,8 @@ const Sharing = () => {
           <PocketShareButton url={openItem?.url!}>
             <svg
               fill="transparent"
-              className="h-6 w-6 translate-y-[3px] overflow-visible stroke-neutral-450 stroke-[1.25] dark:stroke-stone-400"
+              shapeRendering="geometricPrecision"
+              className="h-[22px] w-[22px] translate-y-[3px] overflow-visible stroke-neutral-450 stroke-[1.25] dark:stroke-stone-400"
             >
               <path d="M18.648 15.254c-1.816 1.763 -6.648 1.626 -6.648 1.626a18.262 18.262 0 0 1 -3.288 -.256c1.127 1.985 4.12 2.81 8.982 2.475c-1.945 2.013 -13.598 5.257 -13.668 -7.636l-.026 -1.154c0 -3.036 .023 -4.115 1.352 -5.633c1.671 -1.91 6.648 -1.666 6.648 -1.666s4.977 -.243 6.648 1.667c1.329 1.518 1.352 2.597 1.352 5.633s-.456 4.074 -1.352 4.944z" />
               <path d="M12 11.204v-2.926c0 -1.258 -.895 -2.278 -2 -2.278s-2 1.02 -2 2.278v4.722m4 -4.722c0 -1.258 .895 -2.278 2 -2.278s2 1.02 2 2.278v4.722" />
@@ -93,108 +121,159 @@ const Sharing = () => {
         </div>
       ) : null}
       {providers?.includes("Linkedin") ? (
-        <div className="pr-5">
+        <div className={`${!includesAll && "pr-5"}`}>
           <LinkedinShareButton className="flex" url={openItem?.url!}>
-            <Linkedin className="h-6 w-6 translate-y-[3px] transform overflow-visible stroke-neutral-450 stroke-[1.25] dark:stroke-stone-400" />
+            <Linkedin
+              shapeRendering="geometricPrecision"
+              className={`h-[22px] w-[22px] translate-y-[3px] transform overflow-visible stroke-neutral-450 stroke-[1.25] dark:stroke-stone-400`}
+            />
           </LinkedinShareButton>
         </div>
       ) : null}
-
-      <DropdownMenu modal={false}>
-        <DropdownMenuTrigger>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="#929396"
-            className="light:hover:fill-neutral-400 h-6 w-6 stroke-2 dark:fill-[#929396]"
-          >
-            <path
-              fillRule="evenodd"
-              d="M4.5 12a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0zm6 0a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0zm6 0a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0z"
-              clipRule="evenodd"
-            />
-          </svg>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent className="cursor-fix w-36" align="end">
-          {!providers?.includes("Twitter") ? (
-            <DropdownMenuItem className="">
-              <TwitterShareButton className="flex" url={openItem?.url!}>
-                <Twitter className="mr-2 stroke-neutral-450 stroke-[1.25] dark:stroke-stone-400" />
-                <span>Twitter</span>
-              </TwitterShareButton>
-            </DropdownMenuItem>
-          ) : null}
-          {!providers?.includes("Email") ? (
-            <DropdownMenuItem>
-              <EmailShareButton className="flex" url={openItem?.url!}>
-                <Mail className="mr-2 stroke-neutral-450 stroke-[1.25] dark:stroke-stone-400" />
-                <span>Email</span>
-              </EmailShareButton>
-            </DropdownMenuItem>
-          ) : null}
-          {!providers?.includes("Facebook") ? (
-            <DropdownMenuItem>
-              <FacebookShareButton className="flex" url={openItem?.url!}>
-                <Facebook className="mr-2 stroke-neutral-450 stroke-[1.25] dark:stroke-stone-400" />
-                <span>Facebook</span>
-              </FacebookShareButton>
-            </DropdownMenuItem>
-          ) : null}
-          {!providers?.includes("Telegram") ? (
-            <DropdownMenuItem>
-              <TelegramShareButton className="flex" url={openItem?.url!}>
-                <svg
-                  fill="transparent"
-                  className="h-[16px] w-[16px] overflow-visible stroke-neutral-450 stroke-[1.25] dark:stroke-stone-400"
+      {!includesAll && (
+        <DropdownMenu modal={false}>
+          <DropdownMenuTrigger>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              shapeRendering="geometricPrecision"
+              className="h-6 w-6 fill-neutral-450 stroke-neutral-450"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                shapeRendering="geometricPrecision"
+                d="M6.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM12.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM18.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z"
+              />
+            </svg>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="cursor-fix w-36" align="end">
+            {!providers?.includes("Twitter") ? (
+              <DropdownMenuItem>
+                <TwitterShareButton
+                  className="flex items-center"
+                  url={openItem?.url!}
                 >
-                  <path d="M15 10l-4 4l6 6l4 -16l-18 7l4 2l2 6l3 -4" />
-                </svg>
-
-                <span className="ml-3.5">Telegram</span>
-              </TelegramShareButton>
-            </DropdownMenuItem>
-          ) : null}
-          {!providers?.includes("Pocket") ? (
-            <DropdownMenuItem>
-              <PocketShareButton className="flex" url={openItem?.url!}>
-                <svg
-                  fill="transparent"
-                  className="mr-2 h-6 w-6 stroke-neutral-450 stroke-[1.25] dark:stroke-stone-400"
+                  <Twitter
+                    shapeRendering="geometricPrecision"
+                    className="mr-2 stroke-neutral-450 stroke-[1.25] dark:stroke-stone-400"
+                  />
+                  <span>Twitter</span>
+                </TwitterShareButton>
+              </DropdownMenuItem>
+            ) : null}
+            {!providers?.includes("Email") ? (
+              <DropdownMenuItem>
+                <EmailShareButton
+                  className="flex items-center"
+                  url={openItem?.url!}
                 >
-                  <path d="M5 4h14a2 2 0 0 1 2 2v6a9 9 0 0 1 -18 0v-6a2 2 0 0 1 2 -2" />
-                  <path d="M8 11l4 4l4 -4" />
-                </svg>
-
-                <span>Pocket</span>
-              </PocketShareButton>
-            </DropdownMenuItem>
-          ) : null}
-          {!providers?.includes("Mastodon") ? (
-            <DropdownMenuItem>
-              <PocketShareButton className="flex" url={openItem?.url!}>
-                <svg
-                  fill="transparent"
-                  className="mr-2 h-6 w-6 stroke-neutral-450 stroke-[1.25] dark:stroke-stone-400"
+                  <Mail
+                    shapeRendering="geometricPrecision"
+                    className="mr-2 stroke-neutral-450 stroke-[1.25] dark:stroke-stone-400"
+                  />
+                  <span>Email</span>
+                </EmailShareButton>
+              </DropdownMenuItem>
+            ) : null}
+            {!providers?.includes("Facebook") ? (
+              <DropdownMenuItem>
+                <FacebookShareButton
+                  className="flex items-center"
+                  url={openItem?.url!}
                 >
-                  <path d="M18.648 15.254c-1.816 1.763 -6.648 1.626 -6.648 1.626a18.262 18.262 0 0 1 -3.288 -.256c1.127 1.985 4.12 2.81 8.982 2.475c-1.945 2.013 -13.598 5.257 -13.668 -7.636l-.026 -1.154c0 -3.036 .023 -4.115 1.352 -5.633c1.671 -1.91 6.648 -1.666 6.648 -1.666s4.977 -.243 6.648 1.667c1.329 1.518 1.352 2.597 1.352 5.633s-.456 4.074 -1.352 4.944z" />
-                  <path d="M12 11.204v-2.926c0 -1.258 -.895 -2.278 -2 -2.278s-2 1.02 -2 2.278v4.722m4 -4.722c0 -1.258 .895 -2.278 2 -2.278s2 1.02 2 2.278v4.722" />
-                </svg>
+                  <Facebook
+                    shapeRendering="geometricPrecision"
+                    className="mr-2 stroke-neutral-450 stroke-[1.25] dark:stroke-stone-400"
+                  />
+                  <span>Facebook</span>
+                </FacebookShareButton>
+              </DropdownMenuItem>
+            ) : null}
+            {!providers?.includes("Telegram") ? (
+              <DropdownMenuItem>
+                <TelegramShareButton
+                  className="flex items-center"
+                  url={openItem?.url!}
+                >
+                  <div className="mr-2 h-[22px] w-[22px]">
+                    <svg
+                      shapeRendering="geometricPrecision"
+                      fill="transparent"
+                      className="h-[16px] w-[16px] overflow-visible stroke-neutral-450 stroke-[1.25] dark:stroke-stone-400"
+                    >
+                      <path d="M15 10l-4 4l6 6l4 -16l-18 7l4 2l2 6l3 -4" />
+                    </svg>
+                  </div>
 
-                <span>Mastodon</span>
-              </PocketShareButton>
-            </DropdownMenuItem>
-          ) : null}
-          {!providers?.includes("Linkedin") ? (
-            <DropdownMenuItem>
-              <LinkedinShareButton className="flex" url={openItem?.url!}>
-                <Linkedin className="mr-[9px] h-6 w-6 overflow-visible stroke-neutral-450 stroke-[1.5] dark:stroke-stone-400" />
+                  <span>Telegram</span>
+                </TelegramShareButton>
+              </DropdownMenuItem>
+            ) : null}
+            {!providers?.includes("Pocket") ? (
+              <DropdownMenuItem>
+                <PocketShareButton
+                  className="flex items-center"
+                  url={openItem?.url!}
+                >
+                  <svg
+                    shapeRendering="geometricPrecision"
+                    fill="transparent"
+                    className="mr-2 h-[22px] w-[22px] stroke-neutral-450 stroke-[1.25] dark:stroke-stone-400"
+                  >
+                    <path d="M5 4h14a2 2 0 0 1 2 2v6a9 9 0 0 1 -18 0v-6a2 2 0 0 1 2 -2" />
+                    <path d="M8 11l4 4l4 -4" />
+                  </svg>
 
-                <span>Linkedin</span>
-              </LinkedinShareButton>
-            </DropdownMenuItem>
-          ) : null}
-        </DropdownMenuContent>
-      </DropdownMenu>
+                  <span>Pocket</span>
+                </PocketShareButton>
+              </DropdownMenuItem>
+            ) : null}
+            {!providers?.includes("Mastodon") ? (
+              <DropdownMenuItem>
+                <PocketShareButton
+                  className="flex items-center"
+                  url={openItem?.url!}
+                >
+                  <svg
+                    fill="transparent"
+                    shapeRendering="geometricPrecision"
+                    className="mr-2 h-[22px] w-[22px] stroke-neutral-450 stroke-[1.25] dark:stroke-stone-400"
+                  >
+                    <path
+                      shapeRendering="geometricPrecision"
+                      d="M18.648 15.254c-1.816 1.763 -6.648 1.626 -6.648 1.626a18.262 18.262 0 0 1 -3.288 -.256c1.127 1.985 4.12 2.81 8.982 2.475c-1.945 2.013 -13.598 5.257 -13.668 -7.636l-.026 -1.154c0 -3.036 .023 -4.115 1.352 -5.633c1.671 -1.91 6.648 -1.666 6.648 -1.666s4.977 -.243 6.648 1.667c1.329 1.518 1.352 2.597 1.352 5.633s-.456 4.074 -1.352 4.944z"
+                    />
+                    <path
+                      shapeRendering="geometricPrecision"
+                      d="M12 11.204v-2.926c0 -1.258 -.895 -2.278 -2 -2.278s-2 1.02 -2 2.278v4.722m4 -4.722c0 -1.258 .895 -2.278 2 -2.278s2 1.02 2 2.278v4.722"
+                    />
+                  </svg>
+
+                  <span>Mastodon</span>
+                </PocketShareButton>
+              </DropdownMenuItem>
+            ) : null}
+            {!providers?.includes("Linkedin") ? (
+              <DropdownMenuItem>
+                <LinkedinShareButton
+                  className="flex items-center"
+                  url={openItem?.url!}
+                >
+                  <Linkedin
+                    shapeRendering="geometricPrecision"
+                    className="mr-2 h-[22px] w-[22px] overflow-visible stroke-neutral-450 stroke-[1.5] dark:stroke-stone-400"
+                  />
+
+                  <span>Linkedin</span>
+                </LinkedinShareButton>
+              </DropdownMenuItem>
+            ) : null}
+          </DropdownMenuContent>
+        </DropdownMenu>
+      )}
     </div>
   );
 };
