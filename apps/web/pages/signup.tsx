@@ -36,7 +36,7 @@ function Signup() {
               Terms of Service
             </Link>{" "}
             and{" "}
-            <Link href="/privacypolicy" className="underline">
+            <Link href="/privacy" className="underline">
               Privacy Policy
             </Link>
           </h3>

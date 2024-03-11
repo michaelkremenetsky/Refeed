@@ -1,7 +1,7 @@
-import { useUser } from "@supabase/auth-helpers-react";
+import { useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { useUser } from "@supabase/auth-helpers-react";
 
 import { LandingWrapper } from "../components/layout/PageWrapper";
 import { AppleButton } from "../features/auth/AppleLoginButton";
@@ -46,7 +46,7 @@ function Login() {
               Terms of Service
             </Link>{" "}
             and{" "}
-            <Link href="/privacypolicy" className="underline">
+            <Link href="/privacy" className="underline">
               Privacy Policy
             </Link>
           </h4>
