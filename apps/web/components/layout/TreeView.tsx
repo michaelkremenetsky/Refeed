@@ -1,7 +1,12 @@
+import type { FunctionComponent } from "react";
+import { memo, useContext, useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/router";
 import {
   TreeWidthContext,
   TreeWidthProvider,
 } from "@components/layout/TreeContext";
+import clsx from "clsx";
 import { Dialog, DialogContent, DialogTrigger } from "components/ui/Dialog";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -16,10 +21,6 @@ import {
   PlusIcon,
   Trash,
 } from "lucide-react";
-import Link from "next/link";
-import { useRouter } from "next/router";
-import type { FunctionComponent } from "react";
-import { memo, useContext, useState } from "react";
 import type { NodeApi, NodeRendererProps } from "react-arborist";
 import { Tree } from "react-arborist";
 import type { OpenMap } from "react-arborist/dist/module/state/open-slice";
@@ -27,6 +28,7 @@ import type { RouterOutput } from "utils/trpc";
 import { trpc } from "utils/trpc";
 
 import { titleAtom } from "@refeed/atoms/feedsAtom";
+import { removeFeedsOrFolder } from "@refeed/features/feed/removeFeedsOrFolders";
 import {
   ContextMenu,
   ContextMenuContent,
@@ -36,7 +38,6 @@ import {
 } from "@refeed/ui";
 import { DialogRoot } from "@refeed/ui/components/dialog/AddDialog";
 
-import { removeFeedsOrFolder } from "../../../../packages/features/feed/removeFeedsOrFolders";
 import { useModifyFeedOrder } from "../../features/folders/useFolderFeedOrder";
 import { RenameFolderDialog } from "../dialog/NewRenameFolderDialog";
 import { ImageWithFallback } from "./SideBarIconFallBack";
@@ -143,11 +144,18 @@ const Node: FunctionComponent<NodeRendererProps<Tree>> = memo(
     // For perf reasons we only load the ContextMenu if its clicked
     const [showContextMenu, setShowContextMenu] = useState(false);
 
+    console.log(node.data.name);
+
     return (
       <ContextMenu modal={false}>
         <ContextMenuTrigger>
           <div
-            className="mr-1.5 flex cursor-pointer items-center rounded-md py-[0.25rem] hover:bg-[#f5f5f5] hover:dark:bg-[#1a1a1a] focus:[&:not(:focus-visible)]:outline-none"
+            className={clsx(
+              "mr-1.5 flex cursor-pointer items-center rounded-md py-[0.25rem] focus:[&:not(:focus-visible)]:outline-none",
+              node.data.name == "Delete Feed"
+                ? "hover:bg-red-100 dark:hover:bg-red-800"
+                : "hover:bg-[#f5f5f5] hover:dark:bg-[#1a1a1a]",
+            )}
             style={style}
             ref={dragHandle}
             onClick={Route}
@@ -176,7 +184,7 @@ const Node: FunctionComponent<NodeRendererProps<Tree>> = memo(
               {node.data.name}
             </span>
             {node.isLeaf ? (
-              <span className="absolute right-[14px] text-center text-xs font-[450] text-neutral-400/75 dark:text-stone-500/80">
+              <span className="absolute right-[14px] text-center text-xs font-[450] text-neutral-400/75 dark:text-stone-500/95">
                 {(node.data.amount as unknown as number) > 2500
                   ? "2.5K+"
                   : (node.data.amount as unknown as number) >= 1000
@@ -184,7 +192,7 @@ const Node: FunctionComponent<NodeRendererProps<Tree>> = memo(
                     : node.data.amount ?? null}
               </span>
             ) : (
-              <span className="absolute right-[14px] pl-2 text-center text-xs font-[450] text-neutral-400/75 dark:text-stone-500/80">
+              <span className="absolute right-[14px] pl-2 text-center text-xs font-[450] text-neutral-400/75 dark:text-stone-500/95">
                 {folderAmount! > 2500
                   ? "2.5K+"
                   : folderAmount! >= 1000
@@ -266,22 +274,22 @@ const ContentMenu = ({ node }: { node: NodeApi<Tree> }) => {
                   />
                 </div>
               </div>
-              <h4 className="mb-0.5 ml-1 mt-2 overflow-hidden truncate text-sm font-medium text-neutral-700">
+              <h4 className="mb-0.5 ml-1 mt-2 overflow-hidden truncate text-sm font-medium text-neutral-700 dark:text-stone-200">
                 Title
               </h4>
-              <h3 className="mb-3 ml-1 overflow-hidden  text-sm text-neutral-500">
+              <h3 className="mb-3 ml-1 overflow-hidden text-sm text-neutral-500 dark:text-stone-500">
                 {node.data.name}
               </h3>
-              <h4 className="mb-0.5 ml-1 mt-2 overflow-hidden truncate text-sm font-medium text-neutral-700">
+              <h4 className="mb-0.5 ml-1 mt-2 overflow-hidden truncate text-sm font-medium text-neutral-700 dark:text-stone-200">
                 URL
               </h4>
-              <h3 className="mb-3 ml-1 overflow-hidden truncate text-sm text-neutral-500">
+              <h3 className="mb-3 ml-1 overflow-hidden truncate text-sm text-neutral-500 dark:text-stone-500">
                 {node.data.feed_url}
               </h3>
-              <h4 className="mb-0.5 ml-1 mt-2 overflow-hidden truncate text-sm font-medium text-neutral-700">
+              <h4 className="mb-0.5 ml-1 mt-2 overflow-hidden truncate text-sm font-medium text-neutral-700 dark:text-stone-200">
                 Date Added
               </h4>
-              <h3 className="mb-3 ml-1 overflow-hidden truncate text-sm text-neutral-500">
+              <h3 className="mb-3 ml-1 overflow-hidden truncate text-sm text-neutral-500 dark:text-stone-500">
                 {/*  @ts-ignore */}
                 {dayjs(node.data.date_added).format("MMMM DD, YYYY")}
               </h3>
