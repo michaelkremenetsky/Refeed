@@ -11,6 +11,7 @@ export const useInfiniteScroll = (
 
   const handleScroll = () => {
     const root = containerRef.current;
+
     if (root) {
       const scrollPosition = root.scrollTop + root.clientHeight;
       const totalHeight = root.scrollHeight;
@@ -26,6 +27,7 @@ export const useInfiniteScroll = (
 
   useEffect(() => {
     const root = containerRef.current;
+
     if (root) {
       root.addEventListener("scroll", handleScroll);
       return () => root.removeEventListener("scroll", handleScroll);

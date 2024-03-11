@@ -144,8 +144,6 @@ const Node: FunctionComponent<NodeRendererProps<Tree>> = memo(
     // For perf reasons we only load the ContextMenu if its clicked
     const [showContextMenu, setShowContextMenu] = useState(false);
 
-    console.log(node.data.name);
-
     return (
       <ContextMenu modal={false}>
         <ContextMenuTrigger>
