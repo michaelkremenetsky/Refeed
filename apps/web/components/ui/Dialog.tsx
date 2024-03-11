@@ -64,7 +64,7 @@ const DialogContent = React.forwardRef<
       ref={ref}
       className={cn(
         "fixed z-50 w-full gap-4 rounded-b-lg bg-white shadow-[0_0px_0px_1.25px_rgba(31,34,37,0.09),0px_12px_24px_-4px_rgba(0,0,0,0.08),0_4px_10px_rgba(166,166,166,0.16)] fade-in-100 sm:max-w-lg sm:rounded-lg sm:zoom-in-90 dark:shadow-none dark:data-[state=open]:bg-[#0f0f10]",
-        "dark:border-[2px] dark:border-[#262626]  dark:bg-slate-900",
+        "dark:border-[1px] dark:border-[#262626] dark:bg-slate-900",
         className,
       )}
       {...props}
