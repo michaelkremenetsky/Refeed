@@ -49,7 +49,7 @@ Refeed is an open-source RSS Reader. It allows you to consume better content fas
 
 5. Setup Supabase via [Docker Image](https://supabase.com/docs/guides/self-hosting/docker) or using the [Hosted Platform](https://supabase.com/)
 
-6. Run [this]() SQL in the Supabase SQL Editor
+6. Run [this](https://github.com/michaelkremenetsky/Refeed/blob/main/setup/SUPABASE.sql) SQL in the Supabase SQL Editor
 
 7. Run `pnpm db:push`
 
