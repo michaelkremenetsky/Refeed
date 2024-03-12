@@ -68,6 +68,7 @@ See [Docker Setup](setup/SELFHOSTING.md)
 - [Tailwind CSS](https://tailwindcss.com/?ref=refeedreader.com)
 - [Prisma](https://prisma.io/?ref=refeedreader.com)
 - [Turborepo](https://turborepo.org/?ref=refeedreader.com)
+- [Supabase](https://supabase.com/?ref=refeedreader.com)
 
 # Contributing
 Contributions are welcome and appreciated.
