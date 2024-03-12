@@ -1,11 +1,5 @@
-<a href="https://refeedreader.com">
-  <div align="center">
-    <img alt="Refeed - An Open Source RSS Reader for the modern human" src="https://github.com/michaelkremenetsky/Refeed/blob/main/apps/web/public/Card.png">
-  </div>
-</a>
-
 # Refeed
-Refeed is an open-source RSS Reader. It allows you to consume better content faster.
+[refeedreader.com](https://refeedreader.com/ "https://refeedreader.com") is an open source RSS Reader. With Refeed, you can easily organize and read your favorite websites, blogs, and news sources in one place, saving you time and effort in staying up-to-date with the content that matters most to you.
 
 <a href="https://refeedreader.com">
   <div align="center">
