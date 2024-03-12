@@ -13,7 +13,8 @@
 ```
 
 3. Setup Supabase via [Docker Image](https://supabase.com/docs/guides/self-hosting/docker) or using the [Hosted Platform](https://supabase.com/)
-4. Fill out the required Environment variables
+4. Run [this](https://github.com/michaelkremenetsky/Refeed/blob/main/setup/SUPABASE.sql) SQL in the Supabase SQL Editor
+5. Fill out the required Environment variables:
 
 - `DATABASE_URL`
 - `NEXT_PUBLIC_SUPABASE_URL`
