@@ -23,6 +23,7 @@ export const CustomCard = ({
 
   const opener = useContext(AddFeedRefContext);
   const setLink = useSetAtom(addFeedLinkAtom);
+  const setTitle = useSetAtom(addFeedLinkAtom);
 
   return (
     <>
@@ -30,11 +31,12 @@ export const CustomCard = ({
         <Pressable
           onPress={() => {
             // Open the Modal
-            opener?.current?.present();
             opener?.current?.expand();
+            opener?.current?.present();
+            setTitle(item?.feed_url);
             setLink(item?.feed_url);
           }}
-          className="mx-2 mb-1 h-[175px] w-[200px] rounded-lg border border-[#E5E7EB] bg-[#fcfcfc] px-0.5"
+          className="mx-2 mb-1 h-[175px] w-[200px] rounded-lg border border-[#e4e7ea] bg-[#fcfcfc] px-0.5"
         >
           <View className="shadow-1 mb-2 ml-2.5 mt-4 flex h-[20px] w-[20px] items-center justify-center rounded">
             <Image
