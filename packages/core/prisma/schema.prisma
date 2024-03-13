@@ -21,7 +21,7 @@ model user {
   email                    String
   email_verified           DateTime?
   image                    String?
-  sharing                  String[]    @default(["twitter", "facebook", "linkedin", "email"])
+  sharing                  String[]    @default([])
   default_temp_time        Int         @default(1440)
   feeds                    user_feeds[]
   items                    user_item[]
