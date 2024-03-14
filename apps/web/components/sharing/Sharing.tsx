@@ -13,14 +13,14 @@ import {
   TelegramShareButton,
   TwitterShareButton,
 } from "react-share";
-import { trpc } from "utils/trpc";
 
+import { useUser } from "@refeed/features/hooks/useUser";
 import { useOpenItem } from "@refeed/features/item/useItemDataWeb";
 
 const Sharing = () => {
-  const providers = trpc.settings.getShareProviders.useQuery(undefined, {
-    staleTime: Infinity,
-  }).data;
+  const { data } = useUser();
+
+  const providers = data?.sharing;
 
   const { openItem } = useOpenItem();
 

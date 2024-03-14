@@ -1,33 +1,29 @@
 import { PricingPage } from "@components/upgrade/PricingPage";
 import * as Dialog from "@radix-ui/react-dialog";
-import { useUser } from "@supabase/auth-helpers-react";
+import { useUser as useSupabaseUser } from "@supabase/auth-helpers-react";
 import { useQuery } from "@tanstack/react-query";
 import { Drawer } from "vaul";
 
-import { usePlan } from "@refeed/features/payment/usePlan";
+import { useUser } from "@refeed/features/hooks/useUser";
 
 import {
   calculateRemainingTime,
   fetchTrialEndBySubscriptionId,
 } from "../../../features/payments/trail";
-import { trpc } from "../../../utils/trpc";
 import { DeleteAccount } from "../../dialog/DeleteAccountDialog";
 import { SettingsHeader } from "../SettingsHeader";
 
 export const AccountSettingsPage = () => {
-  const user = useUser();
-  const plan = usePlan();
-
-  const { data: getStripeSubscriptionId } =
-    trpc.payments.getStripeSubscriptionId.useQuery();
+  const user = useSupabaseUser();
+  const { data, plan } = useUser();
 
   const { data: trialEnd } = useQuery({
-    queryKey: ["subscriptionTrialEnd", getStripeSubscriptionId],
+    queryKey: ["subscriptionTrialEnd", data?.stripeSubscriptionId],
     queryFn: async () => {
-      const data = await fetchTrialEndBySubscriptionId(
-        getStripeSubscriptionId!,
+      const trailData = await fetchTrialEndBySubscriptionId(
+        data?.stripeSubscriptionId!,
       );
-      return data;
+      return trailData;
     },
   });
 
@@ -44,7 +40,7 @@ export const AccountSettingsPage = () => {
           <h4 className="select-none pl-1.5 text-[13.25px] font-[500] leading-4 dark:text-stone-200">
             {user?.user_metadata.full_name ?? user?.email}
           </h4>
-          <h4 className="select-none truncate pl-1.5 text-[11px] font-[500] leading-4 text-neutral-450 dark:text-[#F3F5F7]/50">
+          <h4 className="truncate pl-1.5 text-[11px] font-[500] leading-4 text-neutral-450 dark:text-[#F3F5F7]/50">
             {user?.email}
           </h4>
         </div>
@@ -56,11 +52,11 @@ export const AccountSettingsPage = () => {
               Current Plan
             </h1>
             <h4 className="flex select-none flex-col text-sm leading-5 text-neutral-450 dark:text-stone-500">
-              {plan.plan == "free"
+              {plan == "free"
                 ? "You are currently on the Free plan"
                 : "You are currently on the Pro plan"}
               <div className="mt-1">
-                {trialEnd && remainingHours != 0 && plan.plan == "pro" && (
+                {trialEnd && remainingHours != 0 && plan == "pro" && (
                   <span className="text-sky-500/95">
                     {" "}
                     {remainingHours > 24 ? (
@@ -80,7 +76,7 @@ export const AccountSettingsPage = () => {
             </h4>
             <Dialog.Root>
               <Drawer.Root direction="right" shouldScaleBackground>
-                {plan.plan == "free" && (
+                {plan == "free" && (
                   <Drawer.Trigger className="mt-1 -translate-x-[22px] transform cursor-pointer select-none text-sm font-medium leading-5 text-sky-500/95">
                     View plans and upgrade →
                   </Drawer.Trigger>
@@ -103,12 +99,12 @@ export const AccountSettingsPage = () => {
               Open Billing Portal
             </h1>
             <h4 className="select-none text-sm leading-5 text-neutral-450 dark:text-stone-500">
-              {plan.plan == "free"
+              {plan == "free"
                 ? "You don't have a subscription yet"
                 : "Manage your current subscription"}
             </h4>
             <div className="mt-1">
-              {plan.plan != "free" && <OpenPortalButton userId={user?.id!} />}
+              {plan != "free" && <OpenPortalButton userId={user?.id!} />}
             </div>
           </div>
         </div>

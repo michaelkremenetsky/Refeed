@@ -6,7 +6,7 @@ import { useQueryState } from "nuqs";
 import type { RouterOutput } from "utils/trpc";
 import { trpc } from "utils/trpc";
 
-import { usePlan } from "@refeed/features/payment/usePlan";
+import { useUser } from "@refeed/features/hooks/useUser";
 import { debounce } from "@refeed/lib/debounce";
 import type { ItemType } from "@refeed/types/item";
 
@@ -16,7 +16,7 @@ const CommandPalette = () => {
   const [open, setOpen] = useAtom(kmenu);
   const [query, setQuery] = useState<string | undefined>(undefined);
 
-  const { plan } = usePlan();
+  const { plan } = useUser();
 
   const [_, setItemQuery] = useQueryState("item", {
     shallow: true,

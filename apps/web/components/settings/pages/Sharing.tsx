@@ -1,12 +1,15 @@
 import type { ChangeEvent } from "react";
 import { trpc } from "utils/trpc";
 
+import { useUser } from "@refeed/features/hooks/useUser";
 import { Checkbox } from "@refeed/ui";
 
 import { SettingsHeader } from "../SettingsHeader";
 
 export const SharingSettingsPage = () => {
-  const { data, isPending } = trpc.settings.getShareProviders.useQuery();
+  const { data, isPending } = useUser();
+
+  const providers = data?.sharing;
   const utils = trpc.useUtils();
 
   const SharingOptions = [

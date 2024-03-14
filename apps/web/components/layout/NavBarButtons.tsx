@@ -2,7 +2,7 @@ import { RightUpgradeDrawer } from "@components/upgrade/Drawer";
 import { atom, useAtomValue, useSetAtom } from "jotai";
 import { AArrowDown, AArrowUp, CheckCheck, MoreHorizontal } from "lucide-react";
 
-import { usePlan } from "@refeed/features/payment/usePlan";
+import { useUser } from "@refeed/features/hooks/useUser";
 
 import { useMarkRead } from "../../features/item";
 import { settingsAtom } from "../../stores/settings";
@@ -27,7 +27,7 @@ interface NavBarTypes {
 export const NavBarButtons = (props: NavBarTypes) => {
   const { hideButtons, recentPage, bookmarkPage } = props;
 
-  const { plan } = usePlan();
+  const { plan } = useUser();
 
   return (
     <div className="item-center absolute right-2 top-1.5 justify-end rounded text-xl font-bold">

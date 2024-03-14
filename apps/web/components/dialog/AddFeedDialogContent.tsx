@@ -2,7 +2,7 @@ import * as RadixDialog from "@radix-ui/react-dialog";
 import { useState } from "react";
 import { toast } from "sonner";
 
-import { usePlan } from "@refeed/features/payment/usePlan";
+import { useUser } from "@refeed/features/hooks/useUser";
 import {
   Input,
   Select,
@@ -35,7 +35,7 @@ export function AddFeedDialogContent({
   favicon_url,
 }: ExtendedProps) {
   const utils = trpc.useUtils();
-  const { plan } = usePlan();
+  const { plan } = useUser();
 
   const {
     checkSource,

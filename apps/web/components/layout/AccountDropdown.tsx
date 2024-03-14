@@ -2,7 +2,10 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import router, { useRouter } from "next/router";
 import { DropdownMenuSeparator } from "@components/ui/DropDownMenu";
-import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
+import {
+  useSupabaseClient,
+  useUser as useSupabaseUser,
+} from "@supabase/auth-helpers-react";
 import { SettingsDialog } from "components/settings/SettingsDialog";
 import { Dialog, DialogTrigger } from "components/ui/Dialog";
 import {
@@ -14,11 +17,13 @@ import {
 } from "components/ui/DropDownMenu";
 import { useQueryState } from "nuqs";
 
+import { useUser } from "@refeed/features/hooks/useUser";
 import { Badge } from "@refeed/ui";
 
 export const AccountDropdown = ({ width }: { width: number }) => {
   const supabase = useSupabaseClient();
-  const user = useUser();
+  const user = useSupabaseUser();
+  const { data } = useUser();
 
   const [DialogType, setDialogType] = useState<
     "Pricing" | "Settings" | undefined

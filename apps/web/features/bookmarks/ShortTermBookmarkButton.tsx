@@ -1,7 +1,7 @@
 import * as Dialog from "@radix-ui/react-dialog";
 
+import { useUser } from "@refeed/features/hooks/useUser";
 import { useOpenItem } from "@refeed/features/item/useItemDataWeb";
-import { usePlan } from "@refeed/features/payment/usePlan";
 import type { ItemType } from "@refeed/types/item";
 
 import {
@@ -18,7 +18,7 @@ export const ShortTermBookmarkButton = ({
   openItemFromArticle?: ItemType;
 }) => {
   let { openItem } = useOpenItem();
-  const { plan } = usePlan();
+  const { plan } = useUser();
 
   if (openItemFromArticle) {
     openItem = openItemFromArticle;

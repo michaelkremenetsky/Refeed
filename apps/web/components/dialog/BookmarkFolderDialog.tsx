@@ -3,8 +3,8 @@ import * as RadixDialog from "@radix-ui/react-dialog";
 import { AnimatePresence, motion } from "framer-motion";
 import { trpc } from "utils/trpc";
 
+import { useUser } from "@refeed/features/hooks/useUser";
 import { useOpenItem } from "@refeed/features/item/useItemDataWeb";
-import { usePlan } from "@refeed/features/payment/usePlan";
 import {
   ContentTopBar,
   DialogOpenContext,
@@ -25,7 +25,7 @@ export function BookmarkFolderDialog({ className, ...props }: ExtendedProps) {
   const isOpen = useContext(DialogOpenContext);
 
   const { openItem } = useOpenItem();
-  const { plan } = usePlan();
+  const { plan } = useUser();
   const [folderName, setFolderName] = useState<string | undefined>();
   const { toggleBookmarkFolder } = useUpdateBookmarkFolders();
   const [error, setError] = useState<string | undefined>(undefined);

@@ -1,7 +1,7 @@
 import { PricingPage } from "@components/upgrade/PricingPage";
 import { Drawer } from "vaul";
 
-import { usePlan } from "@refeed/features/payment/usePlan";
+import { useUser } from "@refeed/features/hooks/useUser";
 import { ProBadge } from "@refeed/ui";
 
 import { AddFilterButton } from "../../filters/AddFilter";
@@ -9,7 +9,7 @@ import { ToggleFilters } from "../../filters/ToggleFilters";
 import { SettingsHeader } from "../SettingsHeader";
 
 export const FiltersSettingsPage = () => {
-  const { plan } = usePlan();
+  const { plan } = useUser();
   return (
     <div className="h-full overflow-y-auto scrollbar-hide">
       <SettingsHeader title="Filters" subtitle="Manage Filters" />

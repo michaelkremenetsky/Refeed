@@ -12,8 +12,7 @@ import { Maximize } from "lucide-react";
 import Markdown from "marked-react";
 import { trpc } from "utils/trpc";
 
-import type { FeedType } from "@refeed/features/item/useItemDataWeb";
-import { usePlan } from "@refeed/features/payment/usePlan";
+import { useUser } from "@refeed/features/hooks/useUser";
 import { decodeHtmlEntities } from "@refeed/lib/decodeHtmlEntities";
 import type { ItemType } from "@refeed/types/item";
 import { TextArea } from "@refeed/ui";
@@ -49,13 +48,7 @@ export const Article = (props: ArticleProps) => {
     },
   );
 
-  const { plan } = usePlan();
-
-  const preventCarouselTrigger = (
-    event: React.KeyboardEvent<HTMLTextAreaElement>,
-  ) => {
-    event.stopPropagation();
-  };
+  const { plan } = useUser();
 
   return (
     <div

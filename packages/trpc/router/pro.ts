@@ -1,4 +1,5 @@
 import { Readability } from "@mozilla/readability";
+import { TRPCError } from "@trpc/server";
 import { parseHTML } from "linkedom";
 import { z } from "zod";
 
@@ -33,28 +34,22 @@ const zodFilterType = z.object({
 
 // This file holds the Router for all the Pro features
 export const proRouter = createTRPCRouter({
-  checkPlan: protectedProcedure.query(async ({ ctx }) => {
+  getUser: protectedProcedure.query(async ({ ctx }) => {
     // Checks what plan a user has
-    const plan = await ctx.prisma.user.findUnique({
+    const user = await ctx.prisma.user.findUnique({
       where: {
         id: ctx.user.id,
       },
       select: {
         plan: true,
+        inbox: true,
+        inbox_email: true,
+        stripeSubscriptionId: true,
+        sharing: true,
       },
     });
 
-    if (
-      plan &&
-      (plan.plan === "free" ||
-        plan.plan === "pro" ||
-        plan.plan === "enterprise")
-    ) {
-      const userPlan: "free" | "pro" | "enterprise" = plan.plan;
-      return userPlan;
-    } else {
-      throw new Error("Invalid Plan");
-    }
+    return user;
   }),
   updateNote: protectedProcedure
     // Updates or adds a note on an Item

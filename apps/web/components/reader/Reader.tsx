@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import { atom, useAtom, useSetAtom } from "jotai";
 import Carousel from "nuka-carousel";
 
-import type { FeedType } from "@refeed/features/item/useItemDataWeb";
+import { useUser } from "@refeed/features/hooks/useUser";
 import { useItemData } from "@refeed/features/item/useItemDataWeb";
 import { usePlan } from "@refeed/features/payment/usePlan";
 import { debounce } from "@refeed/lib/debounce";
@@ -204,7 +204,7 @@ const BackButton = ({ onBackClick }: { onBackClick: () => void }) => {
 };
 
 export const Topbar = ({ className }: { className?: string }) => {
-  const { plan } = usePlan();
+  const { plan } = useUser();
 
   return (
     <div className={clsx("flex items-center gap-5", className)}>
@@ -228,7 +228,7 @@ export const ArticleTopbar = ({
   className?: string;
   openItemFromArticle: ItemType;
 }) => {
-  const { plan } = usePlan();
+  const { plan } = useUser();
 
   return (
     <div className={clsx("flex items-center gap-5", className)}>
