@@ -68,10 +68,10 @@ async fn run_refresher() {
             item::create_unchecked(
                 item.title.clone(),
                 item.url.clone(),
-                item.feed_id.clone(),
                 vec![
                     item::SetParam::SetWebsiteContent(Some(item.website_content)),
                     item::SetParam::SetImageUrl(Some(item.image_url)),
+                    item::SetParam::SetFeedId(Some(item.feed_id)),
                 ],
             )
         })

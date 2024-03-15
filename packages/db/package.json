@@ -12,7 +12,7 @@
     "with-env": "dotenv -e ../../.env --"
   },
   "dependencies": {
-    "@prisma/client": "5.9.1",
+    "@prisma/client": "5.11.0",
     "@prisma/extension-accelerate": "0.6.2",
     "@types/ioredis": "^5.0.0",
     "@upstash/redis": "^1.22.0",
@@ -25,7 +25,7 @@
     "@refeed/tsconfig": "^0.1.0",
     "@types/pg": "^8.10.9",
     "dotenv-cli": "^7.3.0",
-    "prisma": "5.9.1",
+    "prisma": "5.11.0",
     "typescript": "^5.3.3"
   },
   "eslintConfig": {

@@ -30,7 +30,7 @@ model user {
   user_id                  String      @db.Uuid
   created_at               DateTime    @default(now())
   bookmark_folders         bookmark_folder[]
-  custom_items             custom_item[]
+  custom_items             item[]
   inbox                    Boolean?    @default(false)
   inbox_email              String?
   stripeCustomerId         String?
@@ -112,31 +112,21 @@ model item {
   image_source_url   String?
   readibility_score  Float?
   content_length     Int?
-  feed_id            String
-  feed               feed       @relation(fields: [feed_id], references: [id], onDelete: Cascade)
+  feed_id            String?
+  feed               feed?       @relation(fields: [feed_id], references: [id], onDelete: Cascade)
+  from_external_url  Boolean?
+  from_newsletter    Boolean?
+  newsletter_sender  String?   
+  newsletter_email   String?
+  user_id            String?
+  user               user?       @relation(fields: [user_id], references: [id], onDelete: Cascade)
   user_items         user_item[]
   created_at         DateTime   @default(now()) @db.Timestamp(6)
   updated_at         DateTime   @updatedAt
 
-  @@unique([url, feed_id])
+  @@unique([url, title, feed_id])
   @@index([id, created_at])
   @@index([title, url])
-}
-
-model custom_item {
-  id                 String     @id @default(cuid())
-  title              String
-  url                String
-  image_url          String?
-  user_id            String
-  from_newsletter    Boolean?
-  newsletter_email   String?
-  user               user       @relation(fields: [user_id], references: [id], onDelete: Cascade)
-  created_at         DateTime   @default(now())
-  updated_at         DateTime   @updatedAt
-
-  @@unique([title, url, user_id])
-  @@index([id, created_at])
 }
 
 model bookmark_folder {

@@ -7,10 +7,7 @@ import { getFolderFeedIds } from "@refeed/features/feed/getFolderFeedIds";
 import { getNextPrismaCursor } from "../../lib/getNextPrismaCursor";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { removeDuplicates } from "./utils/removeDuplicates";
-import {
-  transformItems,
-  transformItemsWithoutUserItems,
-} from "./utils/transformItems";
+import { transformItems } from "./utils/transformItems";
 
 // Tip - use the VSCode Outline View feature to see the APIs defined in here without having to scroll through the file
 
@@ -34,6 +31,7 @@ export const itemRouter = createTRPCRouter({
           "bookmarks",
           "multiple",
           "discover",
+          "newsletters",
         ]),
         folder: z.string().optional(),
         feed_id: z.string().optional(),
@@ -56,12 +54,11 @@ export const itemRouter = createTRPCRouter({
         orderBy:
           input.type != "recentlyread"
             ? input.sort == "Latest"
-              ? { id: Prisma.SortOrder.desc } // id is much faster than created_at
+              ? { id: Prisma.SortOrder.desc }
               : input.sort == "Oldest"
                 ? { id: Prisma.SortOrder.asc }
                 : undefined
-            : // I still think this isn't the proper way to do this.
-              { id: Prisma.SortOrder.desc },
+            : { id: Prisma.SortOrder.desc },
         include: {
           feed: {
             select: {
@@ -79,7 +76,9 @@ export const itemRouter = createTRPCRouter({
             },
           },
           user_items:
-            input.type == "recentlyread" || input.type == "bookmarks"
+            input.type == "recentlyread" ||
+            input.type == "bookmarks" ||
+            input.type == "newsletters"
               ? {
                   select: {
                     note: true,
@@ -131,7 +130,7 @@ export const itemRouter = createTRPCRouter({
 
         const nextCursor = getNextPrismaCursor(items, input.amount);
 
-        const transformedItems = await transformItems(items);
+        const transformedItems = transformItems(items);
 
         return {
           transformedItems,
@@ -172,7 +171,7 @@ export const itemRouter = createTRPCRouter({
           );
         }
 
-        let transformedItems = await transformItems(items);
+        let transformedItems = transformItems(items);
         const nextCursor = getNextPrismaCursor(transformedItems, input.amount);
 
         transformedItems = removeDuplicates(
@@ -217,7 +216,7 @@ export const itemRouter = createTRPCRouter({
           ...sharedQuery,
         });
 
-        let transformedItems = transformItemsWithoutUserItems(items);
+        let transformedItems = transformItems(items);
         const nextCursor = getNextPrismaCursor(transformedItems, input.amount);
 
         transformedItems = removeDuplicates(
@@ -269,13 +268,13 @@ export const itemRouter = createTRPCRouter({
 
         // Loop through the items and make sure it starts at the pagination_start_timestamp
         const itemsAfterDate = items.filter((item) => {
-          const feed_added = item.feed.users[0]?.pagination_start_timestamp!;
+          const feed_added = item.feed?.users[0]?.pagination_start_timestamp!;
           const item_added = item.created_at;
 
           return feed_added <= item_added;
         });
 
-        let transformedItems = transformItemsWithoutUserItems(itemsAfterDate);
+        let transformedItems = transformItems(itemsAfterDate);
         const nextCursor = getNextPrismaCursor(transformedItems, input.amount);
 
         transformedItems = removeDuplicates(
@@ -340,14 +339,14 @@ export const itemRouter = createTRPCRouter({
         });
 
         // Loop through the items and make sure it starts at the pagination_start_timestamp
-        const itemsAfterDate = items.filter((item) => {
-          const feed_added = item.feed.users[0]?.pagination_start_timestamp!;
-          const item_added = item.created_at;
+        // const itemsAfterDate = items.filter((item) => {
+        //   const feed_added = item.feed?.users[0]?.pagination_start_timestamp!;
+        //   const item_added = item.created_at;
 
-          return feed_added <= item_added;
-        });
+        //   return feed_added <= item_added;
+        // });
 
-        let transformedItems = transformItemsWithoutUserItems(itemsAfterDate);
+        let transformedItems = transformItems(items);
         const nextCursor = getNextPrismaCursor(transformedItems, input.amount);
 
         transformedItems = removeDuplicates(
@@ -356,6 +355,63 @@ export const itemRouter = createTRPCRouter({
           ctx.prisma,
           true,
         );
+
+        return {
+          transformedItems,
+          nextCursor,
+        };
+      }
+      if (input.type == "newsletters") {
+        const items = await ctx.prisma.item.findMany({
+          where: {
+            from_newsletter: true,
+            // feed: {
+            //   users: {
+            //     some: {
+            //       user_id: ctx.user.id,
+            //     },
+            //   },
+            //   items: {
+            //     every: {
+            //       created_at: {
+            //         gte: thirtyDaysAgo,
+            //       },
+            //     },
+            //   },
+            // },
+            // user_items: {
+            //   none: {
+            //     AND: [
+            //       {
+            //         marked_read: true,
+            //       },
+            //       {
+            //         user_id: ctx.user.id,
+            //       },
+            //     ],
+            //   },
+            // },
+          },
+          ...sharedQuery,
+        });
+
+        // Loop through the items and make sure it starts at the pagination_start_timestamp
+        // const itemsAfterDate = items.filter((item) => {
+        //   const feed_added = item.feed.users[0]?.pagination_start_timestamp!;
+        //   const item_added = item.created_at;
+
+        //   return feed_added <= item_added;
+        // });
+
+        const transformedItems = transformItems(items);
+        const nextCursor = getNextPrismaCursor(transformedItems, input.amount);
+
+        // transformedItems = removeDuplicates(
+        //   transformedItems,
+        //   ctx.user.id,
+        //   ctx.prisma,
+        //   true,
+        // );
 
         return {
           transformedItems,
@@ -473,7 +529,7 @@ export const itemRouter = createTRPCRouter({
       const transformedItems = searchItems.map((item) => {
         return {
           ...item,
-          feed_title: item.feed.title,
+          feed_title: item.feed?.title,
         };
       });
 

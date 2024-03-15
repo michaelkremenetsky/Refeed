@@ -3,15 +3,18 @@ import * as RadixDialog from "@radix-ui/react-dialog";
 import { useAtom } from "jotai";
 import { Button, FileTrigger } from "react-aria-components";
 
-import { Switch } from "@refeed/ui";
+import { useUser } from "@refeed/features/hooks/useUser";
+import { Input, ProBadge, Switch } from "@refeed/ui";
 import { DialogRoot } from "@refeed/ui/components/dialog/AddDialog";
 import {
   DialogContent,
   DialogTrigger,
 } from "@refeed/ui/components/dialog/Dialog";
 
+import { generateShortUUID } from "../../../../../packages/lib/generateShortUUID";
 import useOpml from "../../../features/settings/useOpml";
 import { settingsAtom } from "../../../stores/settings";
+import { trpc } from "../../../utils/trpc";
 import { SettingsHeader } from "../SettingsHeader";
 
 const Checkbox = () => (
@@ -21,6 +24,9 @@ const Checkbox = () => (
 );
 
 export const FeedsSettingsPage = () => {
+  const { data } = useUser();
+  const utils = trpc.useUtils();
+
   const { importProgress, exportOPML, importOPML, onFileChange, errorMessage } =
     useOpml();
 
@@ -43,6 +49,8 @@ export const FeedsSettingsPage = () => {
 
   const [settings, setSettings] = useAtom(settingsAtom);
   const [file, setFile] = useState(null);
+
+  const toggleNewsletters = trpc.pro.toggleNewsletters.useMutation();
 
   return (
     <div className="flex h-full flex-col overflow-y-auto">
@@ -70,6 +78,71 @@ export const FeedsSettingsPage = () => {
           id="airplane-mode"
         />
       </div>
+      <div className="mt-4 flex w-full items-start">
+        <div className="flex flex-col">
+          <h1 className="mb-1 select-none text-sm font-medium leading-5">
+            Newsletters <ProBadge className="ml-1.5" />
+          </h1>
+          <h4 className="select-none text-sm leading-5 text-neutral-450 dark:text-stone-500">
+            Subscribe to Newsletters using a email address provided by Refeed.
+          </h4>
+        </div>
+        <Switch
+          className="ml-auto mr-12 mt-3"
+          checked={data?.inbox ?? false}
+          onCheckedChange={() => {
+            if (data?.inbox) {
+              toggleNewsletters.mutate({
+                email: null,
+                enabled: false,
+              });
+
+              // @ts-ignore
+              utils.pro.getUser.setData(undefined, {
+                ...data,
+                inbox: false,
+                inbox_email: data?.inbox_email,
+              });
+            } else if (data?.inbox_email && !data.inbox) {
+              toggleNewsletters.mutate({
+                email: data?.inbox_email,
+                enabled: true,
+              });
+
+              // @ts-ignore
+              utils.pro.getUser.setData(undefined, {
+                ...data,
+                inbox: true,
+                inbox_email: data?.inbox_email,
+              });
+            } else if (!data?.inbox_email) {
+              const randomEmail =
+                generateShortUUID() + "@inbox.refeedreader.com";
+
+              toggleNewsletters.mutate({
+                email: randomEmail,
+                enabled: true,
+              });
+
+              // @ts-ignore
+              utils.pro.getUser.setData(undefined, {
+                ...data,
+                inbox: false,
+                inbox_email: randomEmail,
+              });
+            }
+          }}
+          id="airplane-mode"
+        />
+      </div>
+      {data?.inbox && data?.inbox_email && (
+        <Input
+          placeholder="Type your email address"
+          className="mt-4 h-9 text-sm md:w-[500px]"
+          value={data.inbox_email}
+          readOnly
+        />
+      )}
       <div className="mt-4 flex items-center space-x-2">
         <div className="flex flex-col">
           <h1 className="mb-1 select-none text-sm font-medium leading-5">
@@ -80,6 +153,16 @@ export const FeedsSettingsPage = () => {
           </h4>
         </div>
       </div>
+      {/* <div className="mt-4 flex items-center space-x-2">
+        <div className="flex flex-col">
+          <h1 className="mb-1 select-none text-sm font-medium leading-5">
+            Refeed Inbox
+          </h1>
+          <h4 className="select-none text-sm leading-5 text-neutral-450 dark:text-stone-500">
+            Subscribe to Newsletters using a email address provided by Refeed.
+          </h4>
+        </div>
+      </div> */}
       <div className="mb-4 flex gap-4">
         <DialogRoot>
           <DialogContent title="Import OPML" className="w-[300px]">
