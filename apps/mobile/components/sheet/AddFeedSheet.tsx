@@ -35,6 +35,7 @@ export const AddFeedSheet = ({
   const utils = trpc.useUtils();
 
   const [link, setLink] = useAtom(addFeedLinkAtom);
+  const [title, setTitle] = useAtom(addFeedLinkAtom);
   const [rename, setRename] = useState<string | undefined>(undefined);
   const [folderName, setFolderName] = useState<string | undefined>();
   const [isLoading, setIsLoading] = useState(false);
@@ -51,14 +52,14 @@ export const AddFeedSheet = ({
     try {
       // TODO: Their might still be a bug in here where it adds double feeds
 
-      const title = rename ?? previewFeed?.title;
+      const customTitle = rename ?? title ?? previewFeed?.title;
       const folder = folderName! ?? folders?.[0]!;
 
       await addFeedToUserViaDiscovery.mutateAsync(
         {
           feed_url: previewFeed?.link!,
           folder_name: folder,
-          customTitle: title,
+          customTitle,
         },
         {
           onSuccess: () => {
@@ -79,6 +80,7 @@ export const AddFeedSheet = ({
       setLink(undefined);
       setRename(undefined);
       setFolderName(undefined);
+      setTitle(undefined);
     }
   };
 
@@ -109,10 +111,10 @@ export const AddFeedSheet = ({
       handleComponent={null}
     >
       <BottomSheetView>
-        <Text className="mb-4 mt-2.5 text-center text-lg font-medium">
+        <Text className="mb-4 mt-3.5 text-center text-[17px] font-medium">
           Add New Feed
         </Text>
-        <View className="mx-3.5 rounded-md border border-neutral-200 bg-[#FCFCFC] px-2 py-3">
+        <View className="mx-3.5 rounded-md border border-neutral-200 bg-[#FAFAFA] px-2 py-3">
           <BottomSheetTextInput
             onChangeText={(e) => setLink(e)}
             // eslint-disable-next-line jsx-a11y/no-autofocus
@@ -125,14 +127,14 @@ export const AddFeedSheet = ({
         {previewFeed ? (
           <View className="mx-3.5 mt-4 flex w-full flex-row">
             {previewFeed ? (
-              <View className="h-24 w-24 rounded-md border border-neutral-200 bg-[#FCFCFC] p-2">
+              <View className="h-24 w-24 rounded-md border border-neutral-200 bg-[#FAFAFA] p-2">
                 <Image className="h-full w-full" source={previewFeed.favicon} />
               </View>
             ) : (
-              <View className="h-24 w-24 rounded-md border border-neutral-200 bg-[#FCFCFC]" />
+              <View className="h-24 w-24 rounded-md border border-neutral-200 bg-[#FAFAFA]" />
             )}
             <View className="flex flex-col">
-              <View className="ml-3 flex h-11 w-[218px] justify-center rounded-md border border-neutral-200/80 bg-neutral-50">
+              <View className="ml-3 flex h-11 w-[218px] justify-center rounded-md border border-neutral-200/80 bg-[#FAFAFA]">
                 <BottomSheetTextInput
                   onChangeText={(e) => setRename(e)}
                   // eslint-disable-next-line jsx-a11y/no-autofocus
@@ -145,7 +147,7 @@ export const AddFeedSheet = ({
               <View className="mt-2">
                 <DropdownMenu.Root>
                   <DropdownMenu.Trigger>
-                    <TouchableOpacity className="ml-3 flex h-11 w-[218px] justify-center rounded-md border border-neutral-200 bg-[#FCFCFC] px-2">
+                    <TouchableOpacity className="ml-3 flex h-11 w-[218px] justify-center rounded-md border border-neutral-200 bg-[#FAFAFA] px-2">
                       <Text className="text-base text-[#a3a3a3]/50">
                         {folders?.[0]!}
                       </Text>
@@ -186,7 +188,7 @@ export const AddFeedSheet = ({
             }}
             className="mx-3.5 mb-4 mt-4 flex h-11 justify-center rounded-md bg-sky-500"
           >
-            <Text className="text-center text-lg font-medium text-white">
+            <Text className="text-center text-[17px] font-medium text-white">
               Add Feed
             </Text>
           </TouchableOpacity>
@@ -194,7 +196,7 @@ export const AddFeedSheet = ({
           <View
             className={`${!isLoading && "mb-4"} mx-3.5 mt-4 flex h-11 justify-center rounded-md bg-sky-500/50`}
           >
-            <Text className="text-center text-lg font-medium text-white">
+            <Text className="text-center text-[17px] font-medium text-white">
               Add Feed
             </Text>
           </View>
