@@ -9,10 +9,13 @@ export const useMarkAllRead = () => {
 
   const settings = useAtomValue(settingsAtom);
 
-  const markAllRead = (FeedType: "one" | "all", feedId?: string) => {
+  const markAllRead = (
+    FeedType: "one" | "all" | "folder",
+    feedIds?: string[],
+  ) => {
     if (settings.PromptWhenMarkingItemsRead) {
       FeedType == "one"
-        ? markAllAsRead.mutate({ feedId: feedId })
+        ? markAllAsRead.mutate({ feedIds })
         : FeedType == "all"
           ? markAllAsRead.mutate({})
           : null;
@@ -30,7 +33,7 @@ export const useMarkAllRead = () => {
             text: "Yes",
             onPress: () => {
               FeedType == "one"
-                ? markAllAsRead.mutate({ feedId: feedId })
+                ? markAllAsRead.mutate({ feedIds })
                 : FeedType == "all"
                   ? markAllAsRead.mutate({})
                   : null;

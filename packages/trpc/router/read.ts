@@ -150,14 +150,16 @@ export const readRouter = createTRPCRouter({
       });
     }),
   markAllRead: protectedProcedure
-    .input(z.object({ feedId: z.string().optional() }))
+    .input(z.object({ feedIds: z.array(z.string()).optional() }))
     .mutation(async ({ ctx, input }) => {
-      // Mark one Feed Read
-      if (input.feedId) {
+      // Mark specific feeds read
+      if (input.feedIds) {
         // Get items that don't already have userItem on them
         const items = await ctx.prisma.item.findMany({
           where: {
-            feed_id: input.feedId,
+            feed_id: {
+              in: input.feedIds,
+            },
             NOT: {
               user_items: {
                 some: {

@@ -213,12 +213,16 @@ const ContentMenu = ({ node }: { node: NodeApi<Tree> }) => {
 
   const utils = trpc.useUtils();
 
-  const markRead = async (type: "one" | "all") => {
+  const markRead = async (type: "one" | "folder") => {
     if (type == "one") {
-      await markAllAsRead.mutateAsync({ feedId: node.data.id });
+      console.log(node.data.id);
+      await markAllAsRead.mutateAsync({ feedIds: [node.data.id] });
     }
-    if (type == "all") {
-      await markAllAsRead.mutateAsync({});
+    if (type == "folder") {
+      // Get the ids of all the feeds in the folder
+      const feedIds = node.data.children?.map((feed) => feed.id);
+
+      await markAllAsRead.mutateAsync({ feedIds });
     }
 
     utils.item.getUnreadItems.reset();
@@ -232,7 +236,7 @@ const ContentMenu = ({ node }: { node: NodeApi<Tree> }) => {
       >
         <ContextMenuItem
           onClick={() => {
-            void markRead(node.isLeaf ? "one" : "all");
+            void markRead(node.isLeaf ? "one" : "folder");
           }}
         >
           <CheckCheck className="mr-2 h-4 w-4 stroke-neutral-450 dark:stroke-stone-400" />

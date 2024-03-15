@@ -1,10 +1,10 @@
 import { useUpdateWebItemData } from "@refeed/features/item/useItemDataWeb";
+import type { FeedType } from "@refeed/types/feed";
 import type { ItemType } from "@refeed/types/item";
 
-import type { FeedTypes } from "../../types/feed";
 import { trpc } from "../../utils/trpc";
 
-export const useUpdateFeeds = (items: ItemType[], FeedType?: FeedTypes) => {
+export const useUpdateFeeds = (items: ItemType[], FeedType?: FeedType) => {
   const utils = trpc.useUtils();
 
   const { updateItemData, sort } = useUpdateWebItemData();
