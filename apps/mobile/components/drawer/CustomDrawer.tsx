@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import { memo, useEffect } from "react";
 import { Image, Pressable } from "react-native";
 import TreeView from "react-native-final-tree-view";
 import { TouchableOpacity } from "react-native-gesture-handler";
@@ -8,12 +8,15 @@ import {
   useNavigation as useNavigationNative,
 } from "@react-navigation/native";
 import type { StackNavigationProp } from "@react-navigation/stack";
+import { useAtomValue } from "jotai";
 import * as DropdownMenu from "zeego/dropdown-menu";
 
 import { removeFeedsOrFolder } from "../../../../packages/features/feed/removeFeedsOrFolders";
 import { useModifyFeedOrder } from "../../features/useFolderFeedOrder";
+import { useMarkAllRead } from "../../features/useMarkRead";
 import { DownIcon } from "../../lib/Icons";
 import type { NavigatorParams } from "../../lib/navTypes";
+import { settingsAtom } from "../../lib/stores/settings";
 import { trpc } from "../../utils/trpc";
 import { Text } from "../ui/Text";
 import { View } from "../ui/View";
@@ -25,7 +28,31 @@ const CustomDrawer = memo(() => {
   const navigation =
     useNavigationNative<StackNavigationProp<NavigatorParams>>();
 
-  const { data: feedsInFolders } = trpc.feed.getFeedsInFolders.useQuery();
+  const { data: feedsInFolders, refetch } =
+    trpc.feed.getFeedsInFolders.useQuery();
+  const settings = useAtomValue(settingsAtom);
+  const { markAllRead } = useMarkAllRead();
+
+  useEffect(() => {
+    refetch();
+  }, [settings.SortFeedsByAmountOfUnreadItems]);
+
+  // Filter out feeds with the same feedId (although should figure out how they good there in the first place)
+  feedsInFolders?.forEach((folder) => {
+    if (folder.children) {
+      folder.children = folder.children.filter(
+        (v, i, a) => a.findIndex((t) => t.id === v.id) === i,
+      );
+    }
+  });
+
+  if (settings.SortFeedsByAmountOfUnreadItems) {
+    feedsInFolders?.forEach((folder) => {
+      if (folder.children) {
+        folder.children.sort((a, b) => b.amount - a.amount);
+      }
+    });
+  }
 
   const { onToggle } = useModifyFeedOrder();
 
@@ -63,36 +90,38 @@ const CustomDrawer = memo(() => {
         persistentScrollbar={true}
         bounces={false}
       >
-        <View className="mb-4 flex flex-col">
+        <View className="mb-2 flex flex-col">
           <AccountDropdown />
         </View>
-        <View className="flex w-full flex-row px-1">
-          <TouchableOpacity>
-            <View className="ml-3 mt-[3px] h-5 w-5 self-center rounded-sm">
-              <DownIcon />
-            </View>
-          </TouchableOpacity>
-          <Pressable
-            onPress={() => {
-              requestAnimationFrame(() => {
-                navigation.dispatch(DrawerActions.closeDrawer());
-              });
-              navigation.navigate("Feed", {
-                // Remember node is not typed because of the lib
-                screen: "Inbox",
-                type: "all",
-                title: "All Feeds",
-              });
-            }}
-          >
-            <Text className="ml-1.5 max-w-[100px] self-center truncate stroke-neutral-700 text-base">
-              All
-            </Text>
-          </Pressable>
-          <Text.Secondary className="ml-auto mr-4 self-center text-sm text-neutral-400/90">
-            {totalItemAmount}
-          </Text.Secondary>
-        </View>
+        {feedsInFolders.length > 0 && (
+          <View className="flex w-full flex-row px-1 py-[7px]">
+            <TouchableOpacity>
+              <View className="ml-3 h-5 w-5 self-center rounded-sm">
+                <DownIcon />
+              </View>
+            </TouchableOpacity>
+            <Pressable
+              onPress={() => {
+                requestAnimationFrame(() => {
+                  navigation.dispatch(DrawerActions.closeDrawer());
+                });
+                navigation.navigate("Feed", {
+                  // Remember node is not typed because of the lib
+                  screen: "Inbox",
+                  type: "all",
+                  title: "All Feeds",
+                });
+              }}
+            >
+              <Text className="ml-1.5 max-w-[100px] self-center truncate stroke-neutral-700 text-base font-[500]">
+                All
+              </Text>
+            </Pressable>
+            <Text.Secondary className="ml-auto mr-4 self-center text-sm text-neutral-400/90">
+              {totalItemAmount}
+            </Text.Secondary>
+          </View>
+        )}
         <NoFoldersMessage Empty={feedsInFolders.length == 0} />
         {/** @ts-ignore */}
         <TreeView
@@ -114,7 +143,7 @@ const CustomDrawer = memo(() => {
                     <DropdownMenu.Trigger action="longPress">
                       <View className="flex w-full flex-row px-1 py-[7px]">
                         <TouchableOpacity onPress={() => onToggle(node.name)}>
-                          <View className="ml-3 mt-[3px] h-5 w-5 self-center rounded-sm">
+                          <View className="ml-3 h-5 w-5 self-center rounded-sm">
                             <DownIcon />
                           </View>
                         </TouchableOpacity>
@@ -127,12 +156,19 @@ const CustomDrawer = memo(() => {
                               // Remember node is not typed because of the lib
                               screen: "Inbox",
                               type: "multiple",
-                              title: node.name,
+                              folder: node.name,
                             });
                           }}
                         >
-                          <Text className="ml-1.5 max-w-[100px] self-center truncate stroke-neutral-700 text-base">
-                            {node.name}
+                          <Text
+                            // "text-base"
+                            className="ml-1.5 max-w-[100px] self-center truncate text-base font-[500]"
+                          >
+                            {node.name.length > 18
+                              ? // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+                                node.name.substring(0, node.name.length - 3) +
+                                "..."
+                              : node.name}
                           </Text>
                         </Pressable>
                         <Pressable
@@ -169,7 +205,18 @@ const CustomDrawer = memo(() => {
                       </View>
                     </DropdownMenu.Trigger>
                     <DropdownMenu.Content>
-                      <DropdownMenu.Item key="markallread">
+                      <DropdownMenu.Item
+                        onSelect={() => {
+                          // Get the feedIds of the feeds in the folder
+                          // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+                          const feedIds: string[] = node.children?.map(
+                            (feed: { id: string }) => feed.id,
+                          );
+
+                          markAllRead("folder", feedIds);
+                        }}
+                        key="markallread"
+                      >
                         <DropdownMenu.ItemTitle>
                           Mark as Read
                         </DropdownMenu.ItemTitle>
@@ -214,10 +261,15 @@ const CustomDrawer = memo(() => {
                           />
                         </View>
                         <Text
-                          className="ml-2 w-44 self-center truncate stroke-neutral-700 text-base"
+                          // #404245
+                          className="ml-2 w-44 self-center truncate text-[15px] font-[500] text-neutral-700"
                           numberOfLines={1}
                         >
-                          {node.name}
+                          {node.name.length > 18
+                            ? // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+                              node.name.substring(0, node.name.length - 3) +
+                              "..."
+                            : node.name}
                         </Text>
                         <View className="mx-auto" />
                         <Text.Secondary className="mr-4 self-center text-sm text-neutral-400/80">
@@ -226,7 +278,10 @@ const CustomDrawer = memo(() => {
                       </Pressable>
                     </DropdownMenu.Trigger>
                     <DropdownMenu.Content>
-                      <DropdownMenu.Item key="markallread">
+                      <DropdownMenu.Item
+                        onSelect={() => markAllRead("one", node.id)}
+                        key="markallread"
+                      >
                         <DropdownMenu.ItemTitle>
                           Mark as Read
                         </DropdownMenu.ItemTitle>
