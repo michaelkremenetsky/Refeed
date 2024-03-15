@@ -127,7 +127,6 @@ export const SignedOutView = () => {
               placeholder="Email"
             />
           )}
-          {/** Removed for till I figure out the Supabase Deep Linking */}
           <TouchableOpacity
             onPress={() => {
               if (emailOpen) {

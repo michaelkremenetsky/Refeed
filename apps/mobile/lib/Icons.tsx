@@ -1,7 +1,7 @@
-import { Library } from "lucide-react-native";
 import * as React from "react";
 import type { SvgProps } from "react-native-svg";
 import Svg, { Path } from "react-native-svg";
+import { Library } from "lucide-react-native";
 
 import useCustomColorScheme from "./hooks/useCustomColorScheme";
 
@@ -12,9 +12,8 @@ export const BackIcon = (props: SvgProps) => {
       viewBox="0 0 24 24"
       strokeWidth={1.5}
       stroke="#878792"
-      className="h-6 w-6"
-      width={24}
-      height={24}
+      width={22}
+      height={22}
       {...props}
     >
       <Path
@@ -196,8 +195,7 @@ export const DownIcon = (props: SvgProps) => {
       fill="none"
       viewBox="0 0 24 24"
       strokeWidth={1.5}
-      stroke={colorScheme === "dark" ? "#4d4d4d" : "#878792"}
-      className="h-6 w-6"
+      stroke={colorScheme === "dark" ? "#4d4d4d" : "#9c9ca5"}
       width={20}
       height={20}
       {...props}
@@ -335,9 +333,9 @@ export const ShareIcon = (props: SvgProps) => {
       fill="none"
       viewBox="0 0 24 24"
       strokeWidth={1.5}
-      stroke="#878792"
-      width={24}
-      height={24}
+      stroke="#9c9ca5"
+      width={22}
+      height={22}
       {...props}
     >
       <Path
@@ -374,7 +372,7 @@ export const StackIcon = (props: SvgProps) => (
     fill="none"
     viewBox="0 0 24 24"
     strokeWidth={1.6}
-    className="stroke-[#878792]"
+    className="stroke-[#9c9ca5]"
     width={28}
     height={28}
     {...props}
@@ -408,7 +406,7 @@ export const MoreIcon = () => (
     fill="none"
     viewBox="0 0 24 24"
     strokeWidth={1.5}
-    stroke="#9999a3"
+    stroke="#717578"
     className="h-6 w-6"
   >
     <Path

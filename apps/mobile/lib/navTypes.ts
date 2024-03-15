@@ -1,13 +1,7 @@
-import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import type { PurchasesOffering } from "react-native-purchases";
-
-
+import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 
 import type { ItemType } from "@refeed/types/item";
-
-
-
-
 
 interface MainPropsOne {
   feedId: string;
@@ -80,6 +74,7 @@ export interface NavigatorParams {
     passItems?: ItemType[];
     screen: string;
     title?: string;
+    folder?: string;
   };
   Bookmark: {
     feedId?: string;

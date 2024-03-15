@@ -44,9 +44,9 @@ export const TRPCProvider: React.FC<{ children: React.ReactNode }> = ({
   );
   const [trpcClient] = React.useState(() =>
     trpc.createClient({
-      transformer: superjson,
       links: [
         httpBatchLink({
+          transformer: superjson,
           url: `${getBaseUrl()}/api/trpc`,
           headers: async () => {
             const { data } = await supabase.auth.getSession();

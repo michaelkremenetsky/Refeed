@@ -165,6 +165,8 @@ export const useAuth = () => {
   };
 
   return {
+    setLoading,
+    loadLoggedInScreen,
     signInWithOtp,
     signInWithPassword,
     signInWithGoogle,

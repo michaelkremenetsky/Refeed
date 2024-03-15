@@ -1,3 +1,9 @@
+import React, { useCallback, useEffect, useState } from "react";
+import { Platform, useWindowDimensions } from "react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { Appbar, PaperProvider } from "react-native-paper";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+import * as SplashScreen from "expo-splash-screen";
 import type { DrawerNavigationProp } from "@react-navigation/drawer";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { getHeaderTitle } from "@react-navigation/elements";
@@ -9,13 +15,7 @@ import type { NativeStackHeaderProps } from "@react-navigation/native-stack";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import type { Session } from "@supabase/auth-helpers-react";
 import { SessionContextProvider } from "@supabase/auth-helpers-react";
-import * as SplashScreen from "expo-splash-screen";
 import { Provider as JotaiProvider } from "jotai";
-import React, { useCallback, useEffect, useState } from "react";
-import { Platform, useWindowDimensions } from "react-native";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { Appbar, PaperProvider } from "react-native-paper";
-import { SafeAreaProvider } from "react-native-safe-area-context";
 import { HeaderButtonsProvider } from "react-navigation-header-buttons";
 
 import CustomDrawer from "./components/drawer/CustomDrawer";
@@ -118,7 +118,7 @@ export const Navigation = () => {
               title: "",
               headerShadowVisible: true,
               headerStyle: {
-                backgroundColor: "#FCFCFC",
+                backgroundColor: "#FEFEFE",
               },
               customAnimationOnGesture: true,
               animationDuration: 150,
