@@ -1,57 +1,37 @@
-export const getIcon = async (link: string) => {
-  let icon = link + "/favicon.ico";
+export async function getIcon(link: string) {
+  let size = 256;
+  let faviconUrl;
 
-  try {
-    try {
-      const response = await fetch(icon, { method: "HEAD" });
-      if (!response.ok) {
-        throw Error;
-      }
+  const googleUrl = "https://www.google.com/s2/favicons?domain=";
 
-      const contentType = response.headers.get("Content-Type");
-      const contentLength = parseInt(
-        response.headers.get("Content-Length")!,
-        10,
-      );
+  const url = new URL(link);
 
-      if (!contentType?.startsWith("image/")) {
-        throw Error;
-      }
-
-      if (contentLength && contentLength < 2048) {
-        // If Size less than 2KB than their probably isn't anything
-        throw Error;
-      }
-    } catch {
-      // Get the base URL
-      const newUrl = new URL(link);
-      const base = newUrl.origin;
-
-      // Check that
-      const response = await fetch(base, { method: "HEAD" });
-      if (!response.ok) {
-        throw Error;
-      }
-
-      const contentType = response.headers.get("Content-Type");
-      const contentLength = parseInt(
-        response.headers.get("Content-Length")!,
-        10,
-      );
-
-      if (!contentType?.startsWith("image/")) {
-        throw Error;
-      }
-
-      if (contentLength && contentLength < 2048) {
-        // If Size less than 2KB than their probably isn't anything
-        throw Error;
-      }
-    }
-  } catch {
-    // Fetch from google as fallback since its usually lower quality
-    icon = "https://s2.googleusercontent.com/s2/favicons?domain=" + link;
+  // If its a youtube link get 64x64 because it dosen't get the correct icon if its higher than that.
+  if (url.hostname.includes("youtube.com")) {
+    size = 64;
   }
 
-  return icon;
-};
+  while (size >= 16) {
+    try {
+      const response = await fetch(`${googleUrl}${link}&sz=${size}`, {
+        method: "HEAD",
+      });
+
+      if (response.ok) {
+        faviconUrl = `${googleUrl}${link}&sz=${size}`;
+        break;
+      } else {
+        size /= 2;
+      }
+    } catch (error) {
+      break;
+    }
+  }
+
+  if (!faviconUrl) {
+    faviconUrl =
+      "https://www.google.com/s2/favicons?domain=" + link + "&sz=128";
+  }
+
+  return faviconUrl;
+}
