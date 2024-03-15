@@ -1,8 +1,9 @@
-import { useNavigation } from "@react-navigation/native";
-import dayjs from "dayjs";
-import { Image } from "expo-image";
 import { memo } from "react";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
+import Animated from "react-native-reanimated";
+import { Image } from "expo-image";
+import { useNavigation } from "@react-navigation/native";
+import dayjs from "dayjs";
 
 import { decodeHtmlEntities } from "@refeed/lib/decodeHtmlEntities";
 import type { ItemType } from "@refeed/types/item";
@@ -47,7 +48,7 @@ export const MagazineItem = memo(
         {(FeedType == "recentlyread" || FeedType == "bookmarks") && (
           <View>{i == 0 && <View className="my-2" />}</View>
         )}
-        <View
+        <Animated.View
           className={`mb-5 flex flex-row ${
             item?.marked_read ? " opacity-60" : ""
           }`}
@@ -95,7 +96,7 @@ export const MagazineItem = memo(
               <View className="h-full w-full rounded-md" />
             )}
           </View>
-        </View>
+        </Animated.View>
       </TouchableWithoutFeedback>
     );
   },

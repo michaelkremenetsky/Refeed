@@ -48,7 +48,6 @@ export const FeedLayout = ({ route, navigation }: FeedProps) => {
 
   useFocusEffect(
     useCallback(() => {
-      console.log(folder);
       const navTitle =
         type == "one" || type == "discover"
           ? title

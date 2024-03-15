@@ -22,8 +22,8 @@ const Header = {
   headerRight: () => (
     <HeaderButtons HeaderButtonComponent={HeaderButtonIcon}>
       <Item
-        title="search"
-        iconName="search"
+        title="dropdown"
+        iconName="dropdown"
         className="translate-x-4"
         IconComponent={Dropdown}
       />
