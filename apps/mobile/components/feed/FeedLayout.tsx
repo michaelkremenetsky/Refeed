@@ -27,10 +27,11 @@ import { MagazineItem } from "./MagazineItem";
 dayjs.extend(relativeTime);
 
 export const FeedLayout = ({ route, navigation }: FeedProps) => {
-  const { feedId, type, title } = route.params as {
+  const { feedId, type, title, folder } = route.params as {
     feedId: string;
     type: FeedType;
     title?: string;
+    folder?: string;
   };
   const { setLoading } = useLoading();
 
@@ -47,16 +48,19 @@ export const FeedLayout = ({ route, navigation }: FeedProps) => {
 
   useFocusEffect(
     useCallback(() => {
+      console.log(folder);
       const navTitle =
-        type == "one" || type == "discover" || type == "multiple"
+        type == "one" || type == "discover"
           ? title
-          : type == "all"
-            ? "All Feeds"
-            : type == "recentlyread"
-              ? "Recently Read"
-              : type == "bookmarks"
-                ? "Bookmarks"
-                : undefined;
+          : type == "multiple"
+            ? folder
+            : type == "all"
+              ? "All Feeds"
+              : type == "recentlyread"
+                ? "Recently Read"
+                : type == "bookmarks"
+                  ? "Bookmarks"
+                  : undefined;
 
       if (Platform.OS == "ios") {
         navigation.setOptions({
@@ -71,7 +75,7 @@ export const FeedLayout = ({ route, navigation }: FeedProps) => {
           ),
         });
       }
-    }, [feedId, type, title]),
+    }, [feedId, type, title, folder]),
   );
 
   const onLayoutLoad = useCallback(() => {
@@ -121,9 +125,7 @@ export const FeedLayout = ({ route, navigation }: FeedProps) => {
           onEndReachedThreshold={0.2}
           removeClippedSubviews={true}
           onEndReached={() => {
-            if (items?.length % 25 === 0) {
-              fetchNextPage();
-            }
+            fetchNextPage();
           }}
           scrollEventThrottle={16}
           ListHeaderComponent={<View className="pt-2" />}
@@ -139,7 +141,7 @@ export const FeedLayout = ({ route, navigation }: FeedProps) => {
             alignItems: "center",
           }}
           renderItem={(p) => (
-            <>
+            <View key={p.item.id}>
               {type != "recentlyread" && type != "bookmarks" && (
                 <DateInfo i={p.index} items={items} />
               )}
@@ -150,7 +152,7 @@ export const FeedLayout = ({ route, navigation }: FeedProps) => {
                 item={p.item}
                 markRead={() => markRead(p.item)}
               />
-            </>
+            </View>
           )}
         />
       ) : (
