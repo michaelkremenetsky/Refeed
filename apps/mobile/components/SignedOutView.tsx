@@ -11,50 +11,48 @@ import * as AppleAuthentication from "expo-apple-authentication";
 import { Mail } from "lucide-react-native";
 
 import { useAuth } from "../features/useAuth";
+import { extractCodeFromUrl } from "../utils/extractCodeFromUrl";
 import { supabase } from "../utils/supabase";
 import { Text } from "./ui/Text";
 import { View } from "./ui/View";
 
 export const SignedOutView = () => {
-  const { signInWithOtp, signInWithApple, signInWithGoogle } = useAuth();
+  const {
+    setLoading,
+    loadLoggedInScreen,
+    signInWithOtp,
+    signInWithApple,
+    signInWithGoogle,
+  } = useAuth();
   const [signUp, setSignUp] = useState(true);
   const [email, setEmail] = useState("");
   const [emailOpen, setEmailOpen] = useState(false);
 
   useEffect(() => {
-    async function handleDeepLink(event: any) {
+    async function handleDeepLink(event: { url: string }) {
       const url = event.url;
-      if (url) {
-        // Example: extract 'token' from url
-        const urlParams = new URLSearchParams(url);
-        const token = urlParams.get("token");
 
-        if (token) {
+      if (url != null) {
+        const code = extractCodeFromUrl(url);
+
+        if (code) {
           try {
-            await supabase.auth.verifyOtp({
-              token,
-              email: email,
-              type: "magiclink",
-            });
-
-            // Successful verification - Navigate the user
-            // to the appropriate screen in your app
+            await supabase.auth.exchangeCodeForSession(code);
+            loadLoggedInScreen();
           } catch (error) {
-            // Handle verification error
             console.error(error);
+            setLoading(false);
           }
         }
       }
     }
 
-    // Add listeners
-    Linking.addEventListener("url", handleDeepLink);
-    Linking.getInitialURL().then(handleDeepLink);
-
-    // return () => {
-    //   // Remove listeners
-    //   Linking.removeEventListener("url", handleDeepLink);
-    // };
+    Linking.addEventListener("url", (e) => {
+      setLoading(true);
+      if (e.url) {
+        handleDeepLink(e).then(() => setLoading(false));
+      }
+    });
   }, []);
 
   return (
@@ -125,7 +123,7 @@ export const SignedOutView = () => {
               }}
               value={email}
               autoCapitalize="none"
-              onChangeText={setEmail}
+              onChangeText={(e) => setEmail(e)}
               placeholder="Email"
             />
           )}

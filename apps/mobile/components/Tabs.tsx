@@ -42,7 +42,7 @@ const Tabs = ({ navigation }: TabProps) => {
     }),
     t.feed.getFeedOrder(),
     t.feed.getFeedsInFolders(),
-    t.pro.checkPlan(),
+    t.pro.getUser(),
   ]);
 
   // This one dosen't need to be instantly loaded
