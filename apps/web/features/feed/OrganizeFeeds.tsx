@@ -10,6 +10,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import clsx from "clsx";
 import { useWindowSize } from "usehooks-ts";
 
 import { Badge } from "@refeed/ui";
@@ -117,14 +118,14 @@ export const OrganizeFeeds = () => {
 
   const deleteUserFeedsMutation = trpc.feed.removeUserFeed.useMutation();
 
-  const deleteUserFeeds = async () => {
-    const selectedIds = Object.keys(rowSelection)
-      .map((row) => {
-        const index = parseInt(row, 10);
-        return data?.[index]?.id!;
-      })
-      .filter((id) => id !== undefined);
+  const selectedIds = Object.keys(rowSelection)
+    .map((row) => {
+      const index = parseInt(row, 10);
+      return data?.[index]?.id!;
+    })
+    .filter((id) => id !== undefined);
 
+  const deleteUserFeeds = async () => {
     const feedsInFolders = utils.feed.getFeedsInFolders.getData();
 
     // Optimistic update to make it feel instant
@@ -259,7 +260,10 @@ export const OrganizeFeeds = () => {
                   deleteUserFeeds();
                 }}
                 type="submit"
-                className="my-2 mr-2 w-[135px] rounded-md border border-[#DCDCDC] bg-white py-1.5 text-center text-base font-medium shadow-[0_1px_2px_rgba(16,29,52,.15)] hover:bg-[#fafafa] dark:border-[#1e2020] dark:bg-[#0f0f10] dark:hover:bg-[#0f0f10]"
+                className={clsx(
+                  "my-2 mr-2 w-[135px] rounded-md border border-[#DCDCDC] bg-white py-1.5 text-center text-base font-medium shadow-[0_1px_2px_rgba(16,29,52,.15)] hover:bg-[#fafafa] dark:border-[#1e2020] dark:bg-[#0f0f10] dark:hover:bg-[#0f0f10]",
+                  selectedIds.length == 0 && "opacity-0",
+                )}
               >
                 Unfollow Feed
               </button>
