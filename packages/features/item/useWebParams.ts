@@ -1,9 +1,10 @@
-import { useAtomValue } from "jotai";
 import { useRouter } from "next/router";
+import { useAtomValue } from "jotai";
 import { match } from "ts-pattern";
 
+import type { FeedType } from "@refeed/types/feed";
+
 import { Sort } from "../../../apps/web/stores/ui";
-import type { FeedType } from "./useItemDataWeb";
 
 const useWebParams = () => {
   const { pathname, query } = useRouter();
@@ -18,6 +19,7 @@ const useWebParams = () => {
     .with("/folder/[folder]", () => "multiple")
     .with("/discover/[feedId]", () => "discover")
     .with("/feed/search", () => "search")
+    .with("/feed/newsletters", () => "newsletters")
     .otherwise(() => "all");
 
   return { sort, FeedType: FeedType as FeedType, folder, feedId };

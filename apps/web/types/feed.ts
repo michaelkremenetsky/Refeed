@@ -25,13 +25,18 @@ interface SearchFeedTypeProps {
   query: string;
 }
 
+interface NewslettersFeedTypeProps {
+  FeedType: "newsletters";
+}
+
 export type FeedTypes =
   | AllFeedTypeProps[`FeedType`]
   | RecentlyReadFeedTypeProps[`FeedType`]
   | BookmarksFeedTypeProps[`FeedType`]
   | OneFeedTypeProps[`FeedType`]
   | MultipleFeedTypeProps[`FeedType`]
-  | SearchFeedTypeProps[`FeedType`];
+  | SearchFeedTypeProps[`FeedType`]
+  | NewslettersFeedTypeProps[`FeedType`];
 
 export type FeedLayoutTypes =
   | AllFeedTypeProps
@@ -39,4 +44,5 @@ export type FeedLayoutTypes =
   | BookmarksFeedTypeProps
   | OneFeedTypeProps
   | MultipleFeedTypeProps
-  | SearchFeedTypeProps;
+  | SearchFeedTypeProps
+  | NewslettersFeedTypeProps;

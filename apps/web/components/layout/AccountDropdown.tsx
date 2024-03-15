@@ -99,6 +99,14 @@ export const AccountDropdown = ({ width }: { width: number }) => {
     </Link>
   );
 
+  const Newsletters = () => (
+    <Link href="/feed/newsletters">
+      <DropdownMenuItem>
+        <span>Newsletters</span>
+      </DropdownMenuItem>
+    </Link>
+  );
+
   const LogOutButton = () => (
     <DropdownMenuItem
       // eslint-disable-next-line @typescript-eslint/no-misused-promises
@@ -172,6 +180,7 @@ export const AccountDropdown = ({ width }: { width: number }) => {
           <SettingsTrigger />
           <RecentlyRead />
           <Bookmarks />
+          {data?.inbox && <Newsletters />}
           <OpenDiscovery />
           <DropdownMenuSeparator />
           <OpenMobileApps />
