@@ -49,23 +49,23 @@ export function BookmarkFolderButton({ item }: { item: ItemType }) {
           {item?.bookmark_folders?.length == 0 ||
           item?.bookmark_folders?.length == undefined ? (
             <SFSymbol
-              name="book"
+              name="folder.badge.plus"
               weight="regular"
               scale="large"
-              color="#878792"
+              color="#9c9ca5"
               size={18}
               multicolor={false}
-              style={{ width: 26, height: 26 }}
+              style={{ width: 22, height: 22 }}
             />
           ) : (
             <SFSymbol
-              name="book"
+              name="books.vertical"
               weight="regular"
               scale="large"
-              color="#0496FF"
+              color="#9c9ca5"
               size={18}
               multicolor={false}
-              style={{ width: 26, height: 26 }}
+              style={{ width: 22, height: 22 }}
             />
           )}
         </>

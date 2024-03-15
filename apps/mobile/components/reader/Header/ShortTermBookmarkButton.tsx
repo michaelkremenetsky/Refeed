@@ -2,14 +2,14 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import { SFSymbol } from "react-native-sfsymbols";
 import Svg, { Path } from "react-native-svg";
 
-import { usePlan } from "@refeed/features/payment/usePlan";
+import { useUser } from "@refeed/features/hooks/useUser";
 import type { ItemType } from "@refeed/types/item";
 
 import { useUpdateBookmarks } from "../../../features/useUpdateBookmarks";
 
 export const ShortTermBookmarkButton = ({ item }: { item: ItemType }) => {
   const { markBookmarkRead, removeBookmark } = useUpdateBookmarks();
-  const { plan } = usePlan();
+  const { plan } = useUser();
 
   if (plan != "free") {
     return (
@@ -25,9 +25,9 @@ export const ShortTermBookmarkButton = ({ item }: { item: ItemType }) => {
               weight="regular"
               scale="large"
               size={18}
-              color="#878792"
+              color="#9c9ca5"
               multicolor={false}
-              style={{ width: 28, height: 28 }}
+              style={{ width: 22, height: 22 }}
             />
           </TouchableOpacity>
         ) : (
@@ -41,9 +41,8 @@ export const ShortTermBookmarkButton = ({ item }: { item: ItemType }) => {
               viewBox="0 0 24 24"
               strokeWidth={1.3}
               stroke="#0496FF"
-              className="h-[28px] w-[28px]"
-              width={28}
-              height={28}
+              width={22}
+              height={22}
             >
               <Path
                 strokeLinecap="round"
