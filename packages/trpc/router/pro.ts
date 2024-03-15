@@ -222,4 +222,76 @@ export const proRouter = createTRPCRouter({
         },
       });
     }),
+  toggleNewsletters: protectedProcedure
+    .input(
+      z.object({
+        enabled: z.boolean(),
+        email: z.union([z.string(), z.null()]),
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      if (!input.enabled) {
+        await ctx.prisma.user.update({
+          where: {
+            id: ctx.user.id,
+          },
+          data: {
+            inbox: false,
+          },
+        });
+      }
+      if (input.enabled) {
+        // Check if their is already a user with this email
+        const user = await ctx.prisma.user.findFirst({
+          where: {
+            inbox_email: {
+              equals: input.email,
+            },
+            NOT: {
+              id: {
+                equals: ctx.user.id,
+              },
+            }
+          },
+        });
+
+        if (user) {
+          throw new TRPCError({
+            code: "FORBIDDEN",
+            message: "Email already in use",
+          });
+        }
+
+        const newEmail = input.email;
+
+        if (newEmail) {
+          // Check if it has @refeedreader.com on the end
+          if (!newEmail?.includes("@inbox.refeedreader.com")) {
+            throw new TRPCError({
+              code: "FORBIDDEN",
+              message: "Email must end with refeedreader.com",
+            });
+          }
+
+          // Make sure new email is under 60 characters
+          if (input.email!.length > 60) {
+            throw new TRPCError({
+              code: "FORBIDDEN",
+              message: "Email is too long",
+            });
+          }
+
+          // Otherwise add it to the user
+          await ctx.prisma.user.update({
+            where: {
+              id: ctx.user.id,
+            },
+            data: {
+              inbox: true,
+              inbox_email: input.email,
+            },
+          });
+        }
+      }
+    }),
 });

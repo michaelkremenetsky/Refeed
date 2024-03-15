@@ -7,14 +7,6 @@ import { filterItems } from "../filters/filterItems";
 import { trpc } from "../trpc";
 import useWebParams from "./useWebParams";
 
-export type FeedType =
-  | "all"
-  | "recentlyread"
-  | "bookmarks"
-  | "one"
-  | "multiple"
-  | "search";
-
 export const useItemData = () => {
   const { sort, FeedType, folder, feedId } = useWebParams();
 
@@ -60,6 +52,7 @@ export const useItemData = () => {
     isPending,
     isFetchingNextPage,
     FeedType,
+    folder,
   };
 };
 
