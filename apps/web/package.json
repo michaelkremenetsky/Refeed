@@ -69,7 +69,7 @@
     "cmdk": "^0.2.0",
     "cors": "^2.8.5",
     "dayjs": "^1.11.10",
-    "framer-motion": "^11.0.8",
+    "framer-motion": "^11.0.12",
     "google": "link:next/font/google",
     "jotai": "^2.7.0",
     "jotai-devtools": "^0.8.0",
