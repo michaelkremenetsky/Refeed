@@ -1,4 +1,5 @@
 import { TRPCError } from "@trpc/server";
+import { Innertube } from "youtubei.js";
 import { z } from "zod";
 
 import { addFeedToUser } from "@refeed/features/discovery/addFeedToUser";
@@ -364,10 +365,41 @@ export const feedRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
+      let feed_url = input.feed_url;
+
+      // Get the Base URl
+      const url = new URL(input.feed_url).hostname;
+
+      if (
+        (url == "www.youtube.com" || url == "youtube.com") &&
+        !input.feed_url.includes("/feeds/")
+      ) {
+        // If its a youtube URL then turn it into a RSS Link
+        const client = await Innertube.create();
+
+        const channel = (await Promise.race([
+          client.resolveURL(input.feed_url),
+          new Promise((_, reject) =>
+            setTimeout(
+              () => reject(new Error("Timeout after 3 seconds")),
+              3000,
+            ),
+          ),
+        ])) as {
+          payload: {
+            browseId: string;
+          };
+        };
+
+        feed_url =
+          "https://www.youtube.com/feeds/videos.xml?channel_id=" +
+          channel.payload.browseId;
+      }
+
       // Check if the feed already exists and if dosen't add it
       let feed = await ctx.prisma.feed.findFirst({
         where: {
-          feed_url: toHttps(input.feed_url),
+          feed_url: toHttps(feed_url),
         },
       });
 
@@ -375,7 +407,7 @@ export const feedRouter = createTRPCRouter({
         // Check if feed already exists on user
         const check = await ctx.prisma.feed.findFirst({
           where: {
-            feed_url: toHttps(input.feed_url),
+            feed_url: toHttps(feed_url),
             users: {
               some: {
                 user_id: ctx.user.id,
@@ -393,12 +425,12 @@ export const feedRouter = createTRPCRouter({
       }
 
       if (!feed) {
-        await addFeed(input.customTitle!, toHttps(input.feed_url), ctx.prisma);
+        await addFeed(input.customTitle!, toHttps(feed_url), ctx.prisma);
 
         // Fetch again to get info
         feed = await ctx.prisma.feed.findFirst({
           where: {
-            feed_url: toHttps(input.feed_url),
+            feed_url: toHttps(feed_url),
           },
         });
 
@@ -513,6 +545,44 @@ export const feedRouter = createTRPCRouter({
   getFeed: protectedProcedure
     .input(z.object({ url: z.string() }))
     .query(async ({ input }) => {
+      // Get the Base URl
+      const url = new URL(input.url).hostname;
+
+      if (
+        (url == "www.youtube.com" || url == "youtube.com") &&
+        !input.url.includes("/feeds/")
+      ) {
+        // If its a youtube URL then turn it into a RSS Link
+        const client = await Innertube.create();
+
+        try {
+          const channel = (await Promise.race([
+            client.resolveURL(input.url),
+            new Promise((_, reject) =>
+              setTimeout(
+                () => reject(new Error("Timeout after 3 seconds")),
+                3000,
+              ),
+            ),
+          ])) as {
+            payload: {
+              browseId: string;
+            };
+          };
+
+          const feed = await getFeed({
+            url:
+              "https://www.youtube.com/feeds/videos.xml?channel_id=" +
+              channel.payload.browseId,
+            feedId: "stub_id",
+          });
+
+          return feed;
+        } catch {
+          return undefined;
+        }
+      }
+
       const feed = await getFeed({
         url: input.url,
         feedId: "stub_id",

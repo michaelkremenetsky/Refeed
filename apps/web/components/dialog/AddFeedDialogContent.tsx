@@ -1,5 +1,5 @@
-import * as RadixDialog from "@radix-ui/react-dialog";
 import { useState } from "react";
+import * as RadixDialog from "@radix-ui/react-dialog";
 import { toast } from "sonner";
 
 import { useUser } from "@refeed/features/hooks/useUser";
@@ -82,6 +82,7 @@ export function AddFeedDialogContent({
                     className="h-24 w-24 rounded-xl p-2"
                     alt="Icon not found"
                     src={previewFeed.favicon}
+                    key={previewFeed?.favicon}
                   />
                 ) : (
                   <div className="h-full w-full" />
@@ -93,7 +94,8 @@ export function AddFeedDialogContent({
                     onChange={(e) => {
                       setCustomTitle(e.target.value);
                     }}
-                    defaultValue={previewFeed?.title}
+                    key={previewFeed?.title}
+                    value={previewFeed?.title}
                     className="mb-1 w-[170px] overflow-hidden truncate"
                   />
                 ) : null}
@@ -169,11 +171,12 @@ export function AddFeedDialogContent({
                     });
                     utils.feed.getFeedOrder.reset();
                     utils.feed.getFeedsInFolders.reset();
+                    utils.search.searchFeeds.reset();
                   }
                 }
               }}
               className={`-z-10 mb-1 mt-4 w-full ${
-                !previewFeed || error
+                !previewFeed.link || error
                   ? "cursor-not-allowed bg-sky-500/60"
                   : "bg-sky-500"
               } rounded-md py-1.5 text-center font-medium tracking-tight text-white`}

@@ -15,6 +15,7 @@
     "rss-parser": "^3.13.0",
     "superjson": "1.13.1",
     "svg2img": "1.0.0-beta.2",
+    "youtubei.js": "^9.1.0",
     "zod": "^3.22.2"
   },
   "devDependencies": {
@@ -22,7 +23,7 @@
     "@refeed/prettier-config": "^0.1.0",
     "@refeed/tsconfig": "^0.1.0",
     "dotenv-cli": "^7.3.0",
-    "prisma": "5.9.1",
+    "prisma": "5.11.0",
     "typescript": "^5.3.3"
   },
   "eslintConfig": {

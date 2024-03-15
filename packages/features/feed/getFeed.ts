@@ -77,8 +77,6 @@ export const getFeed = async (params: {
       };
     });
 
-    console.log("Fetched " + feed.title + "Link " + feed.link);
-
     const new_last_crawl_hash = crypto
       .createHash("sha256")
       .update(JSON.stringify(feed.items))

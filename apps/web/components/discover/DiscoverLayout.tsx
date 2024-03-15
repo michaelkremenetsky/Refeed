@@ -64,9 +64,6 @@ export const DiscoverLayout = () => {
     0.5,
   );
 
-  // Doing this instead of a prefetch
-  trpc.settings.getShareProviders.useQuery();
-
   let searchData = data?.pages?.map((page) => page?.feeds).flat();
 
   if (!searchData) {

@@ -20,8 +20,6 @@ interface Item {
   content: string;
 }
 
-// TODO: Rewrite this hook it is quite bad
-
 export const useCheckSource = (
   defaultLink: string,
   searchLink?: string,
@@ -66,14 +64,15 @@ export const useCheckSource = (
           }
         });
 
-        if (!feed.title) {
+        if (!feed?.title || !feed.feedUrl) {
           throw Error;
         }
 
         if (feed) {
           const link = toHttps(query);
 
-          const favicon = new URL(link).origin + "/favicon.ico";
+          const favicon =
+            "https://www.google.com/s2/favicons?domain=" + link + "&sz=128";
           const preview = { ...feed, favicon, link: query, error };
 
           setClientFetchedFeed(preview as Feed);
@@ -97,7 +96,7 @@ export const useCheckSource = (
     }
   }, []);
 
-  const previewFeed = feed_title
+  const previewFeed = !clientFetchedFeed
     ? {
         title: feed_title,
         favicon: favicon_url!,
