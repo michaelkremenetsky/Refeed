@@ -16,14 +16,7 @@ export const itemRouter = createTRPCRouter({
     .input(
       z.object({
         amount: z.number(),
-        sort: z.enum([
-          "Latest",
-          "Oldest",
-          "Readability Ascending",
-          "Readability Descending",
-          "Content Length Ascending",
-          "Content Length Descending",
-        ]),
+        sort: z.enum(["Latest", "Oldest"]),
         type: z.enum([
           "all",
           "one",
@@ -271,7 +264,11 @@ export const itemRouter = createTRPCRouter({
           const feed_added = item.feed?.users[0]?.pagination_start_timestamp!;
           const item_added = item.created_at;
 
-          return feed_added <= item_added;
+          if (input.sort == "Latest") {
+            return feed_added <= item_added;
+          } else if (input.sort == "Oldest") {
+            return feed_added >= item_added;
+          }
         });
 
         let transformedItems = transformItems(itemsAfterDate);
@@ -339,14 +336,18 @@ export const itemRouter = createTRPCRouter({
         });
 
         // Loop through the items and make sure it starts at the pagination_start_timestamp
-        // const itemsAfterDate = items.filter((item) => {
-        //   const feed_added = item.feed?.users[0]?.pagination_start_timestamp!;
-        //   const item_added = item.created_at;
+        const itemsAfterDate = items.filter((item) => {
+          const feed_added = item.feed?.users[0]?.pagination_start_timestamp!;
+          const item_added = item.created_at;
 
-        //   return feed_added <= item_added;
-        // });
+          if (input.sort == "Latest") {
+            return feed_added <= item_added;
+          } else if (input.sort == "Oldest") {
+            return feed_added >= item_added;
+          }
+        });
 
-        let transformedItems = transformItems(items);
+        let transformedItems = transformItems(itemsAfterDate);
         const nextCursor = getNextPrismaCursor(transformedItems, input.amount);
 
         transformedItems = removeDuplicates(

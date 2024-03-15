@@ -4,12 +4,13 @@ import * as Dialog from "@radix-ui/react-dialog";
 import clsx from "clsx";
 import { motion } from "framer-motion";
 import { atom, useAtom, useSetAtom } from "jotai";
+import { Sparkles } from "lucide-react";
 import Carousel from "nuka-carousel";
 
 import { useUser } from "@refeed/features/hooks/useUser";
 import { useItemData } from "@refeed/features/item/useItemDataWeb";
-import { usePlan } from "@refeed/features/payment/usePlan";
 import { debounce } from "@refeed/lib/debounce";
+import type { FeedType } from "@refeed/types/feed";
 import type { ItemType } from "@refeed/types/item";
 
 import { BookmarkButton } from "../../features/bookmarks/BookmarkButton";
@@ -18,7 +19,6 @@ import { ShortTermBookmarkButton } from "../../features/bookmarks/ShortTermBookm
 import { useUpdateFeeds } from "../../features/feed/useUpdateFeeds";
 import { PricingDialog } from "../../features/pricing/PricingDialog";
 import useWindowSize from "../../lib/useWindowSize";
-import { trpc } from "../../utils/trpc";
 import Sharing from "../sharing/Sharing";
 import { Article } from "./Article";
 import { CopyLinkButton } from "./CopyLinkButton";
@@ -27,11 +27,9 @@ import { useReaderNavigation } from "./useReaderNavigation";
 
 export const fullscreenAtom = atom(false);
 export const AIDrawerOpen = atom(false);
+export const AIPromptOpen = atom(false);
 
 const Reader = () => {
-  // To prevent the sharing from popping in
-  trpc.settings.getShareProviders.useQuery();
-
   const { width: windowWidth } = useWindowSize();
 
   const { items, FeedType, fetchNextPage } = useItemData();
@@ -40,6 +38,7 @@ const Reader = () => {
   const { fullscreen, widthStyle, transitionDuration } = useReaderAnimation();
 
   const [aIDrawerOpen, setAIDrawerOpen] = useAtom(AIDrawerOpen);
+  const [isAIPromptOpen, setIsAIPromptOpen] = useAtom(AIPromptOpen);
 
   if (isLoaded || searchItem) {
     return (

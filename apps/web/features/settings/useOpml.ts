@@ -2,7 +2,7 @@ import { useState } from "react";
 import type { feed } from "@prisma/client";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 
-import { usePlan } from "@refeed/features/payment/usePlan";
+import { useUser } from "@refeed/features/hooks/useUser";
 import { base64ToBlob } from "@refeed/lib/base64toBlob";
 import { decode } from "@refeed/lib/decode";
 import { formatOPML } from "@refeed/lib/formatOPML";
@@ -30,7 +30,7 @@ type importProgressType =
 
 const useOpml = () => {
   const supabase = useSupabaseClient();
-  const { plan } = usePlan();
+  const { plan } = useUser();
   const utils = trpc.useUtils();
 
   const [file, setFile] = useState<string | undefined>();

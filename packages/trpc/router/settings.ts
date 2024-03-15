@@ -7,18 +7,6 @@ import { createTRPCRouter, protectedProcedure } from "../trpc";
 // Tip - use VSCode Outline feature to see the APIs defined in here without having to scroll through the file
 
 export const settingRouter = createTRPCRouter({
-  getShareProviders: protectedProcedure.query(async ({ ctx }) => {
-    const sharing = await ctx.prisma.user.findMany({
-      where: {
-        id: ctx.user.id,
-      },
-      select: {
-        sharing: true,
-      },
-    });
-
-    return sharing?.[0]?.sharing;
-  }),
   updateShareProviders: protectedProcedure
     .input(
       z.object({

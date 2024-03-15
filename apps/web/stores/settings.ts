@@ -7,6 +7,7 @@ interface Settings {
   DefaultTimedBookmarkTime: number;
   SortFeedsByAmountOfUnreadItems: boolean;
   defaultNoteTemplate: string;
+  flagEnableNewsleters: boolean;
 }
 
 export const settingsAtom = atomWithStorage<Settings>("settings", {
@@ -16,4 +17,5 @@ export const settingsAtom = atomWithStorage<Settings>("settings", {
   DefaultTimedBookmarkTime: 360,
   SortFeedsByAmountOfUnreadItems: false,
   defaultNoteTemplate: "",
+  flagEnableNewsleters: false,
 });
