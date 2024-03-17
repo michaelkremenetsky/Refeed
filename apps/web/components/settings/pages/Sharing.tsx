@@ -24,10 +24,10 @@ export const SharingSettingsPage = () => {
 
   const updateActiveSharing = trpc.settings.updateShareProviders.useMutation();
 
-  const toggleSharingOption = (e: ChangeEvent<HTMLInputElement>) => {
-    let newShared = data;
+  const toggleSharingOption = async (e: ChangeEvent<HTMLInputElement>) => {
+    let newShared = providers;
 
-    const hasAlready = data?.includes(e.target.value);
+    const hasAlready = providers?.includes(e.target.value);
 
     if (e.target.checked) {
       if (!hasAlready) {
@@ -39,9 +39,10 @@ export const SharingSettingsPage = () => {
       }
     }
 
-    utils.settings.getShareProviders.setData(undefined, newShared);
+    // @ts-ignore
+    utils.pro.getUser.setData(undefined, { ...data, sharing: newShared! });
 
-    updateActiveSharing.mutate({ Sharing: newShared! });
+    await updateActiveSharing.mutateAsync({ Sharing: newShared! });
   };
 
   return (
@@ -63,8 +64,10 @@ export const SharingSettingsPage = () => {
                 <div key={item}>
                   <Checkbox
                     value={item}
-                    checked={data?.includes(item)}
-                    onChange={(e) => toggleSharingOption(e)}
+                    checked={providers?.includes(item)}
+                    onChange={(e) => {
+                      toggleSharingOption(e);
+                    }}
                   />
                   <label className="ml-3">{item}</label>
                 </div>
