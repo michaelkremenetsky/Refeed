@@ -56,22 +56,6 @@ export const Dropdown = () => {
             <DropdownMenu.Item onSelect={() => setSort("Oldest")} key="oldest">
               <DropdownMenu.ItemTitle>Oldest</DropdownMenu.ItemTitle>
             </DropdownMenu.Item>
-            <DropdownMenu.Item
-              onSelect={() => setSort("Content Length Ascending")}
-              key="content length ascending"
-            >
-              <DropdownMenu.ItemTitle>
-                Content Length Ascending
-              </DropdownMenu.ItemTitle>
-            </DropdownMenu.Item>
-            <DropdownMenu.Item
-              onSelect={() => setSort("Content Length Descending")}
-              key="content length descending"
-            >
-              <DropdownMenu.ItemTitle>
-                Content Length Descending
-              </DropdownMenu.ItemTitle>
-            </DropdownMenu.Item>
           </DropdownMenu.SubContent>
         </DropdownMenu.Sub>
         {FeedType == "one" && (

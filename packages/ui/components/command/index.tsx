@@ -43,7 +43,6 @@ const CommandInput = React.forwardRef<
   <div className="flex items-center border-b border-neutral-200 dark:dark:border-neutral-700">
     <CommandPrimitive.Input
       ref={ref}
-      // eslint-disable-next-line jsx-a11y/no-autofocus
       autoFocus={true}
       className={cn(
         "placeholder:text-muted-foreground dark:text- flex h-10 w-full rounded-md border-none border-transparent bg-transparent py-3 text-sm font-[450] outline-none placeholder:text-neutral-450  focus:text-neutral-700 focus:ring-0 focus:ring-offset-0 disabled:cursor-not-allowed disabled:opacity-50 dark:text-stone-500 dark:placeholder:text-stone-400 dark:focus:text-stone-400 ",

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useWindowDimensions } from "react-native";
 import Animated, {
   Easing,
@@ -13,7 +13,7 @@ import { View } from "../ui/View";
 export const SpinningCircle = () => {
   const rotation = useSharedValue(0);
 
-  React.useEffect(() => {
+  useEffect(() => {
     rotation.value = withRepeat(
       withTiming(360, { duration: 1000, easing: Easing.linear }),
       -1,

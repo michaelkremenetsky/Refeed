@@ -6,6 +6,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 
+import { useUser } from "@refeed/features/hooks/useUser";
 import type { ItemType } from "@refeed/types/item";
 
 import { useUpdateFeeds } from "../../features/useUpdateFeeds";
@@ -40,9 +41,10 @@ export const SearchScreen = () => {
 
   const [searchText, setSearchText] = useState<string | undefined>(undefined);
   const utils = trpc.useUtils();
+  const { plan } = useUser();
 
   const { data: search } = trpc.item.searchMultipleItems.useQuery(
-    { query: searchText!, take: 10 },
+    { query: searchText!, take: 10, plan: plan as "free" | "pro" },
     { enabled: searchText != undefined },
   );
 

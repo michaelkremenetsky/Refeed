@@ -1,11 +1,9 @@
-import { RightUpgradeDrawer } from "@components/upgrade/Drawer";
-import { atom, useAtomValue, useSetAtom } from "jotai";
-import { AArrowDown, AArrowUp, CheckCheck, MoreHorizontal } from "lucide-react";
+import { UpgradeDrawer } from "@components/upgrade/Drawer";
+import { atom, useSetAtom } from "jotai";
+import { AArrowDown, AArrowUp, MoreHorizontal } from "lucide-react";
 
 import { useUser } from "@refeed/features/hooks/useUser";
 
-import { useMarkRead } from "../../features/item";
-import { settingsAtom } from "../../stores/settings";
 import { feedLayout, Sort } from "../../stores/ui";
 import {
   DropdownMenu,
@@ -25,7 +23,7 @@ interface NavBarTypes {
 }
 
 export const NavBarButtons = (props: NavBarTypes) => {
-  const { hideButtons, recentPage, bookmarkPage } = props;
+  const { hideButtons } = props;
 
   const { plan } = useUser();
 
@@ -34,68 +32,16 @@ export const NavBarButtons = (props: NavBarTypes) => {
       <div className="flex items-center self-center">
         {!hideButtons ? (
           <div className={`flex self-center`}>
-            {!recentPage ||
-              (bookmarkPage && (
-                <>
-                  <MarkReadButton {...props} />
-                </>
-              ))}
             <FeedLayoutButtonNew />
           </div>
         ) : null}
-        {plan == "free" && <RightUpgradeDrawer />}
+        {plan == "free" && <UpgradeDrawer />}
       </div>
     </div>
   );
 };
 
 export const aiAtom = atom(false);
-
-const MarkReadButton = (props: NavBarTypes) => {
-  const { feedId } = props;
-
-  const { markRead } = useMarkRead(feedId);
-  const settings = useAtomValue(settingsAtom);
-
-  return (
-    <>
-      {settings.PromptWhenMarkingAllItemsRead ? (
-        <DropdownMenu modal={false}>
-          <DropdownMenuTrigger>
-            <CheckCheck className="h-[21.5px mr-2 w-[21.5px] cursor-pointer rounded stroke-[#38383d]/60 stroke-[1.4] dark:stroke-stone-400" />
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Mark all Read</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => {
-                if (props.title === "All Feeds") {
-                  markRead("all");
-                }
-                if (props.feedId) {
-                  markRead("one");
-                }
-              }}
-            >
-              Yes
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      ) : (
-        <MoreHorizontal
-          onClick={() => {
-            if (props.title === "All Feeds") {
-              markRead("all");
-            }
-            if (props.feedId) {
-              markRead("one");
-            }
-          }}
-          className="h-[21.5px mr-2 w-[21.5px] cursor-pointer rounded stroke-black stroke-[1.4] opacity-50 hover:stroke-gray-400 dark:stroke-gray-400 dark:hover:stroke-gray-400"
-        />
-      )}
-    </>
-  );
-};
 
 const FeedLayoutButtonNew = () => {
   const setFeedLayout = useSetAtom(feedLayout);

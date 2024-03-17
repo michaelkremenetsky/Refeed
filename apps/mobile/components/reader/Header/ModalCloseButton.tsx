@@ -1,13 +1,15 @@
-import type { BottomSheetModalMethods } from "@gorhom/bottom-sheet/lib/typescript/types";
-import type { NavigationProp } from "@react-navigation/native";
 import type { RefObject } from "react";
 import React, { useCallback } from "react";
 import { Path, Svg } from "react-native-svg";
+import type { BottomSheetModalMethods } from "@gorhom/bottom-sheet/lib/typescript/types";
+
+import type { TODO } from "../../../lib/todoType";
 
 interface ModalCloseProps {
   type: "Navigation" | "modal";
   modalRef?: RefObject<BottomSheetModalMethods>;
-  navigation?: NavigationProp<ReactNavigation.RootParamList>;
+  /* eslint-disable @typescript-eslint/no-unsafe-call */
+  navigation?: TODO;
 }
 
 export const ModalClose = (props: ModalCloseProps) => {

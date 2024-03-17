@@ -10,6 +10,7 @@ const config = {
     "eslintjsx-a11y/click-events-have-key-events": "off",
     "jsx-a11y/no-static-element-interactions": "off",
     "jsx-a11y/click-events-have-key-events": "off",
+    "jsx-a11y/no-autofocus": "off",
     "react-hooks/exhaustive-deps": "off",
     "react/display-name": "off",
   },

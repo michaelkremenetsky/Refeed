@@ -111,8 +111,9 @@ export const FeedLayout = ({ route, navigation }: FeedProps) => {
           // Going to use FlatList till I figure why it renders the second page on initial render
           refreshing={isFetching}
           onScroll={handleScroll}
-          // eslint-disable-next-line @typescript-eslint/no-misused-promises
-          onRefresh={() => refetch()}
+          onRefresh={() => {
+            refetch();
+          }}
           data={items}
           scrollEnabled={items?.length !== 0}
           contentContainerStyle={{ paddingHorizontal: 16 }}

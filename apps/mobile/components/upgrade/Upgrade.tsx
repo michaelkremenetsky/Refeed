@@ -94,10 +94,9 @@ export default function Upgrade() {
                 plan="Monthly"
               />
               <TouchableOpacity
-                // eslint-disable-next-line @typescript-eslint/no-misused-promises
-                onPress={async () =>
-                  await Purchases.purchaseProduct("pro_monthly")
-                }
+                onPress={() => {
+                  Purchases.purchaseProduct("pro_monthly");
+                }}
                 className="mx-4 mt-6 rounded-lg bg-[#0A84FF] py-3"
               >
                 <Text className="text-center text-base font-semibold text-white">

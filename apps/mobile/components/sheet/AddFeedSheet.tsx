@@ -117,7 +117,6 @@ export const AddFeedSheet = ({
         <View className="mx-3.5 rounded-md border border-neutral-200 bg-[#FAFAFA] px-2 py-3">
           <BottomSheetTextInput
             onChangeText={(e) => setLink(e)}
-            // eslint-disable-next-line jsx-a11y/no-autofocus
             autoFocus
             defaultValue={link}
             placeholder="RSS or Atom Link"
@@ -137,7 +136,6 @@ export const AddFeedSheet = ({
               <View className="ml-3 flex h-11 w-[218px] justify-center rounded-md border border-neutral-200/80 bg-[#FAFAFA]">
                 <BottomSheetTextInput
                   onChangeText={(e) => setRename(e)}
-                  // eslint-disable-next-line jsx-a11y/no-autofocus
                   autoFocus
                   placeholder="Title"
                   defaultValue={previewFeed?.title}

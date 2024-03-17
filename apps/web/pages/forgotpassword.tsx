@@ -3,10 +3,10 @@ import { useState } from "react";
 
 import { LandingWrapper } from "../components/layout/PageWrapper";
 
+// NOTE: This is not in use
+
 export default function CheckEmail() {
   const [email, setEmail] = useState("");
-
-  // TODO: Add auto refresh
 
   return (
     <LandingWrapper>
