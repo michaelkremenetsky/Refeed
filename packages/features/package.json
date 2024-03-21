@@ -10,6 +10,7 @@
     "@refeed/lib": "*",
     "@refeed/types": "*",
     "@refeed/ui": "*",
+    "@refeed/atoms": "*",
     "@trpc/react-query": "11.0.0-next-beta.303",
     "axios": "1.6.5",
     "rss-parser": "^3.13.0",
