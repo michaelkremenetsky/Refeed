@@ -5,7 +5,6 @@
   "types": "./index.ts",
   "license": "MIT",
   "dependencies": {
-    "@refeed/trpc": "*",
     "@refeed/types": "*",
     "jotai": "^2.4.2",
     "jotai-trpc": "^0.5.1",
