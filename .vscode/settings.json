@@ -10,8 +10,11 @@
     { "pattern": "packages/*/" },
     { "pattern": "tooling/*/" }
   ],
+  "search.exclude": {
+    "**/dist*": true,
+    "**/node_modules*": true
+  },
   "editor.formatOnType": true,
-  "rust-analyzer.rustfmt.enableRangeFormatting": true,
   "rust-analyzer.linkedProjects": ["packages/core/Cargo.toml"],
   "[rust]": {
     "editor.defaultFormatter": "rust-lang.rust-analyzer",

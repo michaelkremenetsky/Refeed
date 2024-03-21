@@ -27,7 +27,7 @@
     "dotenv-cli": "^7.3.0",
     "eslint": "^8.56.0",
     "prettier": "^3.2.5",
-    "turbo": "^1.10.16",
+    "turbo": "^1.12.5",
     "typescript": "^5.3.3"
   },
   "prettier": "@refeed/prettier-config",
