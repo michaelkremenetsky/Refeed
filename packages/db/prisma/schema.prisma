@@ -128,6 +128,7 @@ model feed {
 }
 
 model user_item {
+  id               String    @unique @default(cuid())
   item_id          String
   in_read_later    Boolean   @default(false)
   marked_read      Boolean
@@ -140,6 +141,7 @@ model user_item {
   user             user      @relation(fields: [user_id], references: [id], onDelete: Cascade)
   created_at       DateTime  @default(now())
 
+  @@index([id])
   @@index([item_id])
   @@id([item_id, user_id])
 }
