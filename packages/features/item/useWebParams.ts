@@ -2,6 +2,7 @@ import { useRouter } from "next/router";
 import { useAtomValue } from "jotai";
 import { match } from "ts-pattern";
 
+import { bookmarkFolderSortAtom } from "@refeed/atoms/bookmarkAtom";
 import type { FeedType } from "@refeed/types/feed";
 
 import { Sort } from "../../../apps/web/stores/ui";
@@ -22,7 +23,15 @@ const useWebParams = () => {
     .with("/feed/newsletters", () => "newsletters")
     .otherwise(() => "all");
 
-  return { sort, FeedType: FeedType as FeedType, folder, feedId };
+  const bookmarkFolder = useAtomValue(bookmarkFolderSortAtom);
+
+  return {
+    sort,
+    FeedType: FeedType as FeedType,
+    folder,
+    feedId,
+    bookmarkFolder,
+  };
 };
 
 export default useWebParams;

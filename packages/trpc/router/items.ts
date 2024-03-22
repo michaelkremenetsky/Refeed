@@ -26,6 +26,7 @@ export const itemRouter = createTRPCRouter({
           "discover",
           "newsletters",
         ]),
+        bookmark_folder: z.string().optional(),
         folder: z.string().optional(),
         feed_id: z.string().optional(),
         cursor: z.string().optional(),
@@ -35,7 +36,7 @@ export const itemRouter = createTRPCRouter({
       const thirtyDaysAgo = new Date();
       thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
-      const sharedQuery = {
+      const sharedQuery: Prisma.itemFindManyArgs = {
         take: input.amount,
         skip: input.cursor === undefined ? 0 : 1,
         cursor:
@@ -45,13 +46,13 @@ export const itemRouter = createTRPCRouter({
                 id: input.cursor,
               },
         orderBy:
-          input.type != "recentlyread"
+          input.type != "recentlyread" && input.type != "bookmarks"
             ? input.sort == "Latest"
               ? { id: Prisma.SortOrder.desc }
               : input.sort == "Oldest"
                 ? { id: Prisma.SortOrder.asc }
                 : undefined
-            : { id: Prisma.SortOrder.desc },
+            : { updated_at: Prisma.SortOrder.desc },
         include: {
           feed: {
             select: {
@@ -84,46 +85,102 @@ export const itemRouter = createTRPCRouter({
                       },
                     },
                     marked_read_time: true,
-                    user: {
-                      include: {
-                        filters: true,
-                      },
-                    },
                   },
                 }
               : undefined,
         },
       };
-
       if (input.type == "bookmarks") {
-        const items = await ctx.prisma.item.findMany({
-          where: {
-            user_items: {
-              some: {
-                OR: [
-                  {
-                    in_read_later: true,
-                  },
-                  {
-                    bookmark_folders: {
-                      some: {
-                        user_id: ctx.user.id,
-                      },
+        const withBookmarkFolder = {
+          bookmark_folders:
+            input.bookmark_folder === undefined
+              ? undefined
+              : {
+                  some: {
+                    folder: {
+                      name: input.bookmark_folder,
                     },
                   },
-                ],
+                },
+          user_id: ctx.user.id,
+        };
+
+        const withoutBookmarkFolder = {
+          OR: [
+            {
+              in_read_later: true,
+            },
+            {
+              bookmark_folders: {
+                some: {
+                  user_id: ctx.user.id,
+                },
               },
-              every: {
-                user_id: ctx.user.id,
+            },
+          ],
+          user_id: ctx.user.id,
+        };
+
+        const items = await ctx.prisma.user_item.findMany({
+          where:
+            input.bookmark_folder === undefined
+              ? withoutBookmarkFolder
+              : withBookmarkFolder,
+          take: input.amount,
+          skip: input.cursor === undefined ? 0 : 1,
+          orderBy: {
+            marked_read_time:
+              input.sort == "Latest"
+                ? Prisma.SortOrder.desc
+                : input.sort == "Oldest"
+                  ? Prisma.SortOrder.asc
+                  : undefined,
+          },
+          cursor:
+            input.cursor === undefined
+              ? undefined
+              : {
+                  id: input.cursor,
+                },
+          include: {
+            bookmark_folders: {
+              select: {
+                folder: true,
+              },
+            },
+            item: {
+              include: {
+                feed: {
+                  select: {
+                    title: true,
+                    logo_url: true,
+                  },
+                },
               },
             },
           },
-          ...sharedQuery,
+        });
+
+        // Convert use_item to ItemType
+        const convertedItems = items.map((item) => {
+          return {
+            ...item.item,
+            user_items: [
+              {
+                marked_read: item.marked_read,
+                marked_read_time: item.marked_read_time,
+                note: item.note,
+                in_read_later: item.in_read_later,
+                temp_added_time: item.temp_added_time,
+                bookmark_folders: item.bookmark_folders,
+              },
+            ],
+          };
         });
 
         const nextCursor = getNextPrismaCursor(items, input.amount);
 
-        const transformedItems = transformItems(items);
+        const transformedItems = transformItems(convertedItems);
 
         return {
           transformedItems,
@@ -131,41 +188,79 @@ export const itemRouter = createTRPCRouter({
         };
       }
       if (input.type == "recentlyread") {
-        let items = await ctx.prisma.item.findMany({
+        const items = await ctx.prisma.user_item.findMany({
           where: {
-            user_items: {
-              some: {
-                marked_read: true,
-                marked_read_time: {
-                  gte: thirtyDaysAgo,
+            // Check this to make sure its safe
+            marked_read: true,
+            marked_read_time: {
+              gte: thirtyDaysAgo,
+            },
+            user_id: ctx.user.id,
+            bookmark_folders:
+              input.bookmark_folder === undefined
+                ? undefined
+                : {
+                    some: {
+                      folder: {
+                        name: input.bookmark_folder,
+                      },
+                    },
+                  },
+          },
+          take: input.amount,
+          skip: input.cursor === undefined ? 0 : 1,
+          orderBy: {
+            marked_read_time:
+              input.sort == "Latest"
+                ? Prisma.SortOrder.desc
+                : input.sort == "Oldest"
+                  ? Prisma.SortOrder.asc
+                  : undefined,
+          },
+          cursor:
+            input.cursor === undefined
+              ? undefined
+              : {
+                  id: input.cursor,
                 },
+          include: {
+            bookmark_folders: {
+              select: {
+                folder: true,
               },
-              every: {
-                user_id: ctx.user.id,
+            },
+            item: {
+              include: {
+                feed: {
+                  select: {
+                    title: true,
+                    logo_url: true,
+                  },
+                },
               },
             },
           },
-          ...sharedQuery,
         });
 
-        // Sort recently read Items (Make sure it gets the cursor before running this)
-        if (input.type == "recentlyread" && input.sort == "Latest") {
-          items = items.sort(
-            (objA, objB) =>
-              Number(objB.user_items[0]?.marked_read_time) -
-              Number(objA.user_items[0]?.marked_read_time),
-          );
-        }
-        if (input.type == "recentlyread" && input.sort == "Oldest") {
-          items = items.sort(
-            (objA, objB) =>
-              Number(objA.user_items[0]?.marked_read_time) -
-              Number(objB.user_items[0]?.marked_read_time),
-          );
-        }
+        // Convert user_item to ItemType
+        const convertedItems = items.map((item) => {
+          return {
+            ...item.item,
+            user_items: [
+              {
+                marked_read: item.marked_read,
+                marked_read_time: item.marked_read_time,
+                note: item.note,
+                in_read_later: item.in_read_later,
+                temp_added_time: item.temp_added_time,
+                bookmark_folders: item.bookmark_folders,
+              },
+            ],
+          };
+        });
 
-        let transformedItems = transformItems(items);
-        const nextCursor = getNextPrismaCursor(transformedItems, input.amount);
+        let transformedItems = transformItems(convertedItems);
+        const nextCursor = getNextPrismaCursor(items, input.amount);
 
         transformedItems = removeDuplicates(
           transformedItems,
@@ -184,14 +279,8 @@ export const itemRouter = createTRPCRouter({
         const items = await ctx.prisma.item.findMany({
           where: {
             feed_id: input.feed_id,
-            feed: {
-              items: {
-                every: {
-                  created_at: {
-                    gte: thirtyDaysAgo,
-                  },
-                },
-              },
+            created_at: {
+              gte: thirtyDaysAgo,
             },
             user_items: {
               none: {
@@ -228,18 +317,15 @@ export const itemRouter = createTRPCRouter({
       if (input.type == "all") {
         const items = await ctx.prisma.item.findMany({
           where: {
+            created_at: {
+              gte: thirtyDaysAgo,
+            },
+
             feed: {
+              // Make sure the user is subscribed to the feed
               users: {
-                // every causes it to get things from other feeds
                 some: {
                   user_id: ctx.user.id,
-                },
-              },
-              items: {
-                every: {
-                  created_at: {
-                    gte: thirtyDaysAgo,
-                  },
                 },
               },
             },
@@ -261,6 +347,7 @@ export const itemRouter = createTRPCRouter({
 
         // Loop through the items and make sure it starts at the pagination_start_timestamp
         const itemsAfterDate = items.filter((item) => {
+          // @ts-ignore
           const feed_added = item.feed?.users[0]?.pagination_start_timestamp!;
           const item_added = item.created_at;
 
@@ -288,19 +375,18 @@ export const itemRouter = createTRPCRouter({
       }
 
       if (input.type == "one" || input.type == "multiple") {
+        console.log(input);
+
         const items = await ctx.prisma.item.findMany({
           where: {
+            created_at: {
+              gte: thirtyDaysAgo,
+            },
             feed: {
+              // Make sure the user is subscribed to the feed
               users: {
                 some: {
                   user_id: ctx.user.id,
-                },
-              },
-              items: {
-                every: {
-                  created_at: {
-                    gte: thirtyDaysAgo,
-                  },
                 },
               },
             },
@@ -337,6 +423,7 @@ export const itemRouter = createTRPCRouter({
 
         // Loop through the items and make sure it starts at the pagination_start_timestamp
         const itemsAfterDate = items.filter((item) => {
+          // @ts-ignore
           const feed_added = item.feed?.users[0]?.pagination_start_timestamp!;
           const item_added = item.created_at;
 
@@ -366,53 +453,19 @@ export const itemRouter = createTRPCRouter({
         const items = await ctx.prisma.item.findMany({
           where: {
             from_newsletter: true,
-            // feed: {
-            //   users: {
-            //     some: {
-            //       user_id: ctx.user.id,
-            //     },
-            //   },
-            //   items: {
-            //     every: {
-            //       created_at: {
-            //         gte: thirtyDaysAgo,
-            //       },
-            //     },
-            //   },
-            // },
-            // user_items: {
-            //   none: {
-            //     AND: [
-            //       {
-            //         marked_read: true,
-            //       },
-            //       {
-            //         user_id: ctx.user.id,
-            //       },
-            //     ],
-            //   },
-            // },
           },
           ...sharedQuery,
         });
 
-        // Loop through the items and make sure it starts at the pagination_start_timestamp
-        // const itemsAfterDate = items.filter((item) => {
-        //   const feed_added = item.feed.users[0]?.pagination_start_timestamp!;
-        //   const item_added = item.created_at;
-
-        //   return feed_added <= item_added;
-        // });
-
-        const transformedItems = transformItems(items);
+        let transformedItems = transformItems(items);
         const nextCursor = getNextPrismaCursor(transformedItems, input.amount);
 
-        // transformedItems = removeDuplicates(
-        //   transformedItems,
-        //   ctx.user.id,
-        //   ctx.prisma,
-        //   true,
-        // );
+        transformedItems = removeDuplicates(
+          transformedItems,
+          ctx.user.id,
+          ctx.prisma,
+          true,
+        );
 
         return {
           transformedItems,

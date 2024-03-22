@@ -8,7 +8,7 @@ import { trpc } from "../trpc";
 import useWebParams from "./useWebParams";
 
 export const useItemData = () => {
-  const { sort, FeedType, folder, feedId } = useWebParams();
+  const { sort, FeedType, folder, feedId, bookmarkFolder } = useWebParams();
 
   const {
     data: rawItems,
@@ -22,9 +22,10 @@ export const useItemData = () => {
     {
       amount: 25,
       sort,
-      type: FeedType as Exclude<typeof FeedType, "search">,
+      type: FeedType,
       feed_id: feedId as string | undefined,
       folder: folder as string | undefined,
+      bookmark_folder: bookmarkFolder,
     },
     {
       getNextPageParam: (lastPage) => {
@@ -79,7 +80,7 @@ export const useUpdateWebItemData = () => {
       {
         amount: 25,
         sort,
-        type: FeedType as Exclude<typeof FeedType, "search">,
+        type: FeedType,
         feed_id: feedId as string,
         folder: folder as string,
       },

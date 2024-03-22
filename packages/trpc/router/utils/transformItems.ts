@@ -12,7 +12,6 @@ export const transformItems = (rawItems: TODO) => {
       const contentMarkdown = NodeHtmlMarkdown.translate(
         rawItem.website_content ?? "",
       );
-
       let bookmarkFolders: string[] | undefined = [];
 
       if (rawItem.user_items) {
@@ -36,7 +35,9 @@ export const transformItems = (rawItems: TODO) => {
         title: rawItem.title,
         updated_at: rawItem.updated_at,
         url: rawItem.url,
-        website_content: contentMarkdown,
+        website_content: rawItem.from_newsletter
+          ? rawItem.website_content
+          : contentMarkdown,
         marked_read: rawItem.user_items
           ? rawItem.user_items[0]?.marked_read ?? false
           : false,
