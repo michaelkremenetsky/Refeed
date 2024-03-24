@@ -22,21 +22,19 @@ export const BottomFooter = () => {
               </h2>
               <ul className="font-medium text-neutral-450">
                 <li className="mb-4">
-                  <Link href="/about" className="hover:underline">
-                    About
+                  <Link href="/pricing" className="hover:underline">
+                    Pricing
                   </Link>
                 </li>
+
                 <li className="mb-4">
-                  <a
-                    href="https://github.com/users/michaelkremenetsky/projects/2"
-                    className="hover:underline"
-                  >
-                    Roadmap
+                  <a href="/mobile" className="hover:underline">
+                    Mobile App
                   </a>
                 </li>
                 <li>
-                  <a href="/mobile" className="hover:underline">
-                    Mobile App
+                  <a href="/about" className="hover:underline">
+                    About
                   </a>
                 </li>
               </ul>
@@ -56,18 +54,18 @@ export const BottomFooter = () => {
                 </li>
                 <li className="mb-4">
                   <a
-                    href="https://github.com/michaelkremenetsky/Refeed?tab=readme-ov-file#contributing"
-                    className="hover:underline"
-                  >
-                    Contributing
-                  </a>
-                </li>
-                <li className="mb-4">
-                  <a
                     href="https://github.com/michaelkremenetsky/Refeed/issues"
                     className="hover:underline"
                   >
                     Report an Issue
+                  </a>
+                </li>
+                <li className="mb-4">
+                  <a
+                    href="https://github.com/users/michaelkremenetsky/projects/2"
+                    className="hover:underline"
+                  >
+                    Roadmap
                   </a>
                 </li>
               </ul>
@@ -91,6 +89,14 @@ export const BottomFooter = () => {
                     className="hover:underline"
                   >
                     Twitter
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="https://github.com/michaelkremenetsky/Refeed?tab=readme-ov-file#contributing"
+                    className="hover:underline"
+                  >
+                    Contributing
                   </a>
                 </li>
               </ul>
