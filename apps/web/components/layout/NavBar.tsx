@@ -45,7 +45,7 @@ export default function NavBar(props: NavBarTypes) {
           onClick={() => (width != 240 ? setWidth(240) : setWidth(0))}
           className={clsx(
             "left-3 top-2.5 stroke-neutral-400 stroke-[2] dark:stroke-stone-400",
-            "absolute sm:hidden",
+            "absolute md:hidden",
           )}
         />
         {title == "Discover" ? (
@@ -61,7 +61,7 @@ export default function NavBar(props: NavBarTypes) {
             >
               <div className="sm:w-[250px] md:mx-0 md:w-[500px] lg:w-[750px] xl:w-[1000px]">
                 <h1
-                  className={`-ml-1 truncate text-ellipsis font-bold tracking-[-0.01em] subpixel-antialiased`}
+                  className={`-ml-1 truncate text-ellipsis font-bold tracking-[-0.01em]`}
                 >
                   Discover
                 </h1>
@@ -75,14 +75,16 @@ export default function NavBar(props: NavBarTypes) {
             <LayoutTypes Layout={Layout} readerOpen={readerOpen}>
               <div
                 className={clsx(
-                  Layout == "Article" && "md:ml-6 md:w-[39.5em]",
-                  Layout == "Magazine" && !isMobile && "md:ml-8 md:w-[35em]",
-                  Layout == "Card" && "md:ml-2",
+                  Layout == "Article" && "md:ml-3 md:w-[39.5em] lg:ml-6",
+                  Layout == "Magazine" &&
+                    !isMobile &&
+                    "md:ml-3 md:w-[35em] lg:ml-8",
+                  Layout == "Card" && "lg:ml-2",
                 )}
               >
                 {title != "" ? (
                   <h1
-                    className={`truncate text-ellipsis font-bold tracking-[-0.01em] subpixel-antialiased`}
+                    className={`truncate text-ellipsis font-bold tracking-[-0.01em]`}
                   >
                     {trimTitle(title, 30)}
                   </h1>
