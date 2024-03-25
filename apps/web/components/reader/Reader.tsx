@@ -2,13 +2,13 @@ import { memo, useEffect, useRef } from "react";
 import { useRouter } from "next/router";
 import * as Dialog from "@radix-ui/react-dialog";
 import clsx from "clsx";
+import useEmblaCarousel from "embla-carousel-react";
 import { motion } from "framer-motion";
 import { atom, useAtom, useSetAtom } from "jotai";
 import { Sparkles } from "lucide-react";
-import Carousel from "nuka-carousel";
 
 import { useUser } from "@refeed/features/hooks/useUser";
-import { useItemData } from "@refeed/features/item/useItemDataWeb";
+import { useItemData, useOpenItem } from "@refeed/features/item/useItemDataWeb";
 import { debounce } from "@refeed/lib/debounce";
 import type { FeedType } from "@refeed/types/feed";
 import type { ItemType } from "@refeed/types/item";
@@ -65,22 +65,35 @@ const Reader = () => {
               >
                 <Topbar className={!fullscreen ? "ml-1" : ""} />
                 <div className="flex">
+                <button
+                  onClick={() => {
+                    setIsAIPromptOpen(!isAIPromptOpen);
+                    setAIDrawerOpen(!aIDrawerOpen);
+
+                    // Scroll to the bottom
+                    if (isAIPromptOpen) {
+                      window.scrollTo(0, document.body.scrollHeight);
+                    }
+                  }}
+                >
+                  <Sparkles
+                    shapeRendering="geometricPrecision"
+                    className="mr-5 h-[22px] w-[22px] stroke-neutral-500/75 stroke-[1.5] dark:stroke-stone-400"
+                  />
+                </button>
                   <Sharing />
-                </div>
               </div>
             </div>
           </div>
-          <div>
+        </div>
             <MemoizedCarousel
               fullscreen={fullscreen}
               items={searchItem ? [searchItem] : items}
               initialIndex={searchItem ? 0 : initialIndex}
-              fetchNextPage={() => fetchNextPage}
+          fetchNextPage={fetchNextPage}
               FeedType={FeedType}
             />
-          </div>
         </motion.div>
-      </>
     );
   }
 };
@@ -100,11 +113,19 @@ const MemoizedCarousel = memo(function RenderCarousel({
   FeedType: FeedType;
   fullscreen: boolean;
 }) {
-  // Items to keep loaded around the current index
-  const bufferRange = 20;
+  const { openItem } = useOpenItem();
 
-  const startIndex = Math.max(0, initialIndex - bufferRange);
-  const endIndex = Math.min(items.length, initialIndex + bufferRange + 1);
+  const bufferRange = 25;
+
+  // Get the items that items that are around openItemId
+  const startIndex = Math.max(
+    0,
+    items.findIndex((item) => item.id === openItem?.id) - bufferRange,
+  );
+  const endIndex = Math.min(
+    items.length,
+    items.findIndex((item) => item.id === openItem?.id) + bufferRange + 1,
+  );
 
   // Create a new array with placeholders for items outside the buffer range
   const newBufferedItems = items.map((item, index) =>
@@ -115,10 +136,12 @@ const MemoizedCarousel = memo(function RenderCarousel({
   const { replace, asPath } = useRouter();
   const pathWithoutQuery = asPath.split("?")[0];
 
+  // For updating the URL with the current item
+  // The error you get here on the last one is fine and doesn't break anything that then url
   const debouncedReplace = useRef(
-    debounce((endSlideIndex) => {
+    debounce((debouncedItems, endSlideIndex) => {
       replace(
-        `${pathWithoutQuery}?item=` + newBufferedItems[endSlideIndex]!.id,
+        `${pathWithoutQuery}?item=` + debouncedItems[endSlideIndex]!.id,
         undefined,
         { shallow: true, scroll: false },
       );
@@ -131,36 +154,74 @@ const MemoizedCarousel = memo(function RenderCarousel({
     };
   }, []);
 
+  const [emblaRef, emblaApi] = useEmblaCarousel({
+    startIndex: initialIndex,
+    containScroll: "keepSnaps",
+    dragThreshold: 0,
+    duration: fullscreen ? 0 : 25,
+  });
+
+  const slideChange = () => {
+    const newIndex = emblaApi?.selectedScrollSnap();
+
+    if (newIndex) {
+      if (newIndex == newBufferedItems.length - 1) {
+        fetchNextPage();
+      }
+
+      debouncedReplace.current(newBufferedItems, newIndex);
+
+      if (newBufferedItems[newIndex] != undefined) {
+        markRead(newBufferedItems[newIndex]);
+      }
+    }
+  };
+
+  useEffect(() => {
+    const handleKeyDown = (event: { key: string }) => {
+      if (emblaApi) {
+        switch (event.key) {
+          case "ArrowLeft": {
+            emblaApi.scrollPrev();
+            slideChange();
+            break;
+          }
+          case "ArrowRight": {
+            emblaApi.scrollNext();
+            slideChange();
+            break;
+          }
+          default:
+        }
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [emblaApi]);
+
   /* A lot of chrome specfic bugs happening here. Make sure
     to check another browser If theirs a bug here */
   return (
-    <Carousel
-      withoutControls={true}
-      renderAnnounceSlideMessage={undefined}
-      enableKeyboardControls={true}
-      dragging={false}
-      swiping={true}
-      speed={fullscreen ? 0 : 500}
-      slideIndex={initialIndex}
-      slidesToScroll="auto"
-      afterSlide={(endSlideIndex) => {
-        markRead(newBufferedItems[endSlideIndex]!);
+    <div
+      className="h-full w-full overflow-hidden"
+      style={{
+        backfaceVisibility: "hidden",
       }}
-      beforeSlide={(_, endSlideIndex) => {
-        if (endSlideIndex == newBufferedItems.length - 1) {
-          fetchNextPage();
-        }
-        debouncedReplace.current(endSlideIndex);
-      }}
+      ref={emblaRef}
     >
+      <div className="flex w-full">
       {newBufferedItems?.map((item) => (
         <div
           key={item.id}
-          className="scrollbar-rounded-md w-full overflow-y-scroll overscroll-none scrollbar scrollbar-thumb-neutral-300 scrollbar-thumb-rounded-md scrollbar-w-1 md:overscroll-contain dark:bg-[#0f0f10] dark:scrollbar-thumb-[#404245]"
+            className="scrollbar-rounded-md h-[calc(100svh-3.4rem)] w-full flex-shrink-0 overflow-y-scroll overscroll-none scrollbar scrollbar-thumb-neutral-300 scrollbar-thumb-rounded-md scrollbar-w-1 md:overscroll-contain dark:bg-[#0f0f10] dark:scrollbar-thumb-[#404245]"
         >
           {item.title && (
             <div className={fullscreen ? "mx-auto md:w-[650px]" : "w-full"}>
-              <div className="flex h-[calc(100svh-3.4rem)] flex-col items-center pt-[1px]">
+                <div className="flex flex-col items-center pt-[1px]">
                 <Article
                   FeedType={FeedType}
                   item={item}
@@ -171,7 +232,8 @@ const MemoizedCarousel = memo(function RenderCarousel({
           )}
         </div>
       ))}
-    </Carousel>
+      </div>
+    </div>
   );
 });
 
@@ -190,7 +252,7 @@ const BackButton = ({ onBackClick }: { onBackClick: () => void }) => {
         fill="none"
         viewBox="0 0 24 24"
         strokeWidth={1.5}
-        className="h-[22px] w-[22px] stroke-neutral-450 dark:stroke-neutral-500"
+        className="h-[22px] w-[22px] stroke-neutral-500/75 dark:stroke-neutral-500"
       >
         <path
           strokeLinecap="round"
