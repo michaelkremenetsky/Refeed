@@ -161,6 +161,7 @@ const MemoizedCarousel = memo(function RenderCarousel({
     duration: fullscreen ? 0 : 25,
   });
 
+  useEffect(() => {
   const slideChange = () => {
     const newIndex = emblaApi?.selectedScrollSnap();
 
@@ -177,7 +178,6 @@ const MemoizedCarousel = memo(function RenderCarousel({
     }
   };
 
-  useEffect(() => {
     const handleKeyDown = (event: { key: string }) => {
       if (emblaApi) {
         switch (event.key) {
@@ -201,7 +201,7 @@ const MemoizedCarousel = memo(function RenderCarousel({
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [emblaApi]);
+  }, [emblaApi, newBufferedItems]);
 
   /* A lot of chrome specfic bugs happening here. Make sure
     to check another browser If theirs a bug here */
