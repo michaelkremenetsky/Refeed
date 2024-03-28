@@ -7,7 +7,7 @@
   </div>
 </a>
 
-# Key Features
+# Features
 
 - <strong>Timed Bookmarks: </strong> The "Time Bookmark" feature is designed to declutter your bookmarks by automatically removing them after a preset amount of time, ensuring your reading list is filled only with bookmarks that you actually come back to later.
 - <strong>Filters: </strong> Automatically remove content that matches certain criteria, such as specific keywords, authors, or publication dates. By filtering out articles that don't align with your interests or needs, this tool helps declutter your feed, ensuring a more focused and relevant reading experience.
