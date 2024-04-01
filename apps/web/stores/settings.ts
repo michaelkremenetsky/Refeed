@@ -17,5 +17,5 @@ export const settingsAtom = atomWithStorage<Settings>("settings", {
   DefaultTimedBookmarkTime: 360,
   SortFeedsByAmountOfUnreadItems: false,
   defaultNoteTemplate: "",
-  flagEnableNewsleters: false,
+  flagEnableNewsleters: true,
 });
