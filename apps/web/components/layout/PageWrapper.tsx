@@ -6,6 +6,7 @@ const inter = localFont({
   src: "../../public/InterVariable.woff2",
   variable: "--font-inter",
   preload: true,
+  weight: "100 900",
   display: "swap",
 });
 
