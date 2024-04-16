@@ -36,14 +36,15 @@ export const feedRouter = createTRPCRouter({
           select: {
             feed_id: true,
             date_added: true,
+            pagination_start_timestamp: true,
           },
           where: {
             user_id: ctx.user.id,
           },
         },
+        /* Should be able to optmize this query later because of:
+         https://github.com/prisma/prisma-engines/pull/4678 */
         items: {
-          // Need to figure out how to make it count of a max of 1000 items
-          // per feed although I think that thirtyDaysAgo will be a fine limit for now
           where: {
             user_items: {
               none: {
@@ -79,7 +80,6 @@ export const feedRouter = createTRPCRouter({
       },
     });
 
-    // Run both queries in parallel
     const [query, order] = await Promise.all([feedQuery, orderQuery]);
 
     if (!JSON.parse(order?.feed_order as string)) {
@@ -96,34 +96,18 @@ export const feedRouter = createTRPCRouter({
       }[];
     }[] = JSON.parse(order?.feed_order as string);
 
-    // Convert _count to amount, to make API nicer
     const feeds = query.map((feed) => {
       const { items, ...rest } = feed;
 
-      // Only gets feeds after the dated_added date but include 20 feeds that are older than the date_added date
-      // This is to make sure that the user has some feeds to read when they first sign up
-
-      // Get a list of first 20 items before the date if they exist
-      const firstTwentyItemsBeforeDate = items
-        .filter((item) => {
-          const feed_added = feed.users[0]?.date_added!;
-          const item_added = item.created_at;
-
-          return feed_added > item_added;
-        })
-        .slice(0, 20).length;
-
-      // Remove everything before the date the feed was added
+      // Loop through the items and make sure it starts at the pagination_start_timestamp
       const itemsAfterDate = items.filter((item) => {
-        const feed_added = feed.users[0]?.date_added!;
+        const feed_added = feed.users[0]?.pagination_start_timestamp;
         const item_added = item.created_at;
 
-        return feed_added < item_added;
-      }).length;
+        return feed_added! <= item_added;
+      });
 
-      const amount = itemsAfterDate + firstTwentyItemsBeforeDate;
-
-      return { ...rest, amount: amount };
+      return { ...rest, amount: itemsAfterDate.length };
     });
 
     const folderFeeds: (
@@ -149,9 +133,7 @@ export const feedRouter = createTRPCRouter({
         }
     )[] = [];
 
-    // Add the feeds to the folders
     parsed.forEach((folder, x) => {
-      // Create the folder
       folderFeeds.push({
         id: folder.folder_name,
         name: folder.folder_name,
