@@ -16,6 +16,7 @@ import {
   DropdownMenuTrigger,
 } from "components/ui/DropDownMenu";
 import { useQueryState } from "nuqs";
+import { useHotkeys } from "react-hotkeys-hook";
 
 import { useUser } from "@refeed/features/hooks/useUser";
 import { Badge } from "@refeed/ui";
@@ -24,12 +25,21 @@ export const AccountDropdown = ({ width }: { width: number }) => {
   const supabase = useSupabaseClient();
   const user = useSupabaseUser();
   const { data } = useUser();
+  const { replace, query, pathname } = useRouter();
 
   const [DialogType, setDialogType] = useState<
     "Pricing" | "Settings" | undefined
   >();
 
   const widthStyle = { maxWidth: `${width - 75}px` };
+
+  useHotkeys("f+b", () => replace("/bookmarks"));
+  useHotkeys("f+f", () => replace("/feed/all"));
+  useHotkeys("f+n", () => replace("/discover"));
+  useHotkeys("f+s", () => replace("/search"));
+  useHotkeys("g+s", () => {
+    setDialogType("Settings"), setPage("general");
+  });
 
   const DropDownIcon = () => (
     <svg
@@ -109,7 +119,6 @@ export const AccountDropdown = ({ width }: { width: number }) => {
 
   const LogOutButton = () => (
     <DropdownMenuItem
-      // eslint-disable-next-line @typescript-eslint/no-misused-promises
       onClick={async () => {
         await supabase.auth.signOut();
         router.push("/login");
@@ -145,8 +154,6 @@ export const AccountDropdown = ({ width }: { width: number }) => {
     </DropdownMenuTrigger>
   );
 
-  const { query, pathname } = useRouter();
-
   const [page, setPage] = useQueryState("settings");
 
   useEffect(() => {
@@ -173,7 +180,7 @@ export const AccountDropdown = ({ width }: { width: number }) => {
     >
       <DropdownMenu modal={false}>
         <DropDownTrigger />
-        <DropdownMenuContent align="end" className="w-56">
+        <DropdownMenuContent align="start" className="w-60">
           <DropdownMenuLabel className="max-w-[225px] truncate">
             {user?.email}
           </DropdownMenuLabel>
