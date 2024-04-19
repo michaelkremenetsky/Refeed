@@ -28,7 +28,7 @@
     "@types/pg": "^8.10.9",
     "dotenv-cli": "^7.3.0",
     "prisma": "5.11.0",
-    "typescript": "^5.3.3"
+    "typescript": "^5.4.5"
   },
   "eslintConfig": {
     "root": true,

@@ -24,7 +24,7 @@
     "@types/sanitize-html": "^2.9.5",
     "@types/uuid": "^9.0.1",
     "eslint": "^8.56.0",
-    "typescript": "^5.3.3"
+    "typescript": "^5.4.5"
   },
   "eslintConfig": {
     "root": true,
