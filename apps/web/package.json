@@ -114,7 +114,7 @@
     "remark-gfm": "^4.0.0",
     "sass": "^1.65.1",
     "sharp": "^0.33.2",
-    "sonner": "1.4.3",
+    "sonner": "1.4.0",
     "stripe": "^14.13.0",
     "superjson": "1.13.1",
     "tailwind-merge": "^1.13.1",
