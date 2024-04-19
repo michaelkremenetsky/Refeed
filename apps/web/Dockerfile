@@ -30,7 +30,7 @@ FROM --platform=linux/amd64 node:20-alpine AS installer
 	COPY --from=builder /app/out/json .
 	COPY --from=builder /app/out/pnpm-lock.yaml\* ./
 
-	RUN yarn global add pnpm && pnpm fetch --prod && pnpm install -r --offline --prod
+	RUN yarn global add pnpm@8.15.7 && pnpm fetch --prod && pnpm install -r --offline --prod
 
 	COPY --from=builder /app/out/full .
 
