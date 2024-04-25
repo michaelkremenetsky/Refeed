@@ -62,7 +62,7 @@ export const BottomFooter = () => {
                 </li>
                 <li className="mb-4">
                   <a
-                    href="https://github.com/users/michaelkremenetsky/projects/2"
+                    href="https://github.com/users/michaelkremenetsky/projects/3"
                     className="hover:underline"
                   >
                     Roadmap
