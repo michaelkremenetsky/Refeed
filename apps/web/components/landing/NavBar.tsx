@@ -36,7 +36,7 @@ export default function NavBar() {
           </Link>
           <Link
             className="hidden md:block"
-            href="https://github.com/users/michaelkremenetsky/projects/2"
+            href="https://github.com/users/michaelkremenetsky/projects/3"
           >
             Roadmap
           </Link>
