@@ -37,7 +37,7 @@ const SelectTrigger = React.forwardRef<
   <SelectPrimitive.Trigger
     ref={ref}
     className={cn(
-      "flex h-10 w-full items-center justify-between rounded-[6px] border border-neutral-200 bg-[#FCFCFC] bg-transparent px-3 py-2 text-sm font-[450] shadow-sm placeholder:text-neutral-400 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 dark:border-[#24252A] dark:bg-[#141415] dark:text-stone-200",
+      "flex h-10 w-full items-center justify-between rounded-[6px] border border-neutral-200 bg-[#FCFCFC] bg-transparent px-3 py-2 text-sm font-[450] shadow-sm placeholder:text-neutral-400 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 dark:border-[#232329] dark:bg-[#141415] dark:text-stone-200",
       className,
     )}
     {...props}
@@ -58,7 +58,7 @@ const SelectContent = React.forwardRef<
     <SelectPrimitive.Content
       ref={ref}
       className={cn(
-        "relative z-50 min-w-[8rem] overflow-hidden rounded-md border border-neutral-100 border-opacity-80 bg-white text-neutral-700 shadow-[0_0px_0px_1px_rgba(31,34,37,0.09),0px_12px_24px_-4px_rgba(0,0,0,0.08),0px_8px_16px_-4px_rgba(0,0,0,0.04)] fade-in-80 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 dark:border-[#121212]/90 dark:border-[#24252A] dark:bg-[#141415] dark:text-stone-200 ",
+        "relative z-50 min-w-[8rem] overflow-hidden rounded-md border border-neutral-100 border-opacity-80 bg-white text-neutral-700 shadow-[0_0px_0px_1px_rgba(31,34,37,0.09),0px_12px_24px_-4px_rgba(0,0,0,0.08),0px_8px_16px_-4px_rgba(0,0,0,0.04)] fade-in-80 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 dark:border-[#121212]/90 dark:border-[#232329] dark:bg-[#141415] dark:text-stone-200 ",
         className,
       )}
       {...props}

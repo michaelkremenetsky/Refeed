@@ -16,7 +16,7 @@ const Switch = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <SwitchPrimitives.Root
     className={cn(
-      "peer inline-flex h-[18px] w-[33px] shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent ring-1 ring-neutral-300 transition-colors data-[state=checked]:bg-neutral-700 data-[state=unchecked]:bg-neutral-200  data-[state=unchecked]:hover:border-neutral-300 data-[state=checked]:hover:bg-neutral-950 data-[state=unchecked]:hover:bg-neutral-300 disabled:cursor-not-allowed disabled:opacity-50 dark:ring-[#24252A] dark:data-[state=checked]:bg-[#141415] dark:data-[state=unchecked]:bg-neutral-700 dark:focus:ring-[#24252A] dark:focus:ring-offset-neutral-700",
+      "peer inline-flex h-[18px] w-[33px] shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent ring-1 ring-neutral-300 transition-colors data-[state=checked]:bg-neutral-700 data-[state=unchecked]:bg-neutral-200 data-[state=unchecked]:hover:border-neutral-300 data-[state=checked]:hover:bg-neutral-950 data-[state=unchecked]:hover:bg-neutral-300 disabled:cursor-not-allowed disabled:opacity-50 dark:ring-[#232329] dark:data-[state=checked]:bg-[#141415] dark:data-[state=unchecked]:bg-neutral-700 dark:data-[state=unchecked]:hover:border-neutral-600 dark:data-[state=unchecked]:hover:bg-neutral-600 dark:focus:ring-[#232329] dark:focus:ring-offset-neutral-700",
       className,
     )}
     {...props}
