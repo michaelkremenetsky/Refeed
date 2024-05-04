@@ -11,7 +11,10 @@ import type { StackNavigationProp } from "@react-navigation/stack";
 import { useAtomValue } from "jotai";
 import * as DropdownMenu from "zeego/dropdown-menu";
 
+import { truncateText } from "@refeed/lib/truncateText";
+
 import { removeFeedsOrFolder } from "../../../../packages/features/feed/removeFeedsOrFolders";
+import { getTotalChildAmount } from "../../features/getTotalChildAmount";
 import { useModifyFeedOrder } from "../../features/useFolderFeedOrder";
 import { useMarkAllRead } from "../../features/useMarkRead";
 import { DownIcon } from "../../lib/Icons";
@@ -37,7 +40,7 @@ const CustomDrawer = memo(() => {
     refetch();
   }, [settings.SortFeedsByAmountOfUnreadItems]);
 
-  // Filter out feeds with the same feedId (although should figure out how they good there in the first place)
+  // Filter out feeds with the same feedId (although should figure out how they got there in the first place)
   feedsInFolders?.forEach((folder) => {
     if (folder.children) {
       folder.children = folder.children.filter(
@@ -46,6 +49,7 @@ const CustomDrawer = memo(() => {
     }
   });
 
+  // Sort the feeds in each folder based on the amount of unread items
   if (settings.SortFeedsByAmountOfUnreadItems) {
     feedsInFolders?.forEach((folder) => {
       if (folder.children) {
@@ -123,9 +127,8 @@ const CustomDrawer = memo(() => {
           </View>
         )}
         <NoFoldersMessage Empty={feedsInFolders.length == 0} />
-        {/** @ts-ignore */}
+        {/** @ts-ignore This libary does not work well with typescript, probably will end up writing my own */}
         <TreeView
-          // This libary does not work well with typescript, probably will end up writing my own, also the perf is bad
           data={feedsInFolders as any[]}
           isNodeExpanded={(node) => {
             const folded =
@@ -160,15 +163,8 @@ const CustomDrawer = memo(() => {
                             });
                           }}
                         >
-                          <Text
-                            // "text-base"
-                            className="ml-1.5 max-w-[100px] self-center truncate text-base font-[500]"
-                          >
-                            {node.name.length > 18
-                              ? // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-                                node.name.substring(0, node.name.length - 3) +
-                                "..."
-                              : node.name}
+                          <Text className="ml-1.5 max-w-[100px] self-center truncate text-base font-[500]">
+                            {truncateText(node.name, 18)}
                           </Text>
                         </Pressable>
                         <Pressable
@@ -186,30 +182,17 @@ const CustomDrawer = memo(() => {
                           }}
                         >
                           <Text.Secondary className="ml-auto mr-4 self-center text-sm text-neutral-400/80">
-                            {node?.children
-                              ? // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-                                node?.children
-                                  .reduce(
-                                    (
-                                      acc: number,
-                                      child: { amount: number },
-                                    ) => {
-                                      return acc + child.amount;
-                                    },
-                                    0,
-                                  )
-                                  .toString()
-                              : "0"}
+                            {getTotalChildAmount(node)}
                           </Text.Secondary>
                         </Pressable>
                       </View>
                     </DropdownMenu.Trigger>
                     <DropdownMenu.Content>
+                      <DropdownMenu.Label>{node.name}</DropdownMenu.Label>
                       <DropdownMenu.Item
                         onSelect={() => {
-                          // Get the feedIds of the feeds in the folder
                           // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-                          const feedIds: string[] = node.children?.map(
+                          const feedIds = node.children?.map(
                             (feed: { id: string }) => feed.id,
                           );
 
@@ -261,15 +244,10 @@ const CustomDrawer = memo(() => {
                           />
                         </View>
                         <Text
-                          // #404245
                           className="ml-2 w-44 self-center truncate text-[15px] font-[500] text-neutral-700"
                           numberOfLines={1}
                         >
-                          {node.name.length > 18
-                            ? // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-                              node.name.substring(0, node.name.length - 3) +
-                              "..."
-                            : node.name}
+                          {truncateText(node.name, 18)}
                         </Text>
                         <View className="mx-auto" />
                         <Text.Secondary className="mr-4 self-center text-sm text-neutral-400/80">
@@ -278,6 +256,7 @@ const CustomDrawer = memo(() => {
                       </Pressable>
                     </DropdownMenu.Trigger>
                     <DropdownMenu.Content>
+                      <DropdownMenu.Label>{node.name}</DropdownMenu.Label>
                       <DropdownMenu.Item
                         onSelect={() => markAllRead("one", node.id)}
                         key="markallread"
@@ -303,8 +282,7 @@ const CustomDrawer = memo(() => {
             );
           }}
         />
-        {feedsInFolders?.length ? <AddFolderButtonGray /> : null}
-        <View className="h-20" />
+        {feedsInFolders?.length && <AddFolderButtonGray />}
       </DrawerContentScrollView>
     );
   }

@@ -6,6 +6,7 @@ import { trpc } from "../utils/trpc";
 
 export const useMarkAllRead = () => {
   const markAllAsRead = trpc.read.markAllRead.useMutation();
+  const utils = trpc.useUtils();
 
   const settings = useAtomValue(settingsAtom);
 
@@ -13,12 +14,64 @@ export const useMarkAllRead = () => {
     FeedType: "one" | "all" | "folder",
     feedIds?: string[],
   ) => {
+    const markRead = async () => {
+      if (FeedType == "all") {
+        await markAllAsRead.mutateAsync({});
+      }
+
+      if (FeedType == "one") {
+        utils.feed.getFeedsInFolders.setData(undefined, (prevData) => {
+          if (!prevData) {
+            return undefined;
+          }
+
+          const newFeeds = prevData.map((folder) => {
+            folder.children?.forEach((feed) => {
+              if (feedIds?.includes(feed.id)) {
+                feed.amount = 0;
+              }
+            });
+
+            return folder;
+          });
+
+          return newFeeds;
+        });
+
+        await markAllAsRead.mutateAsync({
+          feedIds: [feedIds?.[0]!],
+        });
+      }
+
+      if (FeedType == "folder") {
+        // Get the ids of all the feeds in the folder
+        utils.feed.getFeedsInFolders.setData(undefined, (prevData) => {
+          if (!prevData) {
+            return undefined;
+          }
+
+          const newFeeds = prevData.map((folder) => {
+            folder.children?.forEach((feed) => {
+              if (feedIds?.includes(feed.id)) {
+                feed.amount = 0;
+              }
+            });
+
+            return folder;
+          });
+
+          return newFeeds;
+        });
+
+        await markAllAsRead.mutateAsync({ feedIds });
+      }
+
+      utils.item.getUnreadItems.invalidate();
+      utils.feed.getFeedsInFolders.invalidate();
+    };
+
     if (settings.PromptWhenMarkingItemsRead) {
-      FeedType == "one"
-        ? markAllAsRead.mutate({ feedIds })
-        : FeedType == "all"
-          ? markAllAsRead.mutate({})
-          : null;
+      markRead();
     } else {
       Alert.alert(
         "Mark Feed Read",
@@ -32,11 +85,7 @@ export const useMarkAllRead = () => {
           {
             text: "Yes",
             onPress: () => {
-              FeedType == "one"
-                ? markAllAsRead.mutate({ feedIds })
-                : FeedType == "all"
-                  ? markAllAsRead.mutate({})
-                  : null;
+              markRead();
             },
           },
         ],
