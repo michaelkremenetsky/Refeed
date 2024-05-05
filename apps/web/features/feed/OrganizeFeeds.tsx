@@ -57,7 +57,7 @@ const columns = [
   columnHelper.accessor("title", {
     cell: (props) => (
       <div className="flex items-center p-2 md:ml-3">
-        <div className="shadow-[0_0px_1px_rgba(0,0,0,0.5) mr-4 h-6 w-6 rounded-md border bg-[#FCFCFC] p-[3px] dark:border-[#24252A] dark:bg-[#141415]">
+        <div className="shadow-[0_0px_1px_rgba(0,0,0,0.5) mr-4 h-6 w-6 rounded-md border bg-[#FCFCFC] p-[3px] dark:border-[#232329] dark:bg-[#141415]">
           <Image
             className="h-full w-full rounded-sm"
             width={20}
@@ -215,7 +215,7 @@ export const OrganizeFeeds = () => {
         </div>
 
         {data && table.getSortedRowModel().rows.length > 0 && (
-          <div className="ml-[2px] rounded-lg border dark:border-[#24252A]">
+          <div className="ml-[2px] rounded-lg border dark:border-[#232329]">
             <table className="w-full">
               <thead className="border-b dark:border-neutral-700">
                 {table.getHeaderGroups().map((headerGroup) => (

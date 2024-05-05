@@ -2,7 +2,7 @@ import { createClient } from "@supabase/supabase-js";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import { createTRPCRouter, protectedProcedure } from "../trpc";
+import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 
 // Tip - use VSCode Outline feature to see the APIs defined in here without having to scroll through the file
 
@@ -52,4 +52,31 @@ export const settingRouter = createTRPCRouter({
     await supabase.from("user").delete().match({ user_id: ctx.user.id });
     await supabase.auth.admin.deleteUser(ctx.user.id);
   }),
+  sendFeedback: publicProcedure
+    .input(
+      z.object({
+        feedback: z.string(),
+      }),
+    )
+    .mutation(async ({ input }) => {
+      const formLink =
+        "https://docs.google.com/forms/d/e/1FAIpQLSeAm8OoGkvhtRzYRP6zOuQ05v9HYmmWfK1PZCT_oiWxgpHpHA/formResponse";
+      const formData = new URLSearchParams();
+
+      formData.append("entry.1575902849", input.feedback);
+
+      const response = await fetch(formLink, {
+        method: "POST",
+        body: formData,
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+      });
+
+      if (response.ok) {
+        return { message: "Form submitted successfully!" };
+      } else {
+        return { error: "Failed to submit the form." };
+      }
+    }),
 });

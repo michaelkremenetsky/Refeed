@@ -65,7 +65,7 @@ export const FeedsSelect = ({
         return (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <div className="flex h-10 w-[190px] items-center rounded-md border border-neutral-200 px-4 shadow-sm dark:border-[#24252A] dark:bg-[#141415] dark:text-stone-200">
+              <div className="flex h-10 w-[190px] items-center rounded-md border border-neutral-200 px-4 shadow-sm dark:border-[#232329] dark:bg-[#141415] dark:text-stone-200">
                 <div className="mr-auto flex">
                   <p className="text-sm font-[450]">
                     {field.state.value?.length == 0

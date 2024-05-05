@@ -1,7 +1,5 @@
-import { PricingPage } from "@components/upgrade/PricingPage";
-import { Drawer } from "vaul";
-
 import { useUser } from "@refeed/features/hooks/useUser";
+import { AddFilterUpgradeMessage } from "@refeed/features/pro/AddFilterUpgradeMessage";
 import { ProBadge } from "@refeed/ui";
 
 import { AddFilterButton } from "../../filters/AddFilter";
@@ -26,24 +24,8 @@ export const FiltersSettingsPage = () => {
       </div>
       <div>
         <ToggleFilters />
-        {plan == "pro" ? <AddFilterButton /> : <AddFilterFreeMessage />}
+        {plan == "pro" ? <AddFilterButton /> : <AddFilterUpgradeMessage />}
       </div>
     </div>
-  );
-};
-
-const AddFilterFreeMessage = () => {
-  return (
-    <Drawer.Root direction="right" shouldScaleBackground>
-      <Drawer.Trigger className=" rounded-md text-sm font-medium text-sky-500">
-        + Add Filter
-      </Drawer.Trigger>
-      <Drawer.Portal>
-        <Drawer.Overlay className="fixed inset-0 z-50 bg-black/40" />
-        <Drawer.Content className="fixed bottom-0 right-0 z-50 mt-24 flex h-full w-[1000px] flex-col overflow-scroll overflow-x-hidden rounded-t-[10px] bg-zinc-100">
-          <PricingPage />
-        </Drawer.Content>
-      </Drawer.Portal>
-    </Drawer.Root>
   );
 };

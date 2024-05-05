@@ -32,7 +32,7 @@ export const AddFilterButton = () => {
       <PopoverContent
         align="start"
         sideOffset={7}
-        className="w-full transform overflow-hidden rounded-lg border-[1.5px] border-neutral-400/30 bg-white shadow-[rgba(0,0,0,0.05)_0px_0px_1px,rgba(0,0,0,0.04)_0px_15px_30px] dark:border-[#24252A]"
+        className="w-full transform overflow-hidden rounded-lg border-[1.5px] border-neutral-400/30 bg-white shadow-[rgba(0,0,0,0.05)_0px_0px_1px,rgba(0,0,0,0.04)_0px_15px_30px] dark:border-[#232329]"
       >
         <div className="px-2.5 py-2.5">
           <AddFilter />

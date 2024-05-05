@@ -30,14 +30,14 @@ export const BookmarksSettingsPage = () => {
   return (
     <div>
       <SettingsHeader title="Bookmarks" subtitle="Bookmark Preferences" />
-      <div className="mt-6 flex items-center space-x-2">
-        <div className="flex w-full items-start">
+      <div className="mt-6 flex items-center space-x-2 pt-2">
+        <div className="flex w-full items-start pb-1">
           <div className="flex flex-col">
             <h1 className="mb-1 select-none text-sm font-medium leading-5">
               Default Timed Bookmark time
               <ProBadge className="ml-1.5" />
             </h1>
-            <h4 className="select-none text-sm leading-5 text-neutral-450 dark:text-stone-500">
+            <h4 className="max-w-[325px] select-none text-sm leading-5 text-neutral-450 sm:max-w-none dark:text-stone-500">
               The default amount of time a timed bookmark will be set to
             </h4>
           </div>
@@ -61,7 +61,7 @@ export const BookmarksSettingsPage = () => {
                 defaultValue="60"
                 className="w-[40px] -translate-x-0.5 transform"
               >
-                <SelectItem value="60">1 hours</SelectItem>
+                <SelectItem value="60">1 hour</SelectItem>
                 <SelectItem value="360">6 hours</SelectItem>
                 <SelectItem value="720">12 hours</SelectItem>
                 <SelectItem value="1440">1 day</SelectItem>
@@ -77,9 +77,8 @@ export const BookmarksSettingsPage = () => {
           <div className="flex flex-col">
             <h1 className="mb-1 select-none text-sm font-medium leading-5">
               Bookmark Folders
-              <ProBadge className="ml-1.5" />
             </h1>
-            <h4 className="select-none text-sm leading-5 text-neutral-450 dark:text-stone-500">
+            <h4 className="max-w-[325px] select-none text-sm leading-5 text-neutral-450 sm:max-w-none dark:text-stone-500">
               Folders you can put your Bookmarks are listed here. Click to
               Delete
             </h4>
@@ -88,7 +87,7 @@ export const BookmarksSettingsPage = () => {
                 {getFolders.data?.map((folder) => (
                   <DialogRoot key={folder.name}>
                     <DialogTrigger>
-                      <div className="my-1 mr-1 rounded-md border border-neutral-200/80 bg-white px-2 text-stone-700 shadow-sm dark:border-[#24252A]  dark:border-[#333333]/80 dark:bg-[#141415] dark:text-stone-200">
+                      <div className="my-1 mr-1 rounded-md border border-neutral-200/80 bg-white px-2 text-stone-700 shadow-sm dark:border-[#232329]  dark:border-[#333333]/80 dark:bg-[#141415] dark:text-stone-200">
                         <span className="mr-1 text-sm text-sky-500/80 ">
                           {folder.amount}
                         </span>

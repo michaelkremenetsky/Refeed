@@ -9,7 +9,7 @@ export const PricingPage = () => {
 
   return (
     <>
-      <div className="rounded-b-xl border-x border-b bg-[#fafafa] dark:border-neutral-700/80 dark:bg-[#141415]">
+      <div className="rounded-b-xl border-x border-b bg-[#fafafa] dark:rounded-none dark:border-none dark:border-neutral-700/80 dark:bg-[#141415]">
         <h1 className="mx-auto flex justify-center pt-10 text-7xl font-[775] leading-none tracking-tight md:w-[700px]">
           <span className="z-10 py-2 tracking-tight text-sky-500">Pricing</span>
         </h1>

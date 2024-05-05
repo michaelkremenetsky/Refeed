@@ -96,7 +96,7 @@ export const AccountSettingsPage = () => {
         <div className="flex w-full items-start">
           <div className="flex flex-col">
             <h1 className="mb-2 select-none text-sm font-medium leading-5">
-              Open Billing Portal
+              Billing
             </h1>
             <h4 className="select-none text-sm leading-5 text-neutral-450 dark:text-stone-500">
               {plan == "free"
@@ -123,18 +123,8 @@ export const AccountSettingsPage = () => {
           </div>
         </div>
       </div>
-      <div className="mt-4 flex items-center space-x-2">
-        <div className="flex w-full items-start">
-          <div className="flex flex-col">
-            <h1 className="mb-1 select-none text-sm font-medium leading-5">
-              Delete Account
-            </h1>
-            <div className="mt-1">
-              <DeleteAccount />
-              <div className="flex w-[600px] flex-wrap"></div>
-            </div>
-          </div>
-        </div>
+      <div className="mt-4 flex items-center">
+        <DeleteAccount />
       </div>
     </div>
   );

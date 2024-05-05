@@ -110,7 +110,7 @@ export const ToggleFilter = ({ filter }: { filter: Filter }) => {
                 <TooltipTrigger>
                   <div
                     onClick={() => setNotesOpen(!notesOpen)}
-                    className="flex w-[50px] justify-center rounded-md border border-neutral-200 py-2 shadow-sm dark:border-[#24252A] dark:bg-[#141415]"
+                    className="flex w-[50px] justify-center rounded-md border border-neutral-200 py-2 shadow-sm dark:border-[#232329] dark:bg-[#141415]"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
