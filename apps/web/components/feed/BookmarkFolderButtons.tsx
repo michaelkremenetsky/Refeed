@@ -64,7 +64,7 @@ export const BookmarkFolderButtons = ({
       >
         <button
           onClick={() => setSortAtom(undefined)}
-          className="my-1 mr-1 rounded-md border border-neutral-200/80 bg-white px-2 text-stone-700 shadow-sm dark:border-[#24252A]  dark:border-[#333333]/80 dark:bg-[#0f0f10] dark:text-stone-200"
+          className="my-1 mr-1 rounded-md border border-neutral-200/80 bg-white px-2 text-stone-700 shadow-sm dark:border-[#232329]  dark:border-[#333333]/80 dark:bg-[#0f0f10] dark:text-stone-200"
         >
           All
         </button>

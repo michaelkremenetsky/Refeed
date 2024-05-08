@@ -17,11 +17,10 @@ import { BookmarkFolderUpgradeMessage } from "../../../../packages/features/pro/
 import { useUpdateBookmarkFolders } from "../../features/bookmarks/useUpdateBookmarkFolders";
 import { cn } from "../../lib/cnutils";
 
-interface ExtendedProps extends RadixDialog.DialogContentProps {
-  link?: string;
-}
-
-export function BookmarkFolderDialog({ className, ...props }: ExtendedProps) {
+export function BookmarkFolderDialog({
+  className,
+  ...props
+}: RadixDialog.DialogContentProps) {
   const isOpen = useContext(DialogOpenContext);
 
   const { openItem } = useOpenItem();

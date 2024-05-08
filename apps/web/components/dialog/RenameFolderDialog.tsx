@@ -56,8 +56,7 @@ interface ExtendedProps extends RadixDialog.DialogContentProps {
 }
 
 function DialogContentCore(
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  { children, className, folderName, ...props }: ExtendedProps,
+  { className, folderName, ...props }: ExtendedProps,
   forwardedRef: ForwardedRef<HTMLDivElement>,
 ) {
   const isOpen = useContext(DialogOpenContext);

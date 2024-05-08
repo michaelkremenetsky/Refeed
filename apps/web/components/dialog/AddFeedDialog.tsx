@@ -52,7 +52,7 @@ export function AddFeedDialog({
           <RadixDialog.Content
             asChild
             className={cn(
-              "text-optimize-legibility fixed z-50 grid gap-4 overflow-hidden rounded-b-lg bg-white shadow-[rgba(31,34,37,0.09)_0px_0px_0px_1px,rgba(0,0,0,0.08)_0px_12px_24px_-4px,rgba(0,0,0,0.04)_0px_8px_16px_-4px] fade-in-100 sm:max-w-lg sm:rounded-lg sm:zoom-in-90 dark:bg-[#0f0f10]",
+              "text-optimize-legibility fixed z-50 grid gap-4 overflow-hidden rounded-b-lg bg-white shadow-[rgba(31,34,37,0.09)_0px_0px_0px_1px,rgba(0,0,0,0.08)_0px_12px_24px_-4px,rgba(0,0,0,0.04)_0px_8px_16px_-4px] fade-in-100 sm:max-w-lg sm:rounded-lg sm:zoom-in-90 dark:border dark:border-[#262626] dark:bg-[#0f0f10]",
               route == "addFeed" ? "w-[300px]" : "w-[600px]",
               className,
             )}
