@@ -37,6 +37,7 @@ const config = {
     "import/consistent-type-specifier-style": ["error", "prefer-top-level"],
     "@typescript-eslint/ban-ts-comment": "off",
     "@typescript-eslint/prefer-nullish-coalescing": "off",
+    "@typescript-eslint/no-misused-promises": "off",
   },
   ignorePatterns: [
     "**/.eslintrc.cjs",

@@ -26,8 +26,6 @@
       }
     },
     "production": {
-      // Remove when submitting to the app store
-      // "distribution": "internal",
       "node": "18.17.1"
     }
   },
