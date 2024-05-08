@@ -26,7 +26,7 @@ export const CopyLinkButton = () => {
               strokeWidth={1.5}
               stroke="currentColor"
               shapeRendering="geometricPrecision"
-              className="h-6 w-6 stroke-neutral-450 dark:stroke-neutral-500"
+              className="h-6 w-6 stroke-[#95959d] dark:stroke-[#959699]"
             >
               <path
                 strokeLinecap="round"

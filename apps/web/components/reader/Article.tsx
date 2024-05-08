@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { ArticleTopbar } from "@components/reader/Reader";
+import clsx from "clsx";
 import {
   Tooltip,
   TooltipContent,
@@ -14,6 +15,7 @@ import { trpc } from "utils/trpc";
 
 import { useUser } from "@refeed/features/hooks/useUser";
 import { decodeHtmlEntities } from "@refeed/lib/decodeHtmlEntities";
+import type { FeedType } from "@refeed/types/feed";
 import type { ItemType } from "@refeed/types/item";
 import { TextArea } from "@refeed/ui";
 
@@ -26,6 +28,12 @@ interface ArticleProps {
   FeedType: FeedType;
   Type: "Popup" | "Article View" | "Back" | "Full";
 }
+
+const preventCarouselTrigger = (
+  event: React.KeyboardEvent<HTMLTextAreaElement>,
+) => {
+  event.stopPropagation();
+};
 
 export const Article = (props: ArticleProps) => {
   const { item } = props;
@@ -63,7 +71,7 @@ export const Article = (props: ArticleProps) => {
       }  `}
     >
       {props.Type == "Article View" ? (
-        <div className="flex items-center rounded-t-md border-b bg-[#FCFCFC] py-3.5 dark:border-[#24252A] dark:bg-[#141415]">
+        <div className="flex items-center rounded-t-md border-b bg-[#FCFCFC] py-3.5 dark:border-[#232329] dark:bg-[#141415]">
           <div className="mx-auto flex w-[95%] justify-between">
             <ArticleTopbar openItemFromArticle={item} />
             <div>
@@ -86,15 +94,17 @@ export const Article = (props: ArticleProps) => {
                 : "mt-5"
           }
         />
+        <div className="max-w-[600px]">
         <a
           className={
-            "select-text text-3xl font-[700] leading-9 text-neutral-700 no-underline subpixel-antialiased dark:text-[#f3f3f7]"
+              "select-text text-3xl font-[700] leading-9 text-neutral-700 no-underline dark:text-[#f3f3f7]"
           }
           rel="noopener noreferrer"
           href={url}
         >
           {decodeHtmlEntities(title)}
         </a>
+        </div>
         <div className="mb-5 mt-3 flex">
           <h4 className="font-base text-sm tracking-wide text-neutral-500/90 dark:text-stone-500">
             {"From "} {item.feed_title} on
@@ -102,10 +112,21 @@ export const Article = (props: ArticleProps) => {
           </h4>
         </div>
         <div
-          className={`${props.Type == "Full" && "w-fit md:w-[640px]"} reader prose prose-base mb-5 text-neutral-700 subpixel-antialiased dark:prose-invert prose-a:text-neutral-700 prose-a:underline prose-a:decoration-neutral-300/70 prose-a:decoration-[0.5px] prose-a:underline-offset-[3px] hover:prose-a:decoration-neutral-400/60 dark:text-inherit dark:text-stone-200 dark:prose-a:text-stone-200 dark:prose-a:decoration-[#F4F4F5]`}
+          className={clsx(
+            `${props.Type == "Full" && "w-fit md:w-[640px]"} reader reader-markdown prose prose-base mb-5 text-neutral-700 dark:prose-invert prose-a:text-neutral-700 prose-a:underline prose-a:decoration-neutral-300/70 prose-a:decoration-[0.5px] prose-a:underline-offset-[3px] hover:prose-a:decoration-neutral-400/60 dark:text-inherit dark:text-stone-200 dark:prose-a:text-stone-200 dark:prose-a:decoration-[#F4F4F5]`,
+            `reader-${item.id}`,
+          )}
         >
+          {fullContentExpanded && (
+            // This is fine for now as we santize in in the backend
+            <div dangerouslySetInnerHTML={{ __html: expandedContent! }} />
+          )}
           <Markdown
+            // TODO: Need to find a better way to remove unnecessary inline space
+            isInline={fullContentExpanded}
+            breaks
             renderer={{
+              br: () => <p />,
               image: (src, alt, title) => {
                 return (
                   <img
@@ -117,20 +138,19 @@ export const Article = (props: ArticleProps) => {
                 );
               },
             }}
-            value={
-              !fullContentExpanded ? item.website_content! : expandedContent!
-            }
+            // @ts-ignore
+            value={!fullContentExpanded && item.website_content!}
           />
         </div>
         <div className="flex">
-          <button className="w-full rounded-md border border-neutral-200 text-base font-medium hover:border-gray-300 dark:border-neutral-700 dark:hover:border-neutral-700/90">
+          <button className="w-full max-w-[600px] rounded-md border border-neutral-200 text-base font-medium hover:border-gray-300/85 dark:border-neutral-700 dark:hover:border-neutral-700/90">
             <a
               target="_blank"
               rel="noopener noreferrer"
               href={url}
               className="no-underline"
             >
-              <h2 className="py-2 text-center font-[450] text-neutral-600/80 shadow-sm dark:text-gray-200">
+              <h2 className="py-2 text-center font-[450] text-neutral-600/80 shadow-[rgba(38,38,38,0.04)_0px_2px_1px] dark:text-gray-200">
                 Visit Website
               </h2>
             </a>
@@ -142,7 +162,7 @@ export const Article = (props: ArticleProps) => {
                   onClick={() => {
                     setFullContentExpanded(!fullContentExpanded);
                   }}
-                  className="ml-2 flex w-[50px] justify-center rounded-md border border-neutral-200 py-2 text-base shadow-sm  hover:border-gray-300 dark:border-neutral-700 dark:hover:border-neutral-700/90"
+                  className="ml-2 flex w-[50px] justify-center rounded-md border border-neutral-200 py-2 text-base shadow-[rgba(38,38,38,0.04)_0px_2px_1px] hover:border-gray-300/85 dark:border-neutral-700 dark:hover:border-neutral-700/90"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -166,7 +186,7 @@ export const Article = (props: ArticleProps) => {
               <TooltipTrigger>
                 <div
                   onClick={() => setNotesOpen(!notesOpen)}
-                  className="hover:border-gray-30 ml-2 flex w-[50px] justify-center rounded-md border border-neutral-200 py-2 text-base font-medium shadow-sm hover:border-gray-300 dark:border-neutral-700 dark:hover:border-neutral-700/90"
+                  className="hover:border-gray-30 ml-2 flex w-[50px] justify-center rounded-md border border-neutral-200 py-2 text-base font-medium shadow-[rgba(38,38,38,0.04)_0px_2px_1px] hover:border-gray-300/85 dark:border-neutral-700 dark:hover:border-neutral-700/90"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -193,7 +213,7 @@ export const Article = (props: ArticleProps) => {
                     onClick={() => {
                       setFullscreen(!fullscreen);
                     }}
-                    className="hover:border-gray-30 ml-2 flex w-[50px] justify-center rounded-md border border-neutral-200 py-2 text-base font-medium shadow-sm hover:border-gray-300 dark:border-neutral-700 dark:hover:border-neutral-700/90"
+                    className="hover:border-gray-30 ml-2 flex w-[50px] justify-center rounded-md border border-neutral-200 py-2 text-base font-medium shadow-[rgba(38,38,38,0.04)_0px_2px_1px] hover:border-gray-300/85 dark:border-neutral-700 dark:hover:border-neutral-700/90"
                   >
                     <Maximize className="h-[22px] w-[22px] stroke-neutral-500" />
                   </div>
@@ -214,7 +234,6 @@ export const Article = (props: ArticleProps) => {
             defaultValue={item.note ?? settings.defaultNoteTemplate}
             onKeyDown={(event) => preventCarouselTrigger(event)}
             rows={5}
-            maxLength={50}
           />
         ) : null}
         {props.Type != "Article View" ? (
