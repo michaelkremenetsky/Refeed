@@ -1,6 +1,7 @@
 import dayjs from "dayjs";
-import { useAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 
+import { bookmarkFolderSortAtom } from "@refeed/atoms/bookmarkAtom";
 import type { ItemType } from "@refeed/types/item";
 
 import { feedLayout } from "../../stores/ui";
@@ -17,6 +18,8 @@ export const BookmarkInfo: React.FC<Types> = (props: Types) => {
   if (Layout == "Card") {
     item.bookmark_folders = item?.bookmark_folders?.slice(0, 3);
   }
+
+  const setSortAtom = useSetAtom(bookmarkFolderSortAtom);
 
   if (item) {
     return (
@@ -54,13 +57,20 @@ export const BookmarkInfo: React.FC<Types> = (props: Types) => {
           </div>
         )}
         {item?.bookmark_folders?.map((folder) => (
-          <div key={folder} className="mt-[-1px] flex shrink-0">
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              setSortAtom(folder);
+            }}
+            key={folder}
+            className="mt-[-1px] flex shrink-0"
+          >
             <span
               className={`h-4 rounded bg-[#0496FF]/10 px-1 text-right text-xs font-[500] text-sky-500`}
             >
               {folder}
             </span>
-          </div>
+          </button>
         ))}
       </>
     );
