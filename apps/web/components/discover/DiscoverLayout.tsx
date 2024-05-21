@@ -86,10 +86,13 @@ export const DiscoverLayout = () => {
   return (
     <ScrollArea
       ref={containerRef}
+      type="always"
       className="mx-auto flex h-full w-full flex-col overflow-x-hidden pr-4"
     >
       <div className="mx-auto w-max px-0.5 pt-6">
         <Input
+          /* Convert to "Search Feeds or Paste Link"
+            when it can get the feed from any website */
           placeholder="Search Feeds or Paste RSS Link"
           className="mx-4 mb-0.5 h-11 w-[275px] sm:w-[250px] md:mx-0 md:w-[500px] lg:w-[750px] xl:w-[1000px]"
           defaultValue={searchQuery ?? ""}
@@ -253,16 +256,41 @@ export const EmptySearch = ({
   const { data: feedsInFolders, isPending } =
     trpc.feed.getFeedsInFolders.useQuery();
 
-  return (
-    <DialogRoot>
-      <DialogTrigger className="rounded-md text-center text-sky-500">
-        Add a new one
-      </DialogTrigger>
-      {!isPending && feedsInFolders?.length! > 0 ? (
-        <AddFeedDialog searchLink={emptySearchLink} title="Add New Feed" />
-      ) : (
-        <AddFolderDialog link="" title="Add Folder" />
-      )}
-    </DialogRoot>
-  );
+  let url;
+  try {
+    url = new URL(emptySearchLink).hostname;
+  } catch {
+    url = "";
+  }
+
+  if (
+    (url == "www.youtube.com" || url == "youtube.com") &&
+    !emptySearchLink.includes("/feeds/")
+  ) {
+    return (
+      <DialogRoot>
+        <DialogTrigger className="rounded-md text-center text-sky-500">
+          Add Youtube feed
+        </DialogTrigger>
+        {!isPending && feedsInFolders?.length! > 0 ? (
+          <AddFeedDialog searchLink={emptySearchLink} title="Add New Feed" />
+        ) : (
+          <AddFolderDialog link="" title="Add Folder" />
+        )}
+      </DialogRoot>
+    );
+  } else {
+    return (
+      <DialogRoot>
+        <DialogTrigger className="rounded-md text-center text-sky-500">
+          Add a new one
+        </DialogTrigger>
+        {!isPending && feedsInFolders?.length! > 0 ? (
+          <AddFeedDialog searchLink={emptySearchLink} title="Add New Feed" />
+        ) : (
+          <AddFolderDialog link="" title="Add Folder" />
+        )}
+      </DialogRoot>
+    );
+  }
 };

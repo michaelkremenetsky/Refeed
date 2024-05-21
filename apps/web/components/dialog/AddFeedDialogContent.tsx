@@ -1,5 +1,7 @@
 import { useState } from "react";
 import * as RadixDialog from "@radix-ui/react-dialog";
+import { useAtom } from "jotai";
+import { atomWithStorage } from "jotai/utils";
 import { toast } from "sonner";
 
 import { useUser } from "@refeed/features/hooks/useUser";
@@ -27,6 +29,11 @@ interface ExtendedProps extends RadixDialog.DialogContentProps {
   favicon_url?: string;
 }
 
+const defaultFolderOption = atomWithStorage<string | undefined>(
+  "defaultFolderOption",
+  undefined,
+);
+
 export function AddFeedDialogContent({
   link: defaultLink,
   route,
@@ -47,8 +54,13 @@ export function AddFeedDialogContent({
   } = useCheckSource(defaultLink!, searchLink, feed_title, favicon_url);
 
   const [customTitle, setCustomTitle] = useState<string | undefined>(undefined);
+  const [lastSelectedFolder, setLastSelectedFolder] =
+    useAtom(defaultFolderOption);
+
+  const defaultFolder = lastSelectedFolder ? lastSelectedFolder : folders?.[0];
+
   const [folderName, setFolderName] = useState<string | undefined>(
-    folders?.[0],
+    defaultFolder,
   );
 
   const addFeedToUserViaDiscovery =
@@ -65,11 +77,13 @@ export function AddFeedDialogContent({
           <Input
             onChange={(e) => {
               checkSource(e.target.value);
-              if (!folderName) {
+              if (lastSelectedFolder) {
+                setFolderName(lastSelectedFolder);
+              } else if (!folderName) {
                 setFolderName(folders?.[0]);
+                setLastSelectedFolder(folders?.[0]);
               }
             }}
-            // eslint-disable-next-line jsx-a11y/no-autofocus
             autoFocus={false}
             defaultValue={defaultLink ?? previewFeed?.link ?? searchLink ?? ""}
             placeholder="RSS or Atom Link"
@@ -100,16 +114,21 @@ export function AddFeedDialogContent({
                   />
                 ) : null}
                 <div className="mb-0.5 mt-2">
-                  <Select onValueChange={(value) => setFolderName(value)}>
+                  <Select
+                    onValueChange={(value) => {
+                      setFolderName(value);
+                      setLastSelectedFolder(value);
+                    }}
+                  >
                     <SelectTrigger
-                      defaultValue={folders?.[0]}
-                      className="text-md w-[170px] text-neutral-700"
+                      defaultValue={defaultFolder}
+                      className="text-md w-[170px] text-neutral-600"
                     >
                       {/* @ts-ignore */}
-                      <SelectValue placeholder={folders?.[0]} />
+                      <SelectValue placeholder={defaultFolder} />
                     </SelectTrigger>
                     <SelectContent
-                      defaultValue={folders?.[0]}
+                      defaultValue={defaultFolder}
                       className="w-[170px] text-neutral-700"
                     >
                       {folders?.map((folder: string) => (
@@ -125,11 +144,10 @@ export function AddFeedDialogContent({
           )}
           <RadixDialog.Close aria-label="Close">
             <div
-              // eslint-disable-next-line @typescript-eslint/no-misused-promises
               onClick={async () => {
                 if (previewFeed && error == undefined) {
                   const title = customTitle ?? previewFeed?.title;
-                  const folder = folderName! ?? folders?.[0]!;
+                  const folder = folderName! ?? defaultFolder;
 
                   if (plan == "free" && totalFeedsInFolders! >= 149) {
                     toast(
@@ -171,7 +189,9 @@ export function AddFeedDialogContent({
                     });
                     utils.feed.getFeedOrder.reset();
                     utils.feed.getFeedsInFolders.reset();
-                    utils.search.searchFeeds.reset();
+                    // Might need to add this back later
+                    // If I add this it casues it to flicker when I add a new feed
+                    // utils.search.searchFeeds.reset();
                   }
                 }
               }}
