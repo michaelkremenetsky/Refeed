@@ -8,9 +8,6 @@ export const feedLayout = atomWithStorage<"Magazine" | "Card" | "Article">(
 
 export const hideSidebar = atomWithStorage<boolean>("hideSidebar", false);
 
-export const Sort = atom<
-  | "Latest"
-  | "Oldest"
->("Latest");
+export const Sort = atom<"Latest" | "Oldest">("Latest");
 
 export const kmenu = atom<boolean | undefined>(false);

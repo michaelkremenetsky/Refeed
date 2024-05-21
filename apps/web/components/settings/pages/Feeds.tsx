@@ -1,10 +1,12 @@
+import { useState } from "react";
+import { PricingPage } from "@components/upgrade/PricingPage";
 import * as RadixDialog from "@radix-ui/react-dialog";
 import { useAtom } from "jotai";
-import { useState } from "react";
 import { Button, FileTrigger } from "react-aria-components";
+import { Drawer } from "vaul";
 
 import { useUser } from "@refeed/features/hooks/useUser";
-import { Input, ProBadge, Switch } from "@refeed/ui";
+import { Input, ProBadge, ScrollArea, Switch } from "@refeed/ui";
 import { DialogRoot } from "@refeed/ui/components/dialog/AddDialog";
 import {
   DialogContent,
@@ -24,7 +26,7 @@ const Checkbox = () => (
 );
 
 export const FeedsSettingsPage = () => {
-  const { data } = useUser();
+  const { data, plan } = useUser();
   const utils = trpc.useUtils();
 
   const { importProgress, exportOPML, importOPML, onFileChange, errorMessage } =
@@ -90,53 +92,56 @@ export const FeedsSettingsPage = () => {
                 Refeed.
               </h4>
             </div>
-            <Switch
-              className="ml-auto mr-12 mt-3"
-              checked={data?.inbox ?? false}
-              onCheckedChange={() => {
-                if (data?.inbox) {
-                  toggleNewsletters.mutate({
-                    email: null,
-                    enabled: false,
-                  });
+            {plan !== "pro" ? (
+              <NewsletterUpgradeMessage />
+            ) : (
+              <Switch
+                className="ml-auto mr-12 mt-3"
+                checked={data?.inbox ?? false}
+                onCheckedChange={() => {
+                  if (data?.inbox) {
+                    toggleNewsletters.mutate({
+                      email: null,
+                      enabled: false,
+                    });
 
-                  // @ts-ignore
-                  utils.pro.getUser.setData(undefined, {
-                    ...data,
-                    inbox: false,
-                    inbox_email: data?.inbox_email,
-                  });
-                } else if (data?.inbox_email && !data.inbox) {
-                  toggleNewsletters.mutate({
-                    email: data?.inbox_email,
-                    enabled: true,
-                  });
+                    // @ts-ignore
+                    utils.pro.getUser.setData(undefined, {
+                      ...data,
+                      inbox: false,
+                      inbox_email: data?.inbox_email,
+                    });
+                  } else if (data?.inbox_email && !data.inbox) {
+                    toggleNewsletters.mutate({
+                      email: data?.inbox_email,
+                      enabled: true,
+                    });
 
-                  // @ts-ignore
-                  utils.pro.getUser.setData(undefined, {
-                    ...data,
-                    inbox: true,
-                    inbox_email: data?.inbox_email,
-                  });
-                } else if (!data?.inbox_email) {
-                  const randomEmail =
-                    generateShortUUID() + "@inbox.refeedreader.com";
+                    // @ts-ignore
+                    utils.pro.getUser.setData(undefined, {
+                      ...data,
+                      inbox: true,
+                      inbox_email: data?.inbox_email,
+                    });
+                  } else if (!data?.inbox_email) {
+                    const randomEmail =
+                      generateShortUUID() + "@inbox.refeedreader.com";
 
-                  toggleNewsletters.mutate({
-                    email: randomEmail,
-                    enabled: true,
-                  });
+                    toggleNewsletters.mutate({
+                      email: randomEmail,
+                      enabled: true,
+                    });
 
-                  // @ts-ignore
-                  utils.pro.getUser.setData(undefined, {
-                    ...data,
-                    inbox: false,
-                    inbox_email: randomEmail,
-                  });
-                }
-              }}
-              id="airplane-mode"
-            />
+                    // @ts-ignore
+                    utils.pro.getUser.setData(undefined, {
+                      ...data,
+                      inbox: false,
+                      inbox_email: randomEmail,
+                    });
+                  }
+                }}
+              />
+            )}
           </div>
           {data?.inbox && data?.inbox_email && (
             <Input
@@ -272,5 +277,25 @@ export const FeedsSettingsPage = () => {
         </div>
       ))}
     </div>
+  );
+};
+
+export const NewsletterUpgradeMessage = () => {
+  return (
+    <Drawer.Root direction="right" shouldScaleBackground>
+      <Drawer.Trigger asChild>
+        <div className="ml-auto mr-12 mt-3">
+          <Switch checked={false} />
+        </div>
+      </Drawer.Trigger>
+      <Drawer.Portal>
+        <Drawer.Overlay className="fixed inset-0 z-50 bg-black/40" />
+        <Drawer.Content className="fixed bottom-0 right-0 z-50 mt-24 flex h-full w-[1000px] flex-col overflow-x-hidden rounded-t-[10px] bg-zinc-100">
+          <ScrollArea>
+            <PricingPage />
+          </ScrollArea>
+        </Drawer.Content>
+      </Drawer.Portal>
+    </Drawer.Root>
   );
 };

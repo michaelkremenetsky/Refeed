@@ -15,6 +15,7 @@ export const useInfiniteScroll = (
     if (root) {
       const scrollPosition = root.scrollTop + root.clientHeight;
       const totalHeight = root.scrollHeight;
+
       // 95% of the current items
       const threshold = (25 * heightRatio * totalHeight) / 25;
 

@@ -23,7 +23,7 @@ export const itemRouter = createTRPCRouter({
           "recentlyread",
           "bookmarks",
           "multiple",
-          "discover",
+          "search",
           "newsletters",
         ]),
         bookmark_folder: z.string().optional(),
@@ -48,9 +48,9 @@ export const itemRouter = createTRPCRouter({
         orderBy:
           input.type != "recentlyread" && input.type != "bookmarks"
             ? input.sort == "Latest"
-              ? { id: Prisma.SortOrder.desc }
+              ? { updated_at: Prisma.SortOrder.desc }
               : input.sort == "Oldest"
-                ? { id: Prisma.SortOrder.asc }
+                ? { updated_at: Prisma.SortOrder.asc }
                 : undefined
             : { updated_at: Prisma.SortOrder.desc },
         include: {
@@ -275,7 +275,7 @@ export const itemRouter = createTRPCRouter({
         };
       }
 
-      if (input.type == "discover") {
+      if (input.type == "search") {
         const items = await ctx.prisma.item.findMany({
           where: {
             feed_id: input.feed_id,
@@ -351,11 +351,7 @@ export const itemRouter = createTRPCRouter({
           const feed_added = item.feed?.users[0]?.pagination_start_timestamp!;
           const item_added = item.created_at;
 
-          if (input.sort == "Latest") {
-            return feed_added <= item_added;
-          } else if (input.sort == "Oldest") {
-            return feed_added >= item_added;
-          }
+          return feed_added <= item_added;
         });
 
         let transformedItems = transformItems(itemsAfterDate);
@@ -375,8 +371,6 @@ export const itemRouter = createTRPCRouter({
       }
 
       if (input.type == "one" || input.type == "multiple") {
-        console.log(input);
-
         const items = await ctx.prisma.item.findMany({
           where: {
             created_at: {
@@ -427,11 +421,7 @@ export const itemRouter = createTRPCRouter({
           const feed_added = item.feed?.users[0]?.pagination_start_timestamp!;
           const item_added = item.created_at;
 
-          if (input.sort == "Latest") {
-            return feed_added <= item_added;
-          } else if (input.sort == "Oldest") {
-            return feed_added >= item_added;
-          }
+          return feed_added <= item_added;
         });
 
         let transformedItems = transformItems(itemsAfterDate);
@@ -453,6 +443,7 @@ export const itemRouter = createTRPCRouter({
         const items = await ctx.prisma.item.findMany({
           where: {
             from_newsletter: true,
+            user_id: ctx.user.id,
           },
           ...sharedQuery,
         });
@@ -528,6 +519,9 @@ export const itemRouter = createTRPCRouter({
           },
         },
         take: input.take,
+        orderBy: {
+          id: "desc",
+        },
       });
 
       // Loop through the items and transform the website_content to markdown

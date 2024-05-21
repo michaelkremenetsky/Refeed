@@ -66,7 +66,7 @@ const ContextMenuContent = React.forwardRef<
     <ContextMenuPrimitive.Content
       ref={ref}
       className={cn(
-        "min-w-[8rem] overflow-hidden rounded-[5.5px] bg-white p-1 text-neutral-700 shadow-[0_0px_0px_1px_rgba(31,34,37,0.09),0px_12px_24px_-4px_rgba(0,0,0,0.08),0px_8px_16px_-4px_rgba(0,0,0,0.04)] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 dark:border dark:border-neutral-800 dark:bg-[#0f0f10]",
+        "min-w-[8rem] overflow-hidden rounded-[5.5px] bg-white p-1 text-neutral-700 shadow-[0_0px_0px_1px_rgba(31,34,37,0.09),0px_12px_24px_-4px_rgba(0,0,0,0.08),0px_8px_16px_-4px_rgba(0,0,0,0.04)] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2",
         className,
       )}
       {...props}
@@ -84,7 +84,7 @@ const ContextMenuItem = React.forwardRef<
   <ContextMenuPrimitive.Item
     ref={ref}
     className={cn(
-      "relative flex cursor-default select-none items-center rounded-[6px] px-2 py-1.5 text-sm font-medium text-[#38383d] outline-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 focus:bg-[#f7f7f7] dark:text-stone-200 dark:focus:bg-[#19191a]",
+      "relative flex cursor-default select-none items-center rounded-[6px] px-2 py-1.5 text-sm font-medium text-[#38383d] outline-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 focus:bg-[#f7f7f7]",
       inset && "pl-8",
       className,
     )}
@@ -163,10 +163,7 @@ const ContextMenuSeparator = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <ContextMenuPrimitive.Separator
     ref={ref}
-    className={cn(
-      "-mx-1 my-1 h-px bg-neutral-100 dark:bg-neutral-800",
-      className,
-    )}
+    className={cn("-mx-1 my-1 h-px bg-neutral-100", className)}
     {...props}
   />
 ));

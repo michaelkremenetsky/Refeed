@@ -1,5 +1,4 @@
 import { PricingPage } from "@components/upgrade/PricingPage";
-import * as Dialog from "@radix-ui/react-dialog";
 import { useUser as useSupabaseUser } from "@supabase/auth-helpers-react";
 import { useQuery } from "@tanstack/react-query";
 import { Drawer } from "vaul";
@@ -74,21 +73,19 @@ export const AccountSettingsPage = () => {
                 )}
               </div>
             </h4>
-            <Dialog.Root>
-              <Drawer.Root direction="right" shouldScaleBackground>
-                {plan == "free" && (
-                  <Drawer.Trigger className="mt-1 -translate-x-[22px] transform cursor-pointer select-none text-sm font-medium leading-5 text-sky-500/95">
-                    View plans and upgrade →
-                  </Drawer.Trigger>
-                )}
-                <Drawer.Portal>
-                  <Drawer.Overlay className="fixed inset-0 z-50 bg-black/40" />
-                  <Drawer.Content className="fixed bottom-0 right-0 z-50 mt-24 flex h-full w-[1000px] flex-col overflow-scroll overflow-x-hidden rounded-t-[10px] bg-zinc-100">
-                    <PricingPage />
-                  </Drawer.Content>
-                </Drawer.Portal>
-              </Drawer.Root>
-            </Dialog.Root>
+            <Drawer.Root direction="right" shouldScaleBackground>
+              {plan == "free" && (
+                <Drawer.Trigger className="mt-1 -translate-x-[22px] transform cursor-pointer select-none text-sm font-medium leading-5 text-sky-500/95">
+                  View plans and upgrade →
+                </Drawer.Trigger>
+              )}
+              <Drawer.Portal>
+                <Drawer.Overlay className="fixed inset-0 z-50 bg-black/40" />
+                <Drawer.Content className="fixed bottom-0 right-0 z-50 mt-24 flex h-full w-[1000px] flex-col overflow-scroll overflow-x-hidden rounded-t-[10px] bg-zinc-100">
+                  <PricingPage />
+                </Drawer.Content>
+              </Drawer.Portal>
+            </Drawer.Root>
           </div>
         </div>
       </div>

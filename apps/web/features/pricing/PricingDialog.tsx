@@ -40,7 +40,7 @@ export const PricingDialog = (props: { setDialogUndefined: () => void }) => {
         }}
         className={`${
           theme == "dark" ? "dark dark:bg-[#0f0f10]" : "bg-white"
-        }  text-optimize-legibility data-[state=open]:animate-content ] fixed z-50 h-[650px] w-[710px] rounded-[6px] text-[#282a30] subpixel-antialiased shadow-[rgba(0,0,0,0.05)_0px_0px_1px,rgba(0,0,0,0.04)_0px_15px_30px]  focus:outline-none dark:text-neutral-300`}
+        }  text-optimize-legibility data-[state=open]:animate-content ] fixed z-50 h-[650px] w-[710px] rounded-[6px] text-[#282a30] shadow-[rgba(0,0,0,0.05)_0px_0px_1px,rgba(0,0,0,0.04)_0px_15px_30px]  focus:outline-none dark:text-neutral-300`}
       >
         <h1 className="mx-auto mb-2 mt-2 flex justify-center text-3xl font-[775] leading-none tracking-tight md:w-[700px]">
           <span className="py-2  text-neutral-700">Upgrade</span>
@@ -55,16 +55,43 @@ export const PricingDialog = (props: { setDialogUndefined: () => void }) => {
 };
 
 const Checkbox = () => (
-  <span className="ml-1.5 mr-2 rounded bg-[#0496FF]/10 px-1 py-[3px] text-sm font-[600] text-sky-500">
+  <span className="ml-1 mr-2.5 rounded bg-[#0496FF]/10 px-1 py-[1px] text-[15px] font-[600] text-sky-500">
     ✓
   </span>
 );
 
 const CheckboxGray = () => (
-  <span className="ml-1.5 mr-2 rounded bg-neutral-100 px-1 py-[3px] text-sm font-[600] text-neutral-400 dark:bg-[#141415] dark:text-neutral-500">
+  <span className="ml-1 mr-2.5 rounded bg-neutral-100 px-1 py-[1px] text-[15px] font-[600] text-neutral-400 dark:bg-[#141415] dark:text-neutral-500">
     ✓
   </span>
 );
+
+const InfoSvg = () => {
+  return (
+    <svg width={24} height={24}>
+      <g fillRule="evenodd">
+        <rect
+          width={14}
+          height={14}
+          x={5}
+          y={5}
+          opacity={0.2}
+          fill="#0496FF"
+          rx={7}
+        />
+        <path
+          d="M12 5a7 7 0 1 1 0 14 7 7 0 0 1 0-14zm0 1a6 6 0 1 0 0 12 6 6 0 0 0 0-12z"
+          opacity={0.3}
+          fill="#0496FF"
+        />
+        <path
+          fill="#0496FF"
+          d="M12 12a1 1 0 0 1 1 1v2a1 1 0 0 1-2 0v-2a1 1 0 0 1 1-1zm0-4a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"
+        />
+      </g>
+    </svg>
+  );
+};
 
 const handleSubmit = async (isYearlyPlan: boolean, userId: string) => {
   // Make sure to change the pricing in trpc as well if you change these
@@ -131,13 +158,13 @@ export const ProPlan = (props: {
   return (
     <div
       className={clsx(
-        "mx-4 h-[565px] select-none rounded-lg bg-white text-[#161718] shadow-[0px_20px_70px_-10px_hsla(227,30%,20%,0.08),0px_10px_24px_-8px_hsla(227,30%,20%,0.04),0px_1px_4px_-1px_hsla(227,30%,20%,0.06)] ring-1 ring-[#1EA1FF]/40 md:mx-0 md:w-[375px] dark:bg-[#0f0f10]",
+        "mx-4 h-[565px] select-none rounded-lg bg-white text-[#161718] shadow-[0px_20px_70px_-10px_hsla(227,30%,20%,0.08),0px_10px_24px_-8px_hsla(227,30%,20%,0.04),0px_1px_4px_-1px_hsla(227,30%,20%,0.06)] ring-1 ring-[#1EA1FF]/50 md:mx-0 md:w-[375px] dark:bg-[#0f0f10]",
         className,
       )}
     >
       <h1 className="ml-5 flex pt-5 text-lg font-bold dark:text-stone-500/80">
         <Sparkle className="mr-1 fill-[#0496FF] stroke-sky-500" />
-        Refeed Pro
+        Reader Pro
       </h1>
       <div className="flex">
         <h1 className="ml-5 mt-4 flex pb-4 text-5xl font-bold text-[#38383d] dark:text-stone-200">
@@ -148,41 +175,27 @@ export const ProPlan = (props: {
         </h1>
       </div>
       <ul className="mx-auto mt-2 flex flex-col px-2">
-        <li className=" px-4 py-[3px] text-lg hover:bg-neutral-50 dark:text-stone-200 dark:hover:bg-[#121212]">
+        <li className="px-4 py-[3px] text-lg hover:bg-neutral-50 dark:text-stone-200 dark:hover:bg-[#121212]">
           <Checkbox />
-          Everything in Free Plan+
+          Everything in <span className="font-[550]">Free</span>, and:
         </li>
-        <li className=" px-4 py-[3px] text-lg hover:bg-neutral-50 dark:text-stone-200 dark:hover:bg-[#121212]">
+        <li className="px-4 py-[3px] text-lg hover:bg-neutral-50 dark:text-stone-200 dark:hover:bg-[#121212]">
           <Checkbox />
-          Up to <span className="font-[550]">1000</span> Feeds
-        </li>
-        <li className=" px-4 py-[3px] text-lg hover:bg-neutral-50 dark:text-stone-200 dark:hover:bg-[#121212]">
-          <Checkbox />
-          Up to <span className="font-[550]">2500</span> Unread Items
+          <span className="font-[550]">1,000</span> Feeds
         </li>
         <Tippy
-          className="rounded-[4px] border bg-white p-2 shadow-[rgba(0,0,0,0.05)_0px_0px_1px,rgba(0,0,0,0.04)_0px_15px_30px] dark:border dark:border-[#333333] dark:bg-[#141415]"
+          className="rounded-[4px] bg-white p-2 shadow-[0_0px_0px_1px_rgba(31,34,37,0.09),0px_12px_24px_-4px_rgba(0,0,0,0.08),0px_8px_16px_-4px_rgba(0,0,0,0.06)] dark:border dark:border-[#333333] dark:bg-[#141415]"
           placement="top"
           followCursor={true}
           plugins={[followCursor]}
           delay={0}
           duration={0}
-          content={
-            <div className="h-[200px] w-[305px]">
-              <BookmarkFolders
-                className={`relative border border-neutral-200 shadow-[0px_20px_70px_-10px_hsla(227,30%,20%,0.08),0px_10px_24px_-8px_hsla(227,30%,20%,0.04),0px_1px_4px_-1px_hsla(227,30%,20%,0.06)]`}
-              />
-              <h2 className="mx-2 mt-4 font-medium">Bookmark Folders</h2>
-              <h2 className="mx-2 text-neutral-500">
-                Organize your Bookmarks to into Folders
-              </h2>
-            </div>
-          }
+          content="Just paste the channel URL and we will do the rest"
         >
-          <li className=" px-4 py-[3px] text-lg hover:bg-neutral-50 dark:text-stone-200 dark:hover:bg-[#121212]">
+          <li className="flex px-4 py-[3px] text-lg hover:bg-neutral-50 dark:hover:bg-[#121212]">
             <Checkbox />
-            <span className="underline decoration-neutral-300 decoration-dashed decoration-1 underline-offset-2">
-              Bookmark Folders
+            <span className="underline decoration-neutral-300 decoration-dashed decoration-1 underline-offset-2 dark:text-stone-200">
+              Youtube Feeds
             </span>
           </li>
         </Tippy>
@@ -203,11 +216,62 @@ export const ProPlan = (props: {
             </div>
           }
         >
-          <li className=" px-4 py-[3px] text-lg hover:bg-neutral-50 dark:text-stone-200 dark:hover:bg-[#121212]">
+          <li className="px-4 py-[3px] text-lg hover:bg-neutral-50 dark:text-stone-200 dark:hover:bg-[#121212]">
             <Checkbox />
             <span className="underline decoration-neutral-300 decoration-dashed decoration-1 underline-offset-2">
               Timed Bookmarks
             </span>
+          </li>
+        </Tippy>
+        <Tippy
+          className="rounded-[4px] border bg-white p-2 shadow-[rgba(0,0,0,0.05)_0px_0px_1px,rgba(0,0,0,0.04)_0px_15px_30px] dark:border dark:border-[#333333] dark:bg-[#141415]"
+          placement="top"
+          followCursor={true}
+          plugins={[followCursor]}
+          delay={0}
+          duration={0}
+          content={
+            <div className="h-[200px] w-[305px]">
+              <BookmarkFolders
+                className={`relative border border-neutral-200 shadow-[0px_20px_70px_-10px_hsla(227,30%,20%,0.08),0px_10px_24px_-8px_hsla(227,30%,20%,0.04),0px_1px_4px_-1px_hsla(227,30%,20%,0.06)]`}
+              />
+              <h2 className="mx-2 mt-4 font-medium">Bookmark Folders</h2>
+              <h2 className="mx-2 text-neutral-500">
+                Organize your Bookmarks to into Folders
+              </h2>
+            </div>
+          }
+        >
+          <li className="px-4 py-[3px] text-lg hover:bg-neutral-50 dark:text-stone-200 dark:hover:bg-[#121212]">
+            <Checkbox />
+            <span className="underline decoration-neutral-300 decoration-dashed decoration-1 underline-offset-2">
+              Bookmark Folders
+            </span>
+          </li>
+        </Tippy>
+        <Tippy
+          className="rounded-[4px] bg-white p-2 shadow-[0_0px_0px_1px_rgba(31,34,37,0.09),0px_12px_24px_-4px_rgba(0,0,0,0.08),0px_8px_16px_-4px_rgba(0,0,0,0.06)] dark:border dark:border-[#333333] dark:bg-[#141415]"
+          placement="top"
+          followCursor={true}
+          plugins={[followCursor]}
+          delay={0}
+          duration={0}
+          content="Get early access to the Refeed Mobile App on Apple TestFlight when it is available."
+        >
+          <li className=" hover:help Newsletter flex px-4 py-[3px] text-lg hover:bg-neutral-50 dark:hover:bg-[#121212]">
+            <h3>
+              <Checkbox />
+              <span className="underline decoration-neutral-300 decoration-dashed decoration-1 underline-offset-2 dark:text-stone-200">
+                Mobile App
+              </span>
+              <span
+                className={
+                  "ml-1.5 rounded bg-[#0496FF]/10 px-[3px] text-right text-xs font-[500] text-sky-500"
+                }
+              >
+                Early Access
+              </span>
+            </h3>
           </li>
         </Tippy>
         <Tippy
@@ -228,7 +292,7 @@ export const ProPlan = (props: {
               />
               <h2 className="mx-2 mt-3 font-medium">Notes</h2>
               <h2 className="mx-2 text-neutral-500">
-                Filter out items based on conditions
+                Take Notes on your items
               </h2>
             </div>
           }
@@ -269,10 +333,6 @@ export const ProPlan = (props: {
             </span>
           </li>
         </Tippy>
-        <li className=" px-4 py-[3px] text-lg hover:bg-neutral-50 dark:text-stone-200 dark:hover:bg-[#121212]">
-          <Checkbox />
-          Full Text Search
-        </li>
         <Tippy
           className="rounded-[4px] bg-white p-2 shadow-[0_0px_0px_1px_rgba(31,34,37,0.09),0px_12px_24px_-4px_rgba(0,0,0,0.08),0px_8px_16px_-4px_rgba(0,0,0,0.06)] dark:border dark:border-[#333333] dark:bg-[#141415]"
           placement="top"
@@ -280,21 +340,13 @@ export const ProPlan = (props: {
           plugins={[followCursor]}
           delay={0}
           duration={0}
-          content="Subscribe to Newsletters using a email address provided by Refeed."
+          content="Prompt AI about content in your feeds"
         >
           <li className=" hover:help Newsletter flex px-4 py-[3px] text-lg hover:bg-neutral-50 dark:hover:bg-[#121212]">
             <h3>
-              {" "}
               <Checkbox />
               <span className="underline decoration-neutral-300 decoration-dashed decoration-1 underline-offset-2 dark:text-stone-200">
-                Inbox
-              </span>
-              <span
-                className={
-                  "ml-1.5 rounded bg-[#0496FF]/10 px-[3px] text-right text-xs font-[500] text-sky-500"
-                }
-              >
-                Coming Soon
+                AI Integration
               </span>
             </h3>
           </li>
@@ -306,20 +358,14 @@ export const ProPlan = (props: {
           plugins={[followCursor]}
           delay={0}
           duration={0}
-          content="Refeed AI features coming soon."
+          content="Subscribe to newsletters using a email address provided by Refeed."
         >
-          <li className=" hover:help Newsletter flex px-4 py-[3px] text-lg hover:bg-neutral-50 dark:hover:bg-[#121212]">
+          <li className="hover:help Newsletter flex px-4 py-[3px] text-lg hover:bg-neutral-50 dark:hover:bg-[#121212]">
             <h3>
+              {" "}
               <Checkbox />
               <span className="underline decoration-neutral-300 decoration-dashed decoration-1 underline-offset-2 dark:text-stone-200">
-                AI
-              </span>
-              <span
-                className={
-                  "ml-1.5 rounded bg-[#0496FF]/10 px-[3px] text-right text-xs font-[500] text-sky-500"
-                }
-              >
-                Coming Soon
+                Inbox
               </span>
             </h3>
           </li>
@@ -330,9 +376,9 @@ export const ProPlan = (props: {
           onClick={() => {
             handleSubmit(isYearlyPlan!, user?.id!);
           }}
-          className="mx-5 mb-5 mt-8 w-[90%] rounded-md bg-white px-6 py-1.5 text-base font-medium text-[#38383D] shadow-[0_0_0_1px_rgba(18,55,105,0.08),0_1px_2px_0_rgba(18,55,105,0.12)]"
+          className="mx-5 mb-5 mt-6 w-[90%] rounded-md border bg-white px-6 py-1.5 text-base font-medium text-[#38383D] shadow-[rgba(38,38,38,0.04)_0px_2px_1px]"
         >
-          Try Now -&gt;{" "}
+          Try for 14 days
         </button>
       </Link>
     </div>
@@ -355,11 +401,11 @@ export const FreePlan = ({ className }: { className?: string }) => (
     <ul className="mx-2 mt-2 flex flex-col">
       <li className="px-4 py-[3px] text-lg hover:bg-neutral-50 dark:text-stone-200 dark:hover:bg-[#121212]">
         <CheckboxGray />
-        Up to <span className="font-[550]">100</span> Feeds
+        Open Source
       </li>
       <li className="px-4 py-[3px] text-lg hover:bg-neutral-50 dark:text-stone-200 dark:hover:bg-[#121212]">
         <CheckboxGray />
-        Up to <span className="font-[550]">1000</span> Unread Items
+        <span className="font-[550]">100</span> Feeds
       </li>
       <li className="px-4 py-[3px] text-lg hover:bg-neutral-50 dark:text-stone-200 dark:hover:bg-[#121212]">
         <CheckboxGray />
@@ -367,7 +413,15 @@ export const FreePlan = ({ className }: { className?: string }) => (
       </li>
       <li className="px-4 py-[3px] text-lg hover:bg-neutral-50 dark:text-stone-200 dark:hover:bg-[#121212]">
         <CheckboxGray />
+        Unlimited Folders
+      </li>
+      <li className="px-4 py-[3px] text-lg hover:bg-neutral-50 dark:text-stone-200 dark:hover:bg-[#121212]">
+        <CheckboxGray />
         Fetch Full Content
+      </li>
+      <li className="px-4 py-[3px] text-lg hover:bg-neutral-50 dark:text-stone-200 dark:hover:bg-[#121212]">
+        <CheckboxGray />
+        Search
       </li>
       <li className="px-4 py-[3px] text-lg hover:bg-neutral-50 dark:text-stone-200 dark:hover:bg-[#121212]">
         <CheckboxGray />
@@ -375,15 +429,11 @@ export const FreePlan = ({ className }: { className?: string }) => (
       </li>
       <li className="px-4 py-[3px] text-lg hover:bg-neutral-50 dark:text-stone-200 dark:hover:bg-[#121212]">
         <CheckboxGray />
-        Follow any Public Feed
+        Follow any Feed
       </li>
       <li className="px-4 py-[3px] text-lg hover:bg-neutral-50 dark:text-stone-200 dark:hover:bg-[#121212]">
         <CheckboxGray />
         Self Host Yourself
-      </li>
-      <li className="px-4 py-[3px] text-lg hover:bg-neutral-50 dark:text-stone-200 dark:hover:bg-[#121212]">
-        <CheckboxGray />
-        Always Ad Free and Open source
       </li>
     </ul>
   </div>

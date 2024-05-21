@@ -1,5 +1,15 @@
+import type { ReactNode } from "react";
 import Link from "next/link";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@components/ui/Tooltip";
 import clsx from "clsx";
+import { motion } from "framer-motion";
+
+import { useUser } from "@refeed/features/hooks/useUser";
 
 import type { FeedTypes } from "../../types/feed";
 
@@ -10,7 +20,10 @@ export const EmptyMessage = ({
   FeedType: FeedTypes;
   className?: string;
 }) => (
-  <div className={clsx("flex h-full flex-col items-center", className)}>
+  <motion.div
+    layout="size"
+    className={clsx("flex h-full flex-col items-center", className)}
+  >
     <FeedGraphic />
     <h1 className="mt-6 text-sm font-semibold leading-none">
       {FeedType == "bookmarks"
@@ -19,11 +32,17 @@ export const EmptyMessage = ({
           ? "No Items Viewed Recently"
           : "Your All Caught Up"}
     </h1>
-    <h2 className="mt-3 max-w-[300px] text-center text-sm  text-neutral-500 dark:text-stone-400">
+    <h2 className="mt-3 max-w-[300px] text-center text-sm text-neutral-500 dark:text-stone-400">
       {FeedType == "bookmarks" ? (
         <span>Bookmark items to see them in here.</span>
       ) : FeedType == "recentlyread" ? (
         <span>Read items to see them in here.</span>
+      ) : FeedType == "newsletters" ? (
+        <span>
+          No emails have been send to your address yet. Subscribe to newsletters
+          using your <EmailAddressTooltip>email address</EmailAddressTooltip> to
+          see items here.
+        </span>
       ) : (
         <span>
           Their are no unread articles left. Add more feeds in{" "}
@@ -33,8 +52,24 @@ export const EmptyMessage = ({
         </span>
       )}
     </h2>
-  </div>
+  </motion.div>
 );
+
+const EmailAddressTooltip = ({ children }: { children: ReactNode }) => {
+  const { inboxEmail } = useUser();
+  return (
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger>
+          <span className="text-sky-500">{children}</span>
+        </TooltipTrigger>
+        <TooltipContent className="text-[#38383d]/85 dark:text-[#f3f3f7]">
+          {inboxEmail}
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
+  );
+};
 
 export const FeedGraphic = ({ className }: { className?: string }) => {
   return (

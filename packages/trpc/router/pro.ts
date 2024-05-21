@@ -89,8 +89,8 @@ export const proRouter = createTRPCRouter({
       });
     }),
   fetchFullContent: protectedProcedure
-    .input(z.object({ url: z.string() }))
-    .query(async ({ input }) => {
+    .input(z.object({ itemId: z.string().optional(), url: z.string() }))
+    .query(async ({ input, ctx }) => {
       try {
         const response = await fetch(input.url, {
           credentials: "include",
@@ -110,9 +110,33 @@ export const proRouter = createTRPCRouter({
 
         const { document } = parseHTML(await response.text());
 
-        const article = new Readability(document).parse();
+        const article = new Readability(document, {
+          // charThreshold: 350,
+        }).parse();
 
-        return article?.textContent;
+        // Save the content as a Side Effect so the feeds return faster
+        if (input.itemId) {
+          setTimeout(() => {
+            // Have to do this check twice because typescript is not able to infer it
+            if (input.itemId) {
+              prisma.user_item.update({
+                where: {
+                  item_id_user_id: {
+                    item_id: input.itemId,
+                    user_id: ctx.user.id,
+                  },
+                },
+                data: {
+                  saved_content: article?.textContent,
+                },
+              });
+            }
+          }, 0);
+        }
+
+        console.log(article?.content);
+
+        return article?.content;
       } catch {
         return "Failed to Fetch Site";
       }

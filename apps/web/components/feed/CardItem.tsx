@@ -50,8 +50,8 @@ export const NonLinkedCardItem = ({
         item?.marked_read ? "opacity-70" : "dark:bg-[#0f0f10]"
       }`}
     >
-      <div className={`relative h-28 w-full dark:bg-[#0f0f10] `}>
-        {item?.image_url === "" || !item?.image_url === null ? (
+      <div className={`relative h-28 w-full dark:bg-[#0f0f10]`}>
+        {item?.image_url === "" || item?.image_url === null ? (
           <div className="w-min-screen rounded-t-md" />
         ) : (
           <Image
@@ -63,7 +63,7 @@ export const NonLinkedCardItem = ({
         )}
       </div>
       <div className="flex flex-row">
-        <div className="flex flex-wrap">
+        <div className="flex flex-col">
           <div className="my-1.5">
             <CardTitle FeedType={FeedType} title={item?.title ?? ""} />
           </div>

@@ -25,7 +25,10 @@ export const BookmarkButton = ({
   return (
     <TooltipProvider>
       <Tooltip>
-        <TooltipTrigger asChild>
+        <TooltipTrigger
+          asChild
+          className="rounded-md p-1 hover:bg-[#F5F5F5] dark:hover:bg-[#0f0f0f]"
+        >
           {openItem?.in_read_later == undefined ||
           openItem.in_read_later == false ? (
             <button
@@ -40,7 +43,8 @@ export const BookmarkButton = ({
                 strokeWidth={1.5}
                 stroke="currentColor"
                 shapeRendering="geometricPrecision"
-                className="h-6 w-6 stroke-neutral-450 dark:stroke-neutral-500"
+                // stroke-[#95959d]
+                className="h-6 w-6 stroke-[#95959d] dark:stroke-[#959699]"
               >
                 <path
                   strokeLinecap="round"
@@ -53,7 +57,9 @@ export const BookmarkButton = ({
           ) : (
             <button
               onClick={() => {
-                removeBookmark(openItem?.id!, "Regular");
+                if (openItem?.id) {
+                  removeBookmark(openItem?.id, "Regular");
+                }
               }}
             >
               <svg

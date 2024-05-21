@@ -55,19 +55,19 @@ export const Blog = () => {
 const BlogArticle = ({ title }: { title: string }) => {
   return (
     <div
-      className={`text-[#38383d] subpixel-antialiased dark:border-neutral-700 dark:text-[#F3F5F7] `}
+      className={`text-[#38383d] dark:border-neutral-700 dark:text-[#F3F5F7] `}
     >
       <div className="mt-10 w-full">
         <Link
           className={
-            "select-text text-3xl font-[700] no-underline subpixel-antialiased dark:text-[#F3F5F7]"
+            "select-text text-3xl font-[700] no-underline dark:text-[#F3F5F7]"
           }
           href="#"
         >
           {decodeHtmlEntities(title)}
         </Link>
 
-        <div className="reader prose prose-lg mt-3 max-w-none text-[#38383d] subpixel-antialiased dark:prose-invert prose-a:underline prose-a:decoration-neutral-300 prose-a:decoration-[0.75px] hover:prose-a:decoration-neutral-500 hover:prose-a:decoration-[0.75px] dark:text-inherit dark:text-stone-200 dark:prose-a:decoration-[#F4F4F5]">
+        <div className="reader prose prose-lg mt-3 max-w-none text-[#38383d] dark:prose-invert prose-a:underline prose-a:decoration-neutral-300 prose-a:decoration-[0.75px] hover:prose-a:decoration-neutral-500 hover:prose-a:decoration-[0.75px] dark:text-inherit dark:text-stone-200 dark:prose-a:decoration-[#F4F4F5]">
           Refeed Version 1 is now out. We have been working on this for a long
           time and we are finally ready to release it. We hope you like it.
         </div>

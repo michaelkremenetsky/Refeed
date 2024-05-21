@@ -26,7 +26,7 @@ const DropdownMenuSubTrigger = React.forwardRef<
   <DropdownMenuPrimitive.SubTrigger
     ref={ref}
     className={cn(
-      "flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm font-medium outline-none data-[state=open]:bg-neutral-100 focus:bg-neutral-100 dark:border-[#24252A] dark:data-[state=open]:bg-neutral-700 dark:focus:bg-neutral-700 ",
+      "flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm font-medium outline-none data-[state=open]:bg-neutral-100 focus:bg-neutral-100 dark:border-[#232329] dark:data-[state=open]:bg-neutral-700 dark:focus:bg-neutral-700 ",
       inset && "pl-8",
       className,
     )}
@@ -46,7 +46,7 @@ const DropdownMenuSubContent = React.forwardRef<
   <DropdownMenuPrimitive.SubContent
     ref={ref}
     className={cn(
-      "z-50 min-w-[8rem] overflow-hidden rounded-md border border-neutral-400 bg-white p-1 text-neutral-700 animate-in slide-in-from-left-1 dark:border-[#24252A] dark:bg-neutral-800  dark:text-stone-400",
+      "z-50 min-w-[8rem] overflow-hidden rounded-md border border-neutral-400 bg-white p-1 text-neutral-700 animate-in slide-in-from-left-1 dark:border-[#232329] dark:bg-neutral-800  dark:text-stone-400",
       className,
     )}
     {...props}
@@ -64,8 +64,7 @@ const DropdownMenuContent = React.forwardRef<
       ref={ref}
       sideOffset={sideOffset}
       className={cn(
-        // Border is a shadow
-        "z-50 overflow-hidden rounded-md bg-white p-1 text-stone-200 shadow-[rgba(31,34,37,0.09)_0px_0px_0px_1px,rgba(0,0,0,0.08)_0px_12px_24px_-4px,rgba(0,0,0,0.04)_0px_8px_16px_-4px] animate-in data-[state=open]:animate-in data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 dark:border dark:border-neutral-800 dark:bg-[#0f0f10] dark:text-stone-400",
+        "z-50 overflow-hidden rounded-md bg-[#fefefe] p-1 text-stone-200 shadow-[rgba(31,34,37,0.09)_0px_0px_0px_1px,rgba(0,0,0,0.08)_0px_12px_24px_-4px,rgba(0,0,0,0.04)_0px_8px_16px_-4px] animate-in data-[state=open]:animate-in data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 dark:border dark:border-neutral-800 dark:bg-[#0f0f10] dark:text-stone-400",
         className,
       )}
       {...props}

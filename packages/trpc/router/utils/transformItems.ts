@@ -9,8 +9,10 @@ export const transformItems = (rawItems: TODO) => {
 
   for (const rawItem of rawItems) {
     if (rawItem) {
+      // maxConsecutiveNewlines?
       const contentMarkdown = NodeHtmlMarkdown.translate(
         rawItem.website_content ?? "",
+        { keepDataImages: true },
       );
       let bookmarkFolders: string[] | undefined = [];
 

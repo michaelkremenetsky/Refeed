@@ -25,49 +25,51 @@ export const useUpdateFeeds = (items: ItemType[], FeedType?: FeedType) => {
     updateItemData(newItems);
   }
 
-  const markRead = (item: ItemType) => {
-    const feedsInFolders = utils.feed.getFeedsInFolders.getData();
+  const markRead = (item: ItemType | undefined) => {
+    if (item) {
+      const feedsInFolders = utils.feed.getFeedsInFolders.getData();
 
-    if (!item.marked_read_time) {
-      updateItems(item);
+      if (!item.marked_read_time) {
+        updateItems(item);
 
-      const updatedFolderFeeds = feedsInFolders?.map((folder) => {
-        if (folder.children) {
-          const updatedChildren = folder.children.map((feed) => {
-            if (feed.id == item.feed_id) {
-              if (!item.marked_read) {
-                feed.amount = feed.amount - 1;
+        const updatedFolderFeeds = feedsInFolders?.map((folder) => {
+          if (folder.children) {
+            const updatedChildren = folder.children.map((feed) => {
+              if (feed.id == item.feed_id) {
+                if (!item.marked_read) {
+                  feed.amount = feed.amount - 1;
+                }
               }
-            }
-            return feed;
-          });
-          return {
-            ...folder,
-            children: updatedChildren,
-          };
-        } else {
-          return folder;
-        }
-      });
+              return feed;
+            });
+            return {
+              ...folder,
+              children: updatedChildren,
+            };
+          } else {
+            return folder;
+          }
+        });
 
-      utils.feed.getFeedsInFolders.setData(undefined, (data) => {
-        if (!data) {
-          return undefined;
-        }
+        utils.feed.getFeedsInFolders.setData(undefined, (data) => {
+          if (!data) {
+            return undefined;
+          }
 
-        return updatedFolderFeeds;
-      });
-    }
+          return updatedFolderFeeds;
+        });
+      }
 
-    markReadMutation.mutate({ itemId: item.id });
-    // utils.feed.getFeedsInFolders.invalidate(); // Might add this back
+      markReadMutation.mutate({ itemId: item.id });
+      // utils.feed.getFeedsInFolders.invalidate(); // Might add this back
 
-    if (FeedType != "recentlyread") {
-      utils.item.getUnreadItems.reset({
-        amount: 25,
-        sort,
-        type: "recentlyread",
-      });
+      if (FeedType != "recentlyread") {
+        utils.item.getUnreadItems.reset({
+          amount: 25,
+          sort,
+          type: "recentlyread",
+        });
+      }
     }
   };
 

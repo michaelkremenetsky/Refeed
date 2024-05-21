@@ -50,7 +50,7 @@ const BookmarkFolderIcon = ({
         fill="none"
         viewBox="0 0 24 24"
         strokeWidth={1.5}
-        className="h-6 w-6 stroke-neutral-450 dark:stroke-neutral-500"
+        className="h-6 w-6 stroke-[#95959d] dark:stroke-[#959699]"
         shapeRendering="geometricPrecision"
       >
         <path
@@ -110,7 +110,7 @@ export default function BookmarkFolderButton({
             <BookmarkFolderIcon openItem={openItem} />
           </DropdownMenuTrigger>
         </BookmarkTooltip>
-        <DropdownMenuContent className="w-28">
+        <DropdownMenuContent className="w-36">
           {bookmarkFolders?.map((folder) => {
             return (
               <DropdownMenuItem
@@ -123,9 +123,9 @@ export default function BookmarkFolderButton({
                 <Checkbox.Root
                   checked={openItem?.bookmark_folders?.includes(folder.name)}
                 >
-                  <Checkbox.Indicator>
-                    <Check className="stroke-neutral-400 stroke-[1.3] dark:stroke-stone-400" />
-                  </Checkbox.Indicator>
+                  {openItem?.bookmark_folders?.includes(folder.name) && (
+                    <Check className="stroke-[1.3] text-neutral-400/85 dark:stroke-stone-400" />
+                  )}
                 </Checkbox.Root>
                 <div className="pr-1" />
                 <span>{folder.name}</span>

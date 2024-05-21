@@ -42,8 +42,6 @@ export const feedRouter = createTRPCRouter({
             user_id: ctx.user.id,
           },
         },
-        /* Should be able to optmize this query later because of:
-         https://github.com/prisma/prisma-engines/pull/4678 */
         items: {
           where: {
             user_items: {
@@ -66,7 +64,13 @@ export const feedRouter = createTRPCRouter({
             created_at: true,
           },
         },
+        // What we are trying to do is get the count of all the items added after pagination_start_timestamp
+        // with a max limit of 1000 items or 30 days
       },
+      // This helps bring it down but it is still take 100ms+ right now.
+      // Only way to speed up this query is by going raw. Which won't be to bad
+      // but thats for another day
+      relationLoadStrategy: "query",
       take: plan == "free" ? 150 : 1000,
     });
 

@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import { FeedLayout } from "@components/feed/FeedLayout";
 import NavBar from "@components/layout/NavBar";
 import SideBar from "@components/layout/SideBar";
+import { useFeedsInFolders } from "@features/folders/useFeedsInFolders";
 import { useAtomValue } from "jotai";
 
 import { titleAtom } from "@refeed/atoms/feedsAtom";
@@ -10,15 +11,14 @@ import { titleAtom } from "@refeed/atoms/feedsAtom";
 import CommandPalette from "../../../components/cmdk/CommandPalette";
 import { PageWrapper } from "../../../components/layout/PageWrapper";
 import Reader from "../../../components/reader/Reader";
-import { useFeedsInFolders } from "../../../features/folders/useFeedsInFolders";
 
 const Feed: NextPage = () => {
   const { query } = useRouter();
   const { feedId } = query;
 
   const { feedsInFolders } = useFeedsInFolders();
-
   let title;
+
   if (feedsInFolders) {
     for (const folder of feedsInFolders) {
       if (folder.children) {

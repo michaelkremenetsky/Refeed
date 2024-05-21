@@ -1,11 +1,9 @@
 import Link from "next/link";
-import { PricingPage } from "@components/upgrade/PricingPage";
 import { useUser } from "@supabase/auth-helpers-react";
 import { atom, useAtom, useAtomValue, useSetAtom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
 import { ChevronDown } from "lucide-react";
 import { Resizable } from "re-resizable";
-import { Drawer } from "vaul";
 
 import { DialogRoot } from "@refeed/ui/components/dialog/AddDialog";
 
@@ -58,74 +56,62 @@ export default function SideBar() {
           // Cache the size in the browser
           setWidth(ref.offsetWidth);
         }}
-        className={`group/add sticky top-0 max-h-screen min-h-screen overflow-x-hidden overflow-y-scroll border-r border-[#f0f0f0] bg-[#fcfcfc] scrollbar-hide lg:min-w-[240px] dark:border-[#24252A] dark:bg-[#141415]`}
+        // Add a second dark mode option with a #080808 Sidebar?
+        className={`group/add sticky top-0 max-h-screen min-h-screen overflow-x-hidden overflow-y-scroll border-r border-[#f0f0f0] bg-[#fcfcfc] scrollbar-hide md:min-w-[240px] dark:border-[#232329] dark:bg-[#141415]`}
       >
-        <Drawer.Root direction="right" shouldScaleBackground>
-          <div className={`ml-2.5 mr-1.5 mt-1.5`}>
-            <div className="ml-1">
-              <AccountDropdown width={width} />
-            </div>
-            <div className="mt-2">
-              <SearchSelect />
-            </div>
+        <div className={`ml-2.5 mr-1.5 mt-1.5`}>
+          <div className="ml-1">
+            <AccountDropdown width={width} />
           </div>
-          <div className="ml-2.5">
-            <DialogRoot>
-              {!isFetched && <SideBarSkeleton />}
+          <div className="mt-2">
+            <SearchSelect />
+          </div>
+        </div>
+        <div className="ml-2.5">
+          <DialogRoot>
+            {!isFetched && <SideBarSkeleton />}
 
-              {isFetched && (
-                <div className="flex">
-                  <h4 className="mb-1 ml-1.5 mt-4 text-xs font-medium tracking-wider text-neutral-450 dark:text-stone-500/85">
-                    Feeds
-                  </h4>
-                </div>
-              )}
-              {isFetched && feedsInFolders?.length != 0 && (
-                <>
-                  <Link href="/feed/all">
-                    <div className="mr-1.5 flex cursor-pointer items-center rounded-md py-[0.25rem] hover:bg-[#f5f5f5] hover:dark:bg-[#1a1a1a] focus:[&:not(:focus-visible)]:outline-none">
-                      <ChevronDown className="h-[24px] w-[24px] stroke-neutral-450 stroke-[1.4] hover:stroke-neutral-500" />
-                      <span
-                        className={`flex-1 truncate stroke-neutral-700 pl-1 text-base font-[450] dark:text-stone-200 
+            {isFetched && (
+              <div className="flex">
+                <h4 className="mb-1 ml-1.5 mt-4 text-xs font-medium tracking-wider text-neutral-450 dark:text-stone-500/85">
+                  Feeds
+                </h4>
+              </div>
+            )}
+            {isFetched && feedsInFolders?.length != 0 && (
+              <>
+                <Link href="/feed/all">
+                  <div className="mr-1.5 flex cursor-pointer items-center rounded-md py-[0.25rem] hover:bg-[#f5f5f5] hover:dark:bg-[#1a1a1a] focus:[&:not(:focus-visible)]:outline-none">
+                    <ChevronDown className="h-[24px] w-[24px] stroke-neutral-450 stroke-[1.4] hover:stroke-neutral-500" />
+                    <span
+                      className={`flex-1 truncate stroke-neutral-700 pl-0.5 text-base font-[450] dark:text-stone-200 
             `}
-                      >
-                        All
-                      </span>
-                      <span className="absolute right-[12.5px] text-center text-xs font-[450] text-neutral-400/75 dark:text-stone-500/95">
-                        {totalItemAmount! > 2500
-                          ? "2.5K+"
-                          : totalItemAmount! >= 1000
-                            ? "1K+"
-                            : totalItemAmount ?? null}
-                      </span>
-                    </div>
-                  </Link>
-                  <TreeView
-                    // This needs the width since its virtualized
-                    width={width - 9}
-                    feedsInFolders={feedsInFolders}
-                    OpenState={OpenState}
-                  />
-                </>
-              )}
+                    >
+                      All
+                    </span>
+                    <span className="absolute right-[12.5px] text-center text-xs font-[425] text-neutral-400/75 dark:text-stone-500/95">
+                      {totalItemAmount! > 2500
+                        ? "2.5K+"
+                        : totalItemAmount! >= 1000
+                          ? "1K+"
+                          : totalItemAmount ?? null}
+                    </span>
+                  </div>
+                </Link>
+                <TreeView
+                  // This needs the width since its virtualized
+                  width={width - 9}
+                  feedsInFolders={feedsInFolders}
+                  OpenState={OpenState}
+                />
+              </>
+            )}
 
-              <NoFoldersMessage
-                show={isFetched && feedsInFolders?.length == 0}
-              />
-              <AddFolderDialog link={undefined} title="Add Folder" />
-              {isFetched && feedsInFolders?.length != 0 && (
-                <AddNewButtonBottom />
-              )}
-            </DialogRoot>
-          </div>
-          <div className={`ml-2.5 mr-1.5 mt-auto`}></div>
-          <Drawer.Portal>
-            <Drawer.Overlay className="fixed inset-0 z-20 bg-black/40" />
-            <Drawer.Content className="fixed bottom-0 right-0 z-20 mt-24 flex h-full w-[1000px] flex-col overflow-scroll overflow-x-hidden rounded-t-[10px] bg-zinc-100">
-              <PricingPage />
-            </Drawer.Content>
-          </Drawer.Portal>
-        </Drawer.Root>
+            <NoFoldersMessage show={isFetched && feedsInFolders?.length == 0} />
+            <AddFolderDialog link={undefined} title="Add Folder" />
+            {isFetched && feedsInFolders?.length != 0 && <AddNewButtonBottom />}
+          </DialogRoot>
+        </div>
       </Resizable>
     );
   }

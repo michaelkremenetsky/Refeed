@@ -23,8 +23,9 @@ const Pricing: NextPage = () => {
 export const PricingPage = () => {
   const [isYearlyPlan, setIsYearlyPlan] = useState(false);
 
-  // Background pattern is not supported in Safari so we remove it
   const [isSafari, setIsSafari] = useState(false);
+
+  // Background pattern is not supported in Safari so we remove it
   useEffect(() => {
     setIsSafari(/^((?!chrome|android).)*safari/i.test(navigator.userAgent));
   }, []);
@@ -34,20 +35,24 @@ export const PricingPage = () => {
       <div className="background-pattern rounded-b-xl border-b bg-[#FAFBFC]">
         {!isSafari && <PricingBackground />}
         <NavBar />
-        <h1 className="mx-auto mb-1 mt-20 flex justify-center text-7xl font-[750] leading-none tracking-tighter md:w-[700px]">
-          <span className="z-10 py-2 tracking-tight text-sky-500">Pricing</span>
-        </h1>
-        <h1 className="mx-auto mt-3 flex w-11/12 justify-center text-lg md:w-[700px] md:leading-none">
-          <span className="font-base z-10 text-center text-neutral-500">
-            Try the free plan or try any plan with a free 14 day trial.
+        <h1 className="mx-auto mt-10 flex justify-center pt-10 text-center text-7xl font-[775] leading-none tracking-tight md:w-[700px]">
+          <span className="z-10 py-2 tracking-tight text-sky-500/90">
+            {" "}
+            Pricing
           </span>
         </h1>
+        <h2 className="mx-auto mt-3 flex w-11/12 justify-center text-lg md:w-[700px] md:leading-none">
+          <span className="font-base z-10 text-center text-neutral-450">
+            Stop spending hours doom scrolling through the internet.
+          </span>
+        </h2>
         <div className="mt-5 flex items-center justify-center">
           <Control
             isYearlyPlan={isYearlyPlan}
             setIsYearlyPlan={setIsYearlyPlan}
           />
         </div>
+
         <div className="mb-20 mt-8 flex justify-center">
           <div className="z-10 flex flex-col gap-x-4 gap-y-4 rounded-lg md:flex-row md:gap-y-0">
             <FreePlan className="border border-neutral-300/80 sm:w-[375px]" />
@@ -94,18 +99,18 @@ export const Control = ({
     <div
       dir="ltr"
       data-orientation="horizontal"
-      className="flex rounded-md border bg-neutral-100 dark:border-[#24252A] dark:bg-[#141415]"
+      className="flex rounded-md border bg-neutral-100 dark:border-[#232329] dark:bg-[#141415]"
     >
       <button onClick={() => setIsYearlyPlan(false)} className="rounded-sm">
         <h2
-          className={`${!isYearlyPlan ? "border border-neutral-200 bg-white font-medium text-[#242628] shadow-[rgba(0,0,0,0.05)_0px_0px_1px,rgba(0,0,0,0.04)_0px_15px_30px] dark:border-neutral-700 dark:bg-[#0f0f10] dark:text-stone-200" : "text-neutral-500"} w-full rounded-[6px] px-3 py-[2px]`}
+          className={`${!isYearlyPlan ? "border border-neutral-200 bg-white font-medium text-[#242628] shadow-[rgba(0,0,0,0.05)_0px_0px_1px,rgba(0,0,0,0.04)_0px_15px_30px] dark:border-neutral-700 dark:bg-[#0f0f10] dark:text-stone-200" : "text-[#81818d]"} w-full rounded-[6px] px-3 py-[2px]`}
         >
           Monthly
         </h2>
       </button>
       <button onClick={() => setIsYearlyPlan(true)} className="rounded-sm">
         <h2
-          className={`${isYearlyPlan ? "border border-neutral-200 bg-white font-medium text-[#242628] shadow-[rgba(0,0,0,0.05)_0px_0px_1px,rgba(0,0,0,0.04)_0px_15px_30px] dark:border-neutral-700 dark:bg-[#0f0f10] dark:text-stone-200" : "text-neutral-500"} w-full rounded-[6px] px-3 py-[2px]`}
+          className={`${isYearlyPlan ? "border border-neutral-200 bg-white font-medium text-[#242628] shadow-[rgba(0,0,0,0.05)_0px_0px_1px,rgba(0,0,0,0.04)_0px_15px_30px] dark:border-neutral-700 dark:bg-[#0f0f10] dark:text-stone-200" : "text-[#81818d]"} w-full rounded-[6px] px-3 py-[2px]`}
         >
           Yearly
         </h2>

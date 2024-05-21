@@ -4,7 +4,7 @@ export type FeedType =
   | "bookmarks"
   | "one"
   | "multiple"
-  | "discover"
+  | "search"
   | "newsletters";
 
 export type feedsInFoldersType = (

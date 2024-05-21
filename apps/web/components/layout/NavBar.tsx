@@ -16,10 +16,11 @@ import { NavBarButtons } from "./NavBarButtons";
 interface NavBarTypes {
   feedId?: string;
   feedUrl?: string;
-  hideButtons?: boolean;
   title?: string;
   recentPage?: boolean;
   bookmarkPage?: boolean;
+  settings?: boolean;
+  hideButtons?: boolean;
 }
 
 export default function NavBar(props: NavBarTypes) {
@@ -38,7 +39,7 @@ export default function NavBar(props: NavBarTypes) {
   return (
     <Dialog.Root>
       <div
-        className={`sticky top-0 z-10 flex h-10 border-b border-[#f0f0f0] bg-white/95 backdrop-blur dark:border-[#24252A] dark:bg-[#0f0f10]`}
+        className={`sticky top-0 z-10 flex h-10 border-b border-[#f0f0f0] bg-white/95 backdrop-blur dark:border-[#232329] dark:bg-[#0f0f10]`}
       >
         <PanelLeft
           size={18}
@@ -48,7 +49,7 @@ export default function NavBar(props: NavBarTypes) {
             "absolute md:hidden",
           )}
         />
-        {title == "Discover" ? (
+        {title == "Discover" || props.settings ? (
           <div
             className={`flex w-full items-center overflow-x-auto scrollbar-hide`}
           >

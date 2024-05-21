@@ -44,7 +44,7 @@ export const ShortTermBookmarkButton = ({
                     viewBox="0 0 24 24"
                     strokeWidth={1.5}
                     shapeRendering="geometricPrecision"
-                    className="h-6 w-6 stroke-neutral-450 dark:stroke-neutral-500"
+                    className="h-6 w-6 stroke-[#95959d] dark:stroke-[#959699]"
                   >
                     <path
                       strokeLinecap="round"
@@ -57,7 +57,9 @@ export const ShortTermBookmarkButton = ({
               ) : (
                 <button
                   onClick={() => {
-                    removeBookmark(openItem?.id!, "Short Term");
+                    if (openItem?.id) {
+                      removeBookmark(openItem?.id, "Short Term");
+                    }
                   }}
                 >
                   <svg

@@ -1,8 +1,5 @@
-import { UpgradeDrawer } from "@components/upgrade/Drawer";
 import { atom, useSetAtom } from "jotai";
 import { AArrowDown, AArrowUp, MoreHorizontal } from "lucide-react";
-
-import { useUser } from "@refeed/features/hooks/useUser";
 
 import { feedLayout, Sort } from "../../stores/ui";
 import {
@@ -25,17 +22,20 @@ interface NavBarTypes {
 export const NavBarButtons = (props: NavBarTypes) => {
   const { hideButtons } = props;
 
-  const { plan } = useUser();
-
   return (
     <div className="item-center absolute right-2 top-1.5 justify-end rounded text-xl font-bold">
       <div className="flex items-center self-center">
         {!hideButtons ? (
           <div className={`flex self-center`}>
+            {/* TODO: Add back when I get into a polished state */}
+            {/* {bookmarkPage && (
+              <button className="my-1 mr-2 rounded-md text-sm font-medium text-sky-500 hover:text-sky-500/30">
+                + Add New
+              </button>
+            )} */}
             <FeedLayoutButtonNew />
           </div>
         ) : null}
-        {plan == "free" && <UpgradeDrawer />}
       </div>
     </div>
   );

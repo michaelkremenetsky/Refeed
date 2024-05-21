@@ -1,6 +1,6 @@
-import { memo } from "react";
 import Link from "next/link";
 import router from "next/router";
+import { memo } from "react";
 
 import type { ItemType } from "@refeed/types/item";
 
@@ -8,6 +8,7 @@ import type { FeedTypes } from "../../types/feed";
 import { FeedInfo } from "./FeedInfo";
 import { Title } from "./FeedTitle";
 import { MagazineImage } from "./MagazineImage";
+
 
 export const MagazineItem = memo(
   (props: {
@@ -25,7 +26,7 @@ export const MagazineItem = memo(
         href={`${pathWithoutQuery}/?item=` + item?.id}
         replace={false}
         shallow
-        scroll
+        scroll={false}
         onClick={() => {
           markRead();
         }}
@@ -36,8 +37,6 @@ export const MagazineItem = memo(
   },
 );
 
-// NOTE:Removing flex on mobile makes this look super nice on mobile web. Make this its own layout?
-
 export const NonLinkedMagazineItem = ({
   item,
   FeedType,
@@ -46,7 +45,7 @@ export const NonLinkedMagazineItem = ({
   FeedType: FeedTypes;
 }) => (
   <div
-    className={`relative mx-1 mt-1 flex w-screen flex-row space-x-[4px] rounded-md pb-2 pt-2 md:w-[33em]
+    className={`relative mx-1 flex w-screen flex-row space-x-[4px] rounded-md pb-2 pt-3 md:w-[33em]
           ${item?.marked_read ? "opacity-80" : ""}
         `}
   >

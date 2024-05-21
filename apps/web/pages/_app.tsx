@@ -20,7 +20,7 @@ import { trpc } from "utils/trpc";
 
 import { Toaster } from "@refeed/ui";
 
-if (typeof window !== "undefined") {
+if (typeof window !== "undefined" && process.env.NODE_ENV === "production") {
   if (NEXT_PUBLIC_POSTHOG_KEY && NEXT_PUBLIC_POSTHOG_HOST) {
     posthog.init(NEXT_PUBLIC_POSTHOG_KEY, {
       api_host: NEXT_PUBLIC_POSTHOG_HOST || "https://app.posthog.com",

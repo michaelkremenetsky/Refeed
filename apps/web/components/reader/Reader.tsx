@@ -14,6 +14,7 @@ import BookmarkFolderButton from "../../features/bookmarks/BookmarkFolderButton"
 import { ShortTermBookmarkButton } from "../../features/bookmarks/ShortTermBookmarkButton";
 import { PricingDialog } from "../../features/pricing/PricingDialog";
 import useWindowSize from "../../lib/useWindowSize";
+import Sharing from "../sharing/Sharing";
 import { Article } from "./Article";
 import { CopyLinkButton } from "./CopyLinkButton";
 import { useCarousel } from "./useCarousel";
@@ -30,11 +31,10 @@ const Reader = () => {
   const { items, FeedType, fetchNextPage } = useItemData();
   const { closeReader, initialIndex, isLoaded, searchItem } =
     useReaderNavigation(items);
-  const { fullscreen, widthStyle, transitionDuration } = useReaderAnimation();
+  const { fullscreen, widthStyle } = useReaderAnimation();
 
   // AI drawer is disabled for now
-  const [aIDrawerOpen, setAIDrawerOpen] = useAtom(AIDrawerOpen);
-  const [isAIPromptOpen, setIsAIPromptOpen] = useAtom(AIPromptOpen);
+  const [aIDrawerOpen, _] = useAtom(AIDrawerOpen);
 
   if (isLoaded || searchItem) {
     return (
@@ -60,7 +60,9 @@ const Reader = () => {
                 className={`flex ${fullscreen ? "w-[90%]" : ""} justify-between`}
               >
                 <Topbar className={!fullscreen ? "ml-1" : ""} />
-                <div className="flex"></div>
+                <div className="flex">
+                  <Sharing />
+                </div>
             </div>
           </div>
         </div>
