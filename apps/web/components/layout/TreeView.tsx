@@ -175,7 +175,8 @@ const Node: FunctionComponent<NodeRendererProps<Tree>> = memo(
             <span
               className={`flex-1 truncate text-neutral-700 dark:text-stone-200 ${
                 !node.isLeaf && ""
-              } text-ellipsis ${node.isLeaf ? "pl-2 font-[425] " : "pl-1 font-[450]"} text-base
+              }
+                text-ellipsis ${node.isLeaf ? "pl-2 font-[425] " : "pl-0.5 font-[450]"} text-base
             `}
               style={widthStyle}
             >
@@ -215,18 +216,53 @@ const ContentMenu = ({ node }: { node: NodeApi<Tree> }) => {
 
   const markRead = async (type: "one" | "folder") => {
     if (type == "one") {
-      console.log(node.data.id);
+      utils.feed.getFeedsInFolders.setData(undefined, (prevData) => {
+        if (!prevData) {
+          return undefined;
+        }
+
+        const newFeeds = prevData.map((folder) => {
+          folder.children?.forEach((feed) => {
+            if (feed.id == node.data.id) {
+              feed.amount = 0;
+            }
+          });
+
+          return folder;
+        });
+
+        return newFeeds;
+      });
+
       await markAllAsRead.mutateAsync({ feedIds: [node.data.id] });
     }
     if (type == "folder") {
       // Get the ids of all the feeds in the folder
       const feedIds = node.data.children?.map((feed) => feed.id);
 
+      utils.feed.getFeedsInFolders.setData(undefined, (prevData) => {
+        if (!prevData) {
+          return undefined;
+        }
+
+        const newFeeds = prevData.map((folder) => {
+          folder.children?.forEach((feed) => {
+            if (feedIds?.includes(feed.id)) {
+              feed.amount = 0;
+            }
+          });
+
+          return folder;
+        });
+
+        return newFeeds;
+      });
+
       await markAllAsRead.mutateAsync({ feedIds });
     }
 
-    utils.item.getUnreadItems.reset();
-    utils.feed.getFeedsInFolders.reset();
+    utils.item.getUnreadItems.invalidate();
+    utils.feed.getFeedsInFolders.invalidate();
   };
 
   return (
