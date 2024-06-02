@@ -24,6 +24,7 @@ export const itemRouter = createTRPCRouter({
           "bookmarks",
           "multiple",
           "search",
+          "discover",
           "newsletters",
         ]),
         bookmark_folder: z.string().optional(),
@@ -313,7 +314,6 @@ export const itemRouter = createTRPCRouter({
           nextCursor,
         };
       }
-
       if (input.type == "all") {
         const items = await ctx.prisma.item.findMany({
           where: {
@@ -439,6 +439,26 @@ export const itemRouter = createTRPCRouter({
           nextCursor,
         };
       }
+
+      if (input.type == "discover") {
+        const items = await ctx.prisma.item.findMany({
+          where: {
+            created_at: {
+              gte: thirtyDaysAgo,
+            },
+            feed_id: input.feed_id,
+          },
+          ...sharedQuery,
+        });
+
+        const nextCursor = getNextPrismaCursor(items, input.amount);
+
+        return {
+          transformedItems: items,
+          nextCursor,
+        };
+      }
+
       if (input.type == "newsletters") {
         const items = await ctx.prisma.item.findMany({
           where: {

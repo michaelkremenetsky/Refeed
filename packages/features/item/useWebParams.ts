@@ -1,5 +1,5 @@
-import { useRouter } from "next/router";
 import { useAtomValue } from "jotai";
+import { useRouter } from "next/router";
 import { match } from "ts-pattern";
 
 import { bookmarkFolderSortAtom } from "@refeed/atoms/bookmarkAtom";
