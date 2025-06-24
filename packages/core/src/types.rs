@@ -2,6 +2,7 @@ use chrono::{DateTime, Utc};
 use feed_rs::model::{Category, Content, Link, MediaObject, Person, Text};
 
 // feed-rs Entry struct with feed_id added
+#[allow(dead_code)]
 pub struct CustomEntry {
     pub id: String,
     pub title: Option<Text>,

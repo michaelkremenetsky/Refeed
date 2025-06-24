@@ -48,7 +48,7 @@ pub async fn get_items(items: Vec<CustomEntry>) -> Vec<Item> {
 
                     match data {
                         Ok(data) => {
-                            let optimized_image = image::optimize_image(data.to_vec(), 75);
+                            let optimized_image = image::optimize_image(data.to_vec());
 
                             let image_hash = blake3::hash(&data).to_hex().to_string();
 
