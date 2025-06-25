@@ -71,9 +71,25 @@ pub fn optimize_image(image_data: Vec<u8>) -> Vec<u8> {
     // Create Resizer instance
     let mut resizer = fr::Resizer::new();
 
-    // Make sure its set to default
+    // Set CPU extensions
     unsafe {
-        resizer.set_cpu_extensions(fr::CpuExtensions::default());
+        // Determine CPU extensions to use AVX2 on x86_64, default on other architectures
+        let cpu_extensions = {
+            #[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
+            {
+                if is_x86_feature_detected!("avx2") {
+                    fr::CpuExtensions::Avx2
+                } else {
+                    fr::CpuExtensions::default()
+                }
+            }
+            #[cfg(not(any(target_arch = "x86", target_arch = "x86_64")))]
+            {
+                fr::CpuExtensions::default()
+            }
+        };
+
+        resizer.set_cpu_extensions(cpu_extensions);
     }
 
     // Perform the resizing, return empty Vec on failure
