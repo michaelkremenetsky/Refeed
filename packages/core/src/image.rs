@@ -36,11 +36,11 @@ pub async fn scrape_image_url(client: &Client, url: &str) -> Result<String, Box<
 }
 
 use fast_image_resize as fr;
-use image::{io::Reader as ImageReader, DynamicImage, ImageOutputFormat};
+use image::{DynamicImage, ImageFormat, ImageReader};
 use std::io::Cursor;
 use std::num::NonZeroU32;
 
-pub fn optimize_image(image_data: Vec<u8>, quality: u8) -> Vec<u8> {
+pub fn optimize_image(image_data: Vec<u8>) -> Vec<u8> {
     let img = match ImageReader::new(Cursor::new(image_data)).with_guessed_format() {
         Ok(reader) => match reader.decode() {
             Ok(img) => img,
@@ -52,9 +52,9 @@ pub fn optimize_image(image_data: Vec<u8>, quality: u8) -> Vec<u8> {
     let width = NonZeroU32::new(img.width()).unwrap();
     let height = NonZeroU32::new(img.height()).unwrap();
 
-    let src_image = fr::Image::from_vec_u8(
-        width,
-        height,
+    let src_image = fr::images::Image::from_vec_u8(
+        width.into(),
+        height.into(),
         img.to_rgb8().into_raw(),
         fast_image_resize::PixelType::U8x3,
     )
@@ -63,21 +63,40 @@ pub fn optimize_image(image_data: Vec<u8>, quality: u8) -> Vec<u8> {
     // Create container for data of destination image
     let dst_width = NonZeroU32::new(260).unwrap();
     let dst_height = NonZeroU32::new(156).unwrap();
-    let mut dst_image = fr::Image::new(dst_width, dst_height, src_image.pixel_type());
 
-    // Get mutable view of destination image data
-    let mut dst_view = dst_image.view_mut();
+    // Create destination image
+    let mut dst_image =
+        fr::images::Image::new(dst_width.into(), dst_height.into(), src_image.pixel_type());
 
-    // Create Resizer instance and resize source image into buffer of destination image
-    let mut resizer = fr::Resizer::new(fr::ResizeAlg::Convolution(fr::FilterType::Lanczos3));
+    // Create Resizer instance
+    let mut resizer = fr::Resizer::new();
 
-    // Make sure its set to avx2
+    // Set CPU extensions
     unsafe {
-        resizer.set_cpu_extensions(fr::CpuExtensions::Avx2);
+        // Determine CPU extensions to use AVX2 on x86_64, default on other architectures
+        let cpu_extensions = {
+            #[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
+            {
+                if is_x86_feature_detected!("avx2") {
+                    fr::CpuExtensions::Avx2
+                } else {
+                    fr::CpuExtensions::default()
+                }
+            }
+            #[cfg(not(any(target_arch = "x86", target_arch = "x86_64")))]
+            {
+                fr::CpuExtensions::default()
+            }
+        };
+
+        resizer.set_cpu_extensions(cpu_extensions);
     }
 
     // Perform the resizing, return empty Vec on failure
-    if resizer.resize(&src_image.view(), &mut dst_view).is_err() {
+    if resizer
+        .resize(&src_image, &mut dst_image, &fr::ResizeOptions::default())
+        .is_err()
+    {
         return Vec::new();
     }
     // Convert the resized fr:image back to DynamicImage to use the 'image' crate's saving functionality
@@ -90,7 +109,7 @@ pub fn optimize_image(image_data: Vec<u8>, quality: u8) -> Vec<u8> {
     let mut output_data = Cursor::new(Vec::new());
 
     // Attempt to encode the resized image as JPEG, returning an empty Vec<u8> upon failure
-    match resized_img.write_to(&mut output_data, ImageOutputFormat::Jpeg(quality)) {
+    match resized_img.write_to(&mut output_data, ImageFormat::Jpeg) {
         Ok(_) => output_data.into_inner(),
         Err(_) => Vec::new(),
     }
